@@ -14,17 +14,17 @@ def rule2Str(ruleData):
 
     if ruleData["country"] != "":
         ruleStr = ("&country=" + ruleData["country"])
-    elif ruleData["province"] != "":
+    if ruleData["province"] != "":
         ruleStr = ("&province=" + ruleData["province"])
-    elif ruleData["city"] != "":
+    if ruleData["city"] != "":
         ruleStr = ("&city=" + ruleData["city"])
 
-    if ruleData["host"]!="":
-        ruleStr.join("&host="+ruleData["host"])
-    if ruleData["appid"]!="":
-        ruleStr.join("&appid="+ruleData["appid"])
-    if ruleData["net"]!="":
-        ruleStr.join("&net="+ruleData["net"])
+    if ruleData["host"] != "":
+        ruleStr+=("&host=" + ruleData["host"])
+    if ruleData["appid"] != "":
+        ruleStr+=("&appid=" + ruleData["appid"])
+    if ruleData["net"] != "":
+        ruleStr+=("&net=" + ruleData["net"])
 
     return ruleStr[1:]
 
@@ -72,41 +72,16 @@ def handleRuleRevise(request):
     if request.method != "POST":
         return ruleConfigRevise(request)
 
-    conditions = [""]
+    ruleData = {}
 
+    ruleData["city"] = request.POST.get("city", "")
+    ruleData["province"] = request.POST.get("province", "")
+    ruleData["country"] = request.POST.get("country", "")
+    ruleData["host"] = request.POST.get("host", "")
+    ruleData["appid"] = request.POST.get("appid", "")
+    ruleData["net"] = request.POST.get("net", "")
 
-
-    city = request.POST.get("city", "")
-    if city != "":
-        conditions[0] = "city=" + city
-
-    province = request.POST.get("province", "")
-    if province != "" and city == "":
-        conditions[0] = "province=" + province
-
-    country = request.POST.get("country", "")
-    if country != "" and city == "" and province == "":
-        conditions[0] = "country=" + country
-
-    host = request.POST.get("host", "")
-    if host != "":
-        conditions.append("host=" + host)
-
-    appid = request.POST.get("appid", "")
-    if appid != "":
-        conditions.append("appid=" + appid)
-
-    net = request.POST.get("net", "")
-    if net != "":
-        conditions.append("net=" + net)
-
-    ruleStr = ""
-    ruleStr += conditions[0]
-
-    i = 1
-    while i < len(conditions):
-        ruleStr += "&" + conditions[i]
-        i = i + 1
+    ruleStr = rule2Str(ruleData)
 
     rank = request.POST.get("rank", "")
     ttl = request.POST.get("ttl", "")
