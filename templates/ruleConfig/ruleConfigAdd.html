@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% load static %}
+    <script src="{% static "js/jquery-3.2.1.js" %}"></script>
+
+    <script>
+        $(document).ready(function () {
+            for (var r =1; r<=7;r++) {
+                $("#rankSelect").append(
+                    "<option value='" +
+                    r +
+                    "'>" +
+                    r +
+                    "</option>"
+                );
+            }
+            ;
+
+            $("#countrySelect").change(function () {
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceSelect").append("<option value='' selected>省份</option>")
+                $("#citySelect").append("<option value='' selected>城市</option>")
+
+                {% for province in allProvince %}
+
+                    var curCountryCode = $("#countrySelect").val();
+                    var tempCode ={{ province.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+
+                    if (curCountryCode == tempCode) {
+                        $("#provinceSelect").append(
+                            "<option value='" +
+                            "{{ province.code }}" +
+                            "'>" +
+                            "{{ province.name }}" +
+                            "</option>"
+                        );
+                    };
+
+
+                {% endfor %}
+            });
+
+            $("#provinceSelect").change(function () {
+                $("#citySelect").empty();
+                $("#citySelect").append("<option value='' selected>城市</option>")
+                {% for city in allCity %}
+
+                    var curProvinceCode = $("#provinceSelect").val();
+                    var tempCode ={{ city.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+                    if (curProvinceCode == tempCode) {
+                        $("#citySelect").append(
+                            "<option value='" +
+                            "{{ city.code }}" +
+                            "'>" +
+                            "{{ city.name }}" +
+                            "</option>"
+                        );
+                    };
+
+                {% endfor %}
+            })
+        });
+
+    </script>
+</head>
+<body>
+
+<h1 style="...">Add</h1>
+
+<form action="/ruleConfigAdd/" method="post">
+    <table border="1">
+        <thead>
+        <th>国家</th>
+        <th>省份</th>
+        <th>城市</th>
+        <th>host</th>
+        <th>appid</th>
+        <th>net</th>
+        <th>rank</th>
+        <th>compel</th>
+        <th>ttl</th>
+        <th>groupid</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <select name="country" id="countrySelect">
+                    <option value="" selected>国家</option>
+                    {% for country in allCountry %}
+                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="province" id="provinceSelect">
+                    <option value="" selected>省份</option>
+                </select>
+            </td>
+            <td>
+                <select name="city" id="citySelect">
+                    <option value="" selected>城市</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" name="host"/>
+            </td>
+            <td>
+                <input type="text" name="appid"/>
+            </td>
+            <td>
+                <select name="net">
+                    <option value="" selected>网络</option>
+                    {% for net in allNet %}
+                        <option value="{{ net.code }}">{{ net.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="rank" id="rankSelect">
+
+                </select>
+            </td>
+            <td>
+                <input type="checkbox" name="compel"/>
+            </td>
+            <td>
+                <input type="text" name="ttl"/>
+            </td>
+            <td>
+                <input type="text" name="groupid"/>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="submit" value="提交"/>
+</form>
+
+</body>
+</html>
