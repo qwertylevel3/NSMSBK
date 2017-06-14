@@ -9,7 +9,7 @@
 
     <script>
         $(document).ready(function () {
-            for (var r =1; r<=7;r++) {
+            for (var r = 1; r <= 7; r++) {
                 $("#rankSelect").append(
                     "<option value='" +
                     r +
@@ -20,7 +20,8 @@
             }
             ;
 
-            $("#countrySelect").change(function () {
+
+            function countryChange() {
                 $("#provinceSelect").empty();
                 $("#citySelect").empty();
 
@@ -46,9 +47,9 @@
 
 
                 {% endfor %}
-            });
+            }
 
-            $("#provinceSelect").change(function () {
+            function provinceChange() {
                 $("#citySelect").empty();
                 $("#citySelect").append("<option value='' selected>城市</option>")
                 {% for city in allCity %}
@@ -68,15 +69,28 @@
                     }
 
                 {% endfor %}
-            });
+            }
 
+            $("#countrySelect").change(countryChange());
+            $("#provinceSelect").change(provinceChange());
 
             {% for rule in allRule %}
-                if({{ rule.id }}=={{ id }}){
+                if ({{ rule.id }}=={{ id }}) {
+                    $("#countrySelect").find("option[value='{{ ruleData.country }}']").attr("selected", true);
+                    countryChange()
+
+                    $("#provinceSelect").find("option[value='{{ ruleData.province }}']").attr("selected", true);
+                    provinceChange()
+
+                    $("#citySelect").find("option[value='{{ ruleData.city }}']").attr("selected", true);
+
+                    $("#hostText").val({{ ruleData.host }});
+                    $("#appidText").val({{ ruleData.appid }});
+
                     $("#rankSelect").val({{ rule.rank }});
 
-                    if({{ rule.compel }}=={{ 1 }}){
-                        $("#compelCheckbox").attr("checked",true);
+                    if ({{ rule.compel }}=={{ 1 }}) {
+                        $("#compelCheckbox").attr("checked", true);
                     }
 
                     $("#ttlText").val({{ rule.ttl }});

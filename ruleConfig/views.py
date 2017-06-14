@@ -9,54 +9,59 @@ from sqlModels.models import NetList
 import time
 
 
+class ServerRule:
+    def __init__(self, ruleStr=""):
+        self.country = ""
+        self.province = ""
+        self.city = ""
+        self.host = ""
+        self.appid = ""
+        self.net = ""
+        self.initByStr(ruleStr)
 
-#辅助函数
-#规则map拼接为字符串
-def ruleData2ruleStr(ruleData):
-    ruleStr = "&"
+    #用一个rule字符设置内部数据,并自动填充空的country和province数据
+    def initByStr(self,ruleStr):
+        conditions = ruleStr.split("&")
 
-    if ruleData["country"] != "":
-        ruleStr = ("&country=" + ruleData["country"])
-    if ruleData["province"] != "":
-        ruleStr = ("&province=" + ruleData["province"])
-    if ruleData["city"] != "":
-        ruleStr = ("&city=" + ruleData["city"])
+        for condition in conditions:
+            condition = condition.split("=")
+            if condition[0] == "country":
+                self.country = condition[1]
+            if condition[0] == "province":
+                self.province = condition[1]
+            if condition[0] == "city":
+                self.city = condition[1]
+            if condition[0] == "host":
+                self.host = condition[1]
+            if condition[0] == "appid":
+                self.appid = condition[1]
+            if condition[0] == "net":
+                self.net = condition[1]
 
-    if ruleData["host"] != "":
-        ruleStr+=("&host=" + ruleData["host"])
-    if ruleData["appid"] != "":
-        ruleStr+=("&appid=" + ruleData["appid"])
-    if ruleData["net"] != "":
-        ruleStr+=("&net=" + ruleData["net"])
+        if self.city != "":
+            self.province = self.city[0:5]
+            self.country = self.city[0:3]
+        elif self.province != "":
+            self.country = self.province[0:3]
 
-    return ruleStr[1:]
+    #转换为rule字符串
+    def convert2Str(self):
+        ruleStr = "&"
 
+        if self.country != "":
+            ruleStr = ("&country=" + self.country)
+        if self.province != "":
+            ruleStr = ("&province=" + self.province)
+        if self.city != "":
+            ruleStr = ("&city=" + self.city)
+        if self.host != "":
+            ruleStr += ("&host=" + self.host)
+        if self.appid != "":
+            ruleStr += ("&appid=" + self.appid)
+        if self.net != "":
+            ruleStr += ("&net=" + self.net)
 
-#辅助函数
-#规则字符串转换为map数据，根据城市，省份，自动填充省份，国家数据
-def ruleStr2ruleData(ruleStr):
-    ruleData = {
-        "country": "",
-        "province": "",
-        "city": "",
-        "host": "",
-        "appid": "",
-        "net": ""
-    }
-
-    conditions=ruleStr.split("&")
-
-    for condition in conditions:
-        condition=condition.split("=")
-        ruleData[condition[0]]=condition[1]
-
-    if ruleData["city"]!="":
-        ruleData["province"]=ruleData["city"][0:5]
-        ruleData["country"]=ruleData["city"][0:3]
-    elif ruleData["province"]!="":
-        ruleData["country"]=ruleData["province"][0:3]
-
-    return ruleData
+        return ruleStr[1:]
 
 
 
@@ -65,14 +70,8 @@ def ruleStr2ruleData(ruleStr):
 def ruleConfigRevise(request):
     id = request.POST.get("id", "-1")
 
-    ruleData = {
-        "country": "",
-        "province": "",
-        "city": "",
-        "host": "",
-        "appid": "",
-        "net": ""
-    }
+    ruleData = ServerRule()
+
     if id == "-1":
         id = -1
         for rule in ServerRuleDat.objects.all():
@@ -81,7 +80,7 @@ def ruleConfigRevise(request):
         id = id + 1
     else:
         rule = ServerRuleDat.objects.get(id=id)
-        ruleData=ruleStr2ruleData(rule.rule)
+        ruleData.initByStr(rule.rule)
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
@@ -89,10 +88,9 @@ def ruleConfigRevise(request):
     allNet = NetList.objects.all()
     allRule = ServerRuleDat.objects.all()
 
-
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
-                      "ruleData":ruleData,
+                      "ruleData": ruleData,
                       "id": id,
                       "allRule": allRule,
                       "allCountry": allCountry,
@@ -106,16 +104,16 @@ def handleRuleRevise(request):
     if request.method != "POST":
         return ruleConfigRevise(request)
 
-    ruleData = {}
+    ruleData = ServerRule()
 
-    ruleData["city"] = request.POST.get("city", "")
-    ruleData["province"] = request.POST.get("province", "")
-    ruleData["country"] = request.POST.get("country", "")
-    ruleData["host"] = request.POST.get("host", "")
-    ruleData["appid"] = request.POST.get("appid", "")
-    ruleData["net"] = request.POST.get("net", "")
+    ruleData.city = request.POST.get("city", "")
+    ruleData.province = request.POST.get("province", "")
+    ruleData.country = request.POST.get("country", "")
+    ruleData.host = request.POST.get("host", "")
+    ruleData.appid = request.POST.get("appid", "")
+    ruleData.net = request.POST.get("net", "")
 
-    ruleStr = ruleData2ruleStr(ruleData)
+    ruleStr = ruleData.convert2Str()
 
     rank = request.POST.get("rank", "")
     ttl = request.POST.get("ttl", "")
