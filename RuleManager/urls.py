@@ -19,11 +19,10 @@ from django.contrib import admin
 from ruleConfig import views as ruleConfigViews
 from machineConfig import views as machineConfigViews
 
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
-    url(r'ruleConfigAdd/',ruleConfigViews.ruleConfigAdd),
-    url(r'machineConfigSearch/',machineConfigViews.machineConfigSearch),
-
+    url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
+    url(r'handleRuleRevise/',ruleConfigViews.handleRuleRevise),
+    url(r'machineConfigSearch/', machineConfigViews.machineConfigSearch),
 ]

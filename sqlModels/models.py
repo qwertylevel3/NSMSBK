@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from django.db import models
 
+
 class CityList(models.Model):
     update_time = models.DateTimeField()
     registration_time = models.DateTimeField()
@@ -98,6 +99,7 @@ class ServerList(models.Model):
 
 
 class ServerRuleDat(models.Model):
+    id=models.IntegerField(primary_key=True,unique=True)
     update_time = models.DateTimeField()
     registration_time = models.DateTimeField()
     group_id = models.IntegerField()
@@ -110,4 +112,3 @@ class ServerRuleDat(models.Model):
     class Meta:
         managed = False
         db_table = 'server_rule_dat'
-

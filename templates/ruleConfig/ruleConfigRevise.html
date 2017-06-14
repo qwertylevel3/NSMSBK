@@ -65,10 +65,25 @@
                             "{{ city.name }}" +
                             "</option>"
                         );
-                    };
+                    }
 
                 {% endfor %}
-            })
+            });
+
+
+            {% for rule in allRule %}
+                if({{ rule.id }}=={{ id }}){
+                    $("#rankSelect").val({{ rule.rank }});
+
+                    if({{ rule.compel }}=={{ 1 }}){
+                        $("#compelCheckbox").attr("checked",true);
+                    }
+
+                    $("#ttlText").val({{ rule.ttl }});
+                    $("#groupidText").val({{ rule.group_id }});
+                }
+            {% endfor %}
+
         });
 
     </script>
@@ -77,9 +92,10 @@
 
 <h1 style="...">Add</h1>
 
-<form action="/ruleConfigAdd/" method="post">
+<form action="/handleRuleRevise/" method="post">
     <table border="1">
         <thead>
+        <th>id</th>
         <th>国家</th>
         <th>省份</th>
         <th>城市</th>
@@ -93,6 +109,9 @@
         </thead>
         <tbody>
         <tr>
+            <td>
+                <input type="text" name="id" value="{{ id }}" readonly>
+            </td>
             <td>
                 <select name="country" id="countrySelect">
                     <option value="" selected>国家</option>
@@ -112,13 +131,13 @@
                 </select>
             </td>
             <td>
-                <input type="text" name="host"/>
+                <input type="text" name="host" id="hostText"/>
             </td>
             <td>
-                <input type="text" name="appid"/>
+                <input type="text" name="appid" id="appidText"/>
             </td>
             <td>
-                <select name="net">
+                <select name="net" id="netSelect">
                     <option value="" selected>网络</option>
                     {% for net in allNet %}
                         <option value="{{ net.code }}">{{ net.name }}</option>
@@ -131,13 +150,13 @@
                 </select>
             </td>
             <td>
-                <input type="checkbox" name="compel"/>
+                <input type="checkbox" name="compel" id="compelCheckbox"/>
             </td>
             <td>
-                <input type="text" name="ttl"/>
+                <input type="text" name="ttl" id="ttlText"/>
             </td>
             <td>
-                <input type="text" name="groupid"/>
+                <input type="text" name="groupid" id="groupidText"/>
             </td>
         </tr>
         </tbody>

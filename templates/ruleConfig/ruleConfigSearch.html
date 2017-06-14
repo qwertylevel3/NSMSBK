@@ -64,7 +64,10 @@
 <body>
 
 <h1 style="...">Add</h1>
-<input type="button" value="Add rule" onclick="javascrtpt:window.location.href='/ruleConfigAdd'"/>
+<form action="/ruleConfigRevise/" method="post">
+    <input type="text" name="id" value="-1" hidden>
+    <input type="submit" value="新增"/>
+</form>
 
 
 <h1 style="...">Search</h1>
@@ -136,6 +139,12 @@
             <td>{{ line.rank }}</td>
             <td>{{ line.ttl }}</td>
             <td>{{ line.compel }}</td>
+            <td>
+                <form action="/ruleConfigRevise/" method="post">
+                    <input type="text" name="id" value="{{ line.id }}" hidden/>
+                    <input type="submit" value="更改"/>
+                </form>
+            </td>
         </tr>
     {% endfor %}
     </tbody>
