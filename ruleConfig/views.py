@@ -9,7 +9,10 @@ from sqlModels.models import NetList
 import time
 
 
-def rule2Str(ruleData):
+
+#辅助函数
+#规则map拼接为字符串
+def ruleData2ruleStr(ruleData):
     ruleStr = "&"
 
     if ruleData["country"] != "":
@@ -27,6 +30,34 @@ def rule2Str(ruleData):
         ruleStr+=("&net=" + ruleData["net"])
 
     return ruleStr[1:]
+
+
+#辅助函数
+#规则字符串转换为map数据，根据城市，省份，自动填充省份，国家数据
+def ruleStr2ruleData(ruleStr):
+    ruleData = {
+        "country": "",
+        "province": "",
+        "city": "",
+        "host": "",
+        "appid": "",
+        "net": ""
+    }
+
+    conditions=ruleStr.split("&")
+
+    for condition in conditions:
+        condition=condition.split("=")
+        ruleData[condition[0]]=condition[1]
+
+    if ruleData["city"]!="":
+        ruleData["province"]=ruleData["city"][0:5]
+        ruleData["country"]=ruleData["city"][0:3]
+    elif ruleData["province"]!="":
+        ruleData["country"]=ruleData["province"][0:3]
+
+    return ruleData
+
 
 
 # Create your views here.
@@ -50,6 +81,7 @@ def ruleConfigRevise(request):
         id = id + 1
     else:
         rule = ServerRuleDat.objects.get(id=id)
+        ruleData=ruleStr2ruleData(rule.rule)
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
@@ -57,8 +89,10 @@ def ruleConfigRevise(request):
     allNet = NetList.objects.all()
     allRule = ServerRuleDat.objects.all()
 
+
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
+                      "ruleData":ruleData,
                       "id": id,
                       "allRule": allRule,
                       "allCountry": allCountry,
@@ -81,7 +115,7 @@ def handleRuleRevise(request):
     ruleData["appid"] = request.POST.get("appid", "")
     ruleData["net"] = request.POST.get("net", "")
 
-    ruleStr = rule2Str(ruleData)
+    ruleStr = ruleData2ruleStr(ruleData)
 
     rank = request.POST.get("rank", "")
     ttl = request.POST.get("ttl", "")
