@@ -1,0 +1,39 @@
+{% load static %}
+<script src="{% static "js/jquery-3.2.1.js" %}"></script>
+
+<script>
+    $(document).ready(function () {
+        {% for server in allServer %}
+            if ({{ server.id }}=={{ id }})
+                $("#ipText").val("{{ server.ip }}")
+                $("#portText").val("{{ server.port }}")
+                $("#idcText").val("{{ server.idc }}")
+                $("#signText").val("{{ server.sign }}")
+        {% endfor %}
+    });
+</script>
+
+<table border="1">
+    <thead>
+    <th>ip</th>
+    <th>port</th>
+    <th>idc</th>
+    <th>sign</th>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            <input type="text" name="ip" id="ipText"/>
+        </td>
+        <td>
+            <input type="text" name="port" id="portText"/>
+        </td>
+        <td>
+            <input type="text" name="idc" id="idcText"/>
+        </td>
+        <td>
+            <input type="text" name="sign" id="signText"/>
+        </td>
+    </tr>
+    </tbody>
+</table>

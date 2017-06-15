@@ -9,7 +9,7 @@ from sqlModels.models import NetList
 import time
 
 
-class ServerRule:
+class RuleCondition:
     def __init__(self, ruleStr=""):
         self.country = ""
         self.province = ""
@@ -19,8 +19,8 @@ class ServerRule:
         self.net = ""
         self.initByStr(ruleStr)
 
-    #用一个rule字符设置内部数据,并自动填充空的country和province数据
-    def initByStr(self,ruleStr):
+    # 用一个rule字符设置内部数据,并自动填充空的country和province数据
+    def initByStr(self, ruleStr):
         conditions = ruleStr.split("&")
 
         for condition in conditions:
@@ -44,7 +44,7 @@ class ServerRule:
         elif self.province != "":
             self.country = self.province[0:3]
 
-    #转换为rule字符串
+    # 转换为rule字符串
     def convert2Str(self):
         ruleStr = "&"
 
@@ -54,6 +54,10 @@ class ServerRule:
             ruleStr = ("&province=" + self.province)
         if self.city != "":
             ruleStr = ("&city=" + self.city)
+
+        if ruleStr == "&":
+            ruleStr = ""
+
         if self.host != "":
             ruleStr += ("&host=" + self.host)
         if self.appid != "":
@@ -61,17 +65,49 @@ class ServerRule:
         if self.net != "":
             ruleStr += ("&net=" + self.net)
 
-        return ruleStr[1:]
+        if ruleStr=="":
+            return ruleStr
+        else:
+            return ruleStr[1:]
+
+    # 查找字符串序列
+    def getSearchStrList(self):
+        conditions = [""]
+        if self.city != "":
+            conditions[0] = self.city
+        if self.province != "" and self.city == "":
+            conditions[0] = self.province
+        if self.country != "" and self.city == "" and self.province == "":
+            conditions[0] = self.country
+        if self.host != "":
+            conditions.append("host=" + self.host)
+        if self.appid != "":
+            conditions.append("appid=" + self.appid)
+        if self.net != "":
+            conditions.append("net=" + self.net)
+        return conditions
 
 
+def ruleConfigDelete(request):
+    id = request.POST.get("id", "-1")
+    # 查找该项目是否存在
+    targetData = ServerRuleDat.objects.filter(id=id)
 
-# Create your views here.
+    # 查找成功则设置isuse为0，作为删除操作
+    if len(targetData) > 0:
+        for data in targetData:
+            data.is_use=0
+            data.save()
+    return HttpResponseRedirect('/ruleConfigSearch/')
+
 
 def ruleConfigRevise(request):
     id = request.POST.get("id", "-1")
 
-    ruleData = ServerRule()
+    condition = RuleCondition()
 
+    # 如果id为-1（新建项目），则id为所有id中最大+1
+    # 否则获取该id的项目数据，并设置ruleData数据，作为默认值
     if id == "-1":
         id = -1
         for rule in ServerRuleDat.objects.all():
@@ -80,7 +116,7 @@ def ruleConfigRevise(request):
         id = id + 1
     else:
         rule = ServerRuleDat.objects.get(id=id)
-        ruleData.initByStr(rule.rule)
+        condition.initByStr(rule.rule)
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
@@ -90,7 +126,7 @@ def ruleConfigRevise(request):
 
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
-                      "ruleData": ruleData,
+                      "condition": condition,
                       "id": id,
                       "allRule": allRule,
                       "allCountry": allCountry,
@@ -100,20 +136,20 @@ def ruleConfigRevise(request):
                   })
 
 
+# 接受表单，新增或更改rule数据
 def handleRuleRevise(request):
     if request.method != "POST":
         return ruleConfigRevise(request)
 
-    ruleData = ServerRule()
-
-    ruleData.city = request.POST.get("city", "")
-    ruleData.province = request.POST.get("province", "")
-    ruleData.country = request.POST.get("country", "")
-    ruleData.host = request.POST.get("host", "")
-    ruleData.appid = request.POST.get("appid", "")
-    ruleData.net = request.POST.get("net", "")
-
-    ruleStr = ruleData.convert2Str()
+    condition = RuleCondition()
+    condition.city = request.POST.get("city", "")
+    condition.province = request.POST.get("province", "")
+    condition.country = request.POST.get("country", "")
+    condition.host = request.POST.get("host", "")
+    condition.appid = request.POST.get("appid", "")
+    condition.net = request.POST.get("net", "")
+    # 拼接为rule字符串用来保存
+    conditionStr = condition.convert2Str()
 
     rank = request.POST.get("rank", "")
     ttl = request.POST.get("ttl", "")
@@ -121,21 +157,19 @@ def handleRuleRevise(request):
     compel = 0
     if compelStr == "on":
         compel = 1
-
     groupid = request.POST.get("groupid", "")
-
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     id = request.POST.get("id", "-1")
-
+    # 查找该项目是否存在
     targetData = ServerRuleDat.objects.filter(id=id)
 
     if len(targetData) > 0:
         for data in targetData:
             data.update_time = updateTime
             data.group_id = groupid
-            data.rule = ruleStr
+            data.rule = conditionStr
             data.ttl = ttl
             data.compel = compel
             data.save()
@@ -144,7 +178,7 @@ def handleRuleRevise(request):
             update_time=updateTime,
             registration_time=registrationTime,
             group_id=groupid,
-            rule=ruleStr,
+            rule=conditionStr,
             rank=rank,
             ttl=ttl,
             compel=compel,
@@ -157,40 +191,24 @@ def handleRuleRevise(request):
 def ruleConfigSearch(request):
     result = []
     if request.method == "POST":
-        conditions = [""]
 
-        city = request.POST.get("city", "")
-        if city != "":
-            conditions[0] = city
+        ruleCondition = RuleCondition()
 
-        province = request.POST.get("province", "")
-        if province != "" and city == "":
-            conditions[0] = province
+        ruleCondition.city = request.POST.get("city", "")
+        ruleCondition.province = request.POST.get("province", "")
+        ruleCondition.country = request.POST.get("country", "")
+        ruleCondition.host = request.POST.get("host", "")
+        ruleCondition.appid = request.POST.get("appid", "")
+        ruleCondition.net = request.POST.get("net", "")
 
-        country = request.POST.get("country", "")
-        if country != "" and city == "" and province == "":
-            conditions[0] = country
-
-        host = request.POST.get("host", "")
-        if host != "":
-            conditions.append("host=" + host)
-
-        appid = request.POST.get("appid", "")
-        if appid != "":
-            conditions.append("appid=" + appid)
-
-        net = request.POST.get("net", "")
-        if net != "":
-            conditions.append("net=" + net)
+        conditions = ruleCondition.getSearchStrList()
 
         allRules = ServerRuleDat.objects.all()
-
-        size = len(ServerRuleDat.objects.all())
 
         for rule in allRules:
             flag = True
             for condition in conditions:
-                if rule.is_use == 1 and rule.rule.find(condition) == -1:
+                if rule.is_use == 0 or rule.rule.find(condition) == -1:
                     flag = False
             if flag:
                 result.append(rule)

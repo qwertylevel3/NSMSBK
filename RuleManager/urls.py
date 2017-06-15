@@ -17,12 +17,17 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from ruleConfig import views as ruleConfigViews
-from machineConfig import views as machineConfigViews
+from serverConfig import views as serverConfigViews
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
-    url(r'handleRuleRevise/',ruleConfigViews.handleRuleRevise),
-    url(r'machineConfigSearch/', machineConfigViews.machineConfigSearch),
+    url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete),
+    url(r'handleRuleRevise/', ruleConfigViews.handleRuleRevise),
+
+    url(r'serverConfigSearch/', serverConfigViews.serverConfigSearch),
+    url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise),
+    url(r'serverConfigDelete/',serverConfigViews.serverConfigDelete),
+    url(r'handleServerRevise/', serverConfigViews.handleServerRevise),
 ]

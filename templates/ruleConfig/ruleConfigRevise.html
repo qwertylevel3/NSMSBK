@@ -21,101 +21,46 @@
             ;
 
 
-            function countryChange() {
-                $("#provinceSelect").empty();
-                $("#citySelect").empty();
-
-                $("#provinceSelect").append("<option value='' selected>省份</option>")
-                $("#citySelect").append("<option value='' selected>城市</option>")
-
-                {% for province in allProvince %}
-
-                    var curCountryCode = $("#countrySelect").val();
-                    var tempCode ={{ province.code }}/100;
-                    tempCode = parseInt(tempCode);
-
-
-                    if (curCountryCode == tempCode) {
-                        $("#provinceSelect").append(
-                            "<option value='" +
-                            "{{ province.code }}" +
-                            "'>" +
-                            "{{ province.name }}" +
-                            "</option>"
-                        );
-                    };
-
-
-                {% endfor %}
-            }
-
-            function provinceChange() {
-                $("#citySelect").empty();
-                $("#citySelect").append("<option value='' selected>城市</option>")
-                {% for city in allCity %}
-
-                    var curProvinceCode = $("#provinceSelect").val();
-                    var tempCode ={{ city.code }}/100;
-                    tempCode = parseInt(tempCode);
-
-                    if (curProvinceCode == tempCode) {
-                        $("#citySelect").append(
-                            "<option value='" +
-                            "{{ city.code }}" +
-                            "'>" +
-                            "{{ city.name }}" +
-                            "</option>"
-                        );
-                    }
-
-                {% endfor %}
-            }
-
-            $("#countrySelect").change(countryChange());
-            $("#provinceSelect").change(provinceChange());
-
-            {% for rule in allRule %}
-                if ({{ rule.id }}=={{ id }}) {
-                    $("#countrySelect").find("option[value='{{ ruleData.country }}']").attr("selected", true);
-                    countryChange()
-
-                    $("#provinceSelect").find("option[value='{{ ruleData.province }}']").attr("selected", true);
-                    provinceChange()
-
-                    $("#citySelect").find("option[value='{{ ruleData.city }}']").attr("selected", true);
-
-                    $("#hostText").val({{ ruleData.host }});
-                    $("#appidText").val({{ ruleData.appid }});
-
-                    $("#rankSelect").val({{ rule.rank }});
-
-                    if ({{ rule.compel }}=={{ 1 }}) {
-                        $("#compelCheckbox").attr("checked", true);
-                    }
-
-                    $("#ttlText").val({{ rule.ttl }});
-                    $("#groupidText").val({{ rule.group_id }});
-                }
-            {% endfor %}
-
         });
-
     </script>
+
+
+    <script>
+        function validate_required(field, alerttxt) {
+            with (field) {
+                if (value == null || value == "") {
+                    alert(alerttxt);
+                    return false
+                }
+                else {
+                    return true
+                }
+            }
+        }
+        function validate_form(thisform) {
+            with (thisform) {
+                if (validate_required(groupid, "group id must be filled out!") == false) {
+                    groupid.focus();
+                    return false
+                }
+                if (validate_required(ttl, "ttl must be filled out!") == false) {
+                    ttl.focus();
+                    return false
+                }
+            }
+        }
+    </script>
+
 </head>
 <body>
 
 <h1 style="...">Add</h1>
 
-<form action="/handleRuleRevise/" method="post">
+<form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
+
     <table border="1">
         <thead>
         <th>id</th>
-        <th>国家</th>
-        <th>省份</th>
-        <th>城市</th>
-        <th>host</th>
-        <th>appid</th>
-        <th>net</th>
         <th>rank</th>
         <th>compel</th>
         <th>ttl</th>
@@ -125,38 +70,6 @@
         <tr>
             <td>
                 <input type="text" name="id" value="{{ id }}" readonly>
-            </td>
-            <td>
-                <select name="country" id="countrySelect">
-                    <option value="" selected>国家</option>
-                    {% for country in allCountry %}
-                        <option value="{{ country.code }}">{{ country.name }}</option>
-                    {% endfor %}
-                </select>
-            </td>
-            <td>
-                <select name="province" id="provinceSelect">
-                    <option value="" selected>省份</option>
-                </select>
-            </td>
-            <td>
-                <select name="city" id="citySelect">
-                    <option value="" selected>城市</option>
-                </select>
-            </td>
-            <td>
-                <input type="text" name="host" id="hostText"/>
-            </td>
-            <td>
-                <input type="text" name="appid" id="appidText"/>
-            </td>
-            <td>
-                <select name="net" id="netSelect">
-                    <option value="" selected>网络</option>
-                    {% for net in allNet %}
-                        <option value="{{ net.code }}">{{ net.name }}</option>
-                    {% endfor %}
-                </select>
             </td>
             <td>
                 <select name="rank" id="rankSelect">
@@ -175,6 +88,9 @@
         </tr>
         </tbody>
     </table>
+
+    {% include "ruleConfig/__conditionTable.html" %}
+
     <input type="submit" value="提交"/>
 </form>
 

@@ -56,16 +56,16 @@
 
         {% for rule in allRule %}
             if ({{ rule.id }}=={{ id }}) {
-                $("#countrySelect").find("option[value='{{ ruleData.country }}']").attr("selected", true);
+                $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
                 $("#countrySelect").change()
 
-                $("#provinceSelect").find("option[value='{{ ruleData.province }}']").attr("selected", true);
+                $("#provinceSelect").find("option[value='{{ condition.province }}']").attr("selected", true);
                 $("#provinceSelect").change()
 
-                $("#citySelect").find("option[value='{{ ruleData.city }}']").attr("selected", true);
+                $("#citySelect").find("option[value='{{ condition.city }}']").attr("selected", true);
 
-                $("#hostText").val("{{ ruleData.host }}");
-                $("#appidText").val({{ ruleData.appid }});
+                $("#hostText").val("{{ condition.host }}");
+                $("#appidText").val({{ condition.appid }});
 
                 $("#rankSelect").val({{ rule.rank }});
 

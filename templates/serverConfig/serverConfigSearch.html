@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>server</title>
+</head>
+<body>
+<h1>add server</h1>
+<form action="/serverConfigRevise/" method="post">
+    <input type="text" name="id" value="-1" hidden>
+    <input type="submit" value="提交"/>
+</form>
+
+
+<h1>server search</h1>
+<form action="/serverConfigSearch/" method="post">
+    {% include "serverConfig/__serverConfigTable.html" %}
+    <input type="submit" value="提交"/>
+</form>
+
+<h1 style="...">显示所有服务器</h1>
+<table border="1">
+    <thead>
+    <th>ip</th>
+    <th>port</th>
+    <th>idc</th>
+    <th>sign</th>
+    </thead>
+    <tbody>
+    {% for line in result %}
+        <tr>
+            <td>{{ line.ip }}</td>
+            <td>{{ line.port }}</td>
+            <td>{{ line.idc }}</td>
+            <td>{{ line.sign }}</td>
+            <td>
+                <form action="/serverConfigRevise/" method="post">
+                    <input type="text" name="id" value="{{ line.id }}" hidden/>
+                    <input type="submit" value="更改"/>
+                </form>
+            </td>
+            <td>
+                <form action="/serverConfigDelete/" method="post">
+                    <input type="text" name="id" value="{{ line.id }}" hidden/>
+                    <input type="submit" value="删除"/>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
