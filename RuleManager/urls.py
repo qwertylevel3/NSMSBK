@@ -16,11 +16,15 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from indexPage import views as indexViews
 from ruleConfig import views as ruleConfigViews
 from serverConfig import views as serverConfigViews
+from serverGroupConfig import views as serverGroupConfigViews
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    # url(r'^admin/', admin.site.urls),
+    url(r'index/', indexViews.index),
+
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
     url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete),
@@ -28,6 +32,10 @@ urlpatterns = [
 
     url(r'serverConfigSearch/', serverConfigViews.serverConfigSearch),
     url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise),
-    url(r'serverConfigDelete/',serverConfigViews.serverConfigDelete),
+    url(r'serverConfigDelete/', serverConfigViews.serverConfigDelete),
     url(r'handleServerRevise/', serverConfigViews.handleServerRevise),
+
+    url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch),
+    url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise),
+    url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise),
 ]

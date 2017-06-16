@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% load static %}
+    <script src="{% static "js/jquery-3.2.1.js" %}"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+    <script>
+        $(document).ready(function () {
+            {% for server in defaultServer %}
+                $("#checkbox{{ server }}").attr("checked", true);
+
+            {% endfor %}
+
+            {% for serverGroup in allServerGroup %}
+                if ({{ serverGroup.id }}=={{ id }})
+                    $("#timeoutTel").val({{ serverGroup.time_out }})
+                $("#groupidTel").val({{ serverGroup.group_id }})
+            {% endfor %}
+
+            if ({{ id }}=={{ -1 }}) {
+                $("#timeoutTel").val("")
+                $("#groupidTel").val("")
+            }
+        });
+
+    </script>
+
+
+    <script>
+        function validate_required(field, alerttxt) {
+            with (field) {
+                if (value == null || value == "") {
+                    alert(alerttxt);
+                    return false
+                }
+                else {
+                    return true
+                }
+            }
+        }
+        function validate_form(thisform) {
+            with (thisform) {
+                if (validate_required(groupid, "group id must be filled out!") == false) {
+                    groupid.focus();
+                    return false
+                }
+                if (validate_required(timeout, "timeout must be filled out!") == false) {
+                    timeout.focus();
+                    return false
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+{% include "__head.html" %}
+
+<div class="mainDiv">
+
+    <form action="/handleServerGroupRevise/" onsubmit="return validate_form(this)" method="post">
+        <input type="text" name="id" value={{ id }} hidden>
+        <table border="1">
+            <thead>
+            <th>id</th>
+            <th>ip</th>
+            <th>port</th>
+            <th>idc</th>
+            <th>sign</th>
+            </thead>
+            <tbody>
+            {% for server in allServer %}
+                <tr>
+                    <td>{{ server.id }}</td>
+                    <td>{{ server.ip }}</td>
+                    <td>{{ server.port }}</td>
+                    <td>{{ server.idc }}</td>
+                    <td>{{ server.sign }}</td>
+                    <td>
+                        <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
+                               id="checkbox{{ server.id }}"/>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <table border="1">
+            <thead>
+            <th>groupid</th>
+            <th>timeout</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input type="tel" name="groupid" id="groupidTel"/>
+                </td>
+                <td>
+                    <input type="tel" name="timeout" id="timeoutTel" value="6000"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="submitButtonDiv">
+            <input type="submit" class="button" value="提交"/>
+        </div>
+        <div class="addButtonDiv">
+            <input type="button" class="button" value="取消"
+                   onclick="window.location.replace('/serverGroupConfigSearch/')">
+        </div>
+
+        <div class="spaceDiv"/>
+
+
+    </form>
+</div>
+
+</body>
+
+</html>

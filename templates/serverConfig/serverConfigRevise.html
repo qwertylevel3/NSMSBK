@@ -3,14 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
 </head>
 <body>
+{% include "__head.html" %}
+<div class="mainDiv">
 
-<form action="/handleServerRevise/"  method="post">
-<input type="text" name="id" value="{{ id }}" readonly hidden>
-{% include "serverConfig/__serverConfigTable.html" %}
-<input type="submit" value="提交"/>
-</form>
-
+    <form action="/handleServerRevise/" method="post">
+        <input type="text" name="id" value="{{ id }}" readonly hidden>
+        {% include "serverConfig/__serverConfigTable.html" %}
+        <div class="submitButtonDiv">
+            <input type="submit" class="button" value="提交"/>
+        </div>
+        <div class="addButtonDiv">
+            <input type="button" class="button" value="取消" onclick="window.location.replace('/serverConfigSearch/')">
+        </div>
+        <div class="spaceDiv"/>
+    </form>
+</div>
 </body>
 </html>

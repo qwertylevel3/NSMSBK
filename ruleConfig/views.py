@@ -74,11 +74,11 @@ class RuleCondition:
     def getSearchStrList(self):
         conditions = [""]
         if self.city != "":
-            conditions[0] = self.city
+            conditions[0] = "="+self.city
         if self.province != "" and self.city == "":
-            conditions[0] = self.province
+            conditions[0] = "="+self.province
         if self.country != "" and self.city == "" and self.province == "":
-            conditions[0] = self.country
+            conditions[0] = "="+self.country
         if self.host != "":
             conditions.append("host=" + self.host)
         if self.appid != "":
@@ -106,14 +106,13 @@ def ruleConfigRevise(request):
 
     condition = RuleCondition()
 
-    # 如果id为-1（新建项目），则id为所有id中最大+1
-    # 否则获取该id的项目数据，并设置ruleData数据，作为默认值
+    #-1代表新增
     if id == "-1":
         id = -1
-        for rule in ServerRuleDat.objects.all():
-            if rule.id > id:
-                id = rule.id
-        id = id + 1
+#        for rule in ServerRuleDat.objects.all():
+#            if rule.id > id:
+#                id = rule.id
+#        id = id + 1
     else:
         rule = ServerRuleDat.objects.get(id=id)
         condition.initByStr(rule.rule)
@@ -162,6 +161,7 @@ def handleRuleRevise(request):
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     id = request.POST.get("id", "-1")
+
     # 查找该项目是否存在
     targetData = ServerRuleDat.objects.filter(id=id)
 
@@ -190,6 +190,7 @@ def handleRuleRevise(request):
 
 def ruleConfigSearch(request):
     result = []
+    conditions=[]
     if request.method == "POST":
 
         ruleCondition = RuleCondition()
@@ -203,15 +204,16 @@ def ruleConfigSearch(request):
 
         conditions = ruleCondition.getSearchStrList()
 
-        allRules = ServerRuleDat.objects.all()
+    allRules = ServerRuleDat.objects.all()
 
-        for rule in allRules:
-            flag = True
-            for condition in conditions:
-                if rule.is_use == 0 or rule.rule.find(condition) == -1:
-                    flag = False
-            if flag:
-                result.append(rule)
+    # 对于所有符合condition的rule添加到result列表中
+    for rule in allRules:
+        flag = True
+        for condition in conditions:
+            if rule.is_use == 0 or rule.rule.find(condition) == -1:
+                flag = False
+        if flag:
+            result.append(rule)
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()

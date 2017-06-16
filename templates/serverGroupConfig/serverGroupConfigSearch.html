@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+</head>
+<body>
+
+{% include "__head.html" %}
+<input type="button" name="ruleButton" class="button" value="返回" onclick="window.location.replace('/index/')">
+
+
+<div class="mainDiv">
+
+
+    <h2>server group</h2>
+
+
+    <div class="centerDiv">
+        <form action="/serverGroupConfigRevise/" method="post">
+            <input type="text" name="id" value="-1" hidden/>
+            <input type="submit" class="button" value="新增server group"/>
+        </form>
+    </div>
+
+
+    <table border="1">
+        <thead>
+        <th>groupid</th>
+        <th>server ids</th>
+        </thead>
+        <tbody>
+        {% for serverGroup in allServerGroup %}
+            <tr>
+                <td>{{ serverGroup.group_id }}</td>
+                <td>{{ serverGroup.server_ids }}</td>
+                <td>
+                    <form action="/serverGroupConfigRevise/" method="post">
+                        <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
+                        <input type="submit" class="tableButton" value="更改"/>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

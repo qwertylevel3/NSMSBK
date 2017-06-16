@@ -6,6 +6,8 @@
 
     {% load static %}
     <script src="{% static "js/jquery-3.2.1.js" %}"></script>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
 
     <script>
         $(document).ready(function () {
@@ -52,47 +54,59 @@
     </script>
 
 </head>
+
 <body>
+{% include "__head.html" %}
 
-<h1 style="...">Add</h1>
+<div class="mainDiv">
+    <h2 style="...">Add</h2>
 
-<form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
+    <form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
 
-    <table border="1">
-        <thead>
-        <th>id</th>
-        <th>rank</th>
-        <th>compel</th>
-        <th>ttl</th>
-        <th>groupid</th>
-        </thead>
-        <tbody>
-        <tr>
-            <td>
-                <input type="text" name="id" value="{{ id }}" readonly>
-            </td>
-            <td>
-                <select name="rank" id="rankSelect">
+        <table border="1">
+            <thead>
+            <th>id</th>
+            <th>rank</th>
+            <th>compel</th>
+            <th>ttl</th>
+            <th>groupid</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <input type="text" name="id" value="{{ id }}" readonly>
+                </td>
+                <td>
+                    <select name="rank" id="rankSelect">
 
-                </select>
-            </td>
-            <td>
-                <input type="checkbox" name="compel" id="compelCheckbox"/>
-            </td>
-            <td>
-                <input type="text" name="ttl" id="ttlText"/>
-            </td>
-            <td>
-                <input type="text" name="groupid" id="groupidText"/>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" class="checkbox" name="compel" id="compelCheckbox"/>
+                </td>
+                <td>
+                    <input type="text" name="ttl" id="ttlText"/>
+                </td>
+                <td>
+                    <input type="text" name="groupid" id="groupidText"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
 
-    {% include "ruleConfig/__conditionTable.html" %}
+        {% include "ruleConfig/__conditionTable.html" %}
 
-    <input type="submit" value="提交"/>
-</form>
+        <div class="submitButtonDiv">
+            <input type="submit" class="button" value="提交"/>
+        </div>
+        <div class="addButtonDiv">
+            <input type="button" class="button" value="取消" onclick="window.location.replace('/ruleConfigSearch/')">
+        </div>
 
+        <div class="spaceDiv"/>
+    </form>
+</div>
 </body>
+
+
 </html>

@@ -10,7 +10,7 @@ def serverConfigDelete(request):
     targetData = ServerList.objects.filter(id=id)
     if len(targetData) > 0:
         for data in targetData:
-            data.is_used=0
+            data.is_used = 0
             data.save()
     return HttpResponseRedirect('/serverConfigSearch/')
 
@@ -56,13 +56,6 @@ def handleServerRevise(request):
 def serverConfigRevise(request):
     id = request.POST.get("id", "-1")
 
-    if id == "-1":
-        id = -1
-        for server in ServerList.objects.all():
-            if server.id > id:
-                id = server.id
-        id = id + 1
-
     return render(request, 'serverConfig/serverConfigRevise.html',
                   {"id": id,
                    "allServer": ServerList.objects.all()
@@ -71,21 +64,26 @@ def serverConfigRevise(request):
 
 def serverConfigSearch(request):
     result = []
+    ip = ""
+    port = ""
+    idc = ""
+    sign = ""
+
     if request.method == "POST":
         ip = request.POST.get("ip", "")
         port = request.POST.get("port", "")
         idc = request.POST.get("idc", "")
         sign = request.POST.get("sign", "")
 
-        allServer = ServerList.objects.all()
+    allServer = ServerList.objects.all()
 
-        for server in allServer:
-            if (ip == "" or server.ip == ip) and (
-                            port == "" or server.port == port) and (
-                            idc == "" or server.idc == idc) and (
-                            sign == "" or server.sign == sign) and (
-                        server.is_used == 1):
-                result.append(server)
+    for server in allServer:
+        if (ip == "" or server.ip == ip) and (
+                        port == "" or server.port == port) and (
+                        idc == "" or server.idc == idc) and (
+                        sign == "" or server.sign == sign) and (
+                    server.is_used == 1):
+            result.append(server)
 
     return render(request, 'serverConfig/serverConfigSearch.html',
                   {

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+
+</head>
+<body>
+
+
+<h1>rule manager</h1>
+
+<div class="indexDiv">
+    <input type="button" class="button" name="ruleButton" value="rule config"
+           onclick="window.location.replace('/ruleConfigSearch/')">
+    <input type="button" class="button" name="serverButton" value="server config"
+           onclick="window.location.replace('/serverConfigSearch/')">
+    <input type="button" class="button" name="serverGroupButton" value="server group config"
+           onclick="window.location.replace('/serverGroupConfigSearch/')">
+</div>
+
+</body>
+</html>
