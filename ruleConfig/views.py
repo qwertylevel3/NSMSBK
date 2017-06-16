@@ -209,8 +209,10 @@ def ruleConfigSearch(request):
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
         flag = True
+        if rule.is_use==0:
+            flag=False
         for condition in conditions:
-            if rule.is_use == 0 or rule.rule.find(condition) == -1:
+            if rule.rule.find(condition) == -1:
                 flag = False
         if flag:
             result.append(rule)

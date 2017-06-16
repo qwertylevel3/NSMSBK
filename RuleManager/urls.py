@@ -22,7 +22,7 @@ from serverConfig import views as serverConfigViews
 from serverGroupConfig import views as serverGroupConfigViews
 
 urlpatterns = [
-    # url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'index/', indexViews.index),
 
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
