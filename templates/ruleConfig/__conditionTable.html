@@ -1,135 +1,133 @@
-
-
 <div class="conditionTableDiv">
 
 
-{% load static %}
-<script src="{% static "js/jquery-3.2.1.js" %}"></script>
+    {% load static %}
+    <script src="{% static "js/jquery-3.2.1.js" %}"></script>
 
-<script>
-    $(document).ready(function () {
-         $("#countrySelect").change(function () {
-            $("#provinceSelect").empty();
-            $("#citySelect").empty();
+    <script>
+        $(document).ready(function () {
 
-            $("#provinceSelect").append("<option value='' selected>省份</option>")
-            $("#citySelect").append("<option value='' selected>城市</option>")
+            $("#countrySelect").change(function () {
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
 
-            {% for province in allProvince %}
+                $("#provinceSelect").append("<option value='' selected>省份</option>")
+                $("#citySelect").append("<option value='' selected>城市</option>")
 
-                var curCountryCode = $("#countrySelect").val();
-                var tempCode ={{ province.code }}/100;
-                tempCode = parseInt(tempCode);
+                {% for province in allProvince %}
 
-
-                if (curCountryCode == tempCode) {
-                    $("#provinceSelect").append(
-                        "<option value='" +
-                        "{{ province.code }}" +
-                        "'>" +
-                        "{{ province.name }}" +
-                        "</option>"
-                    );
-                };
+                    var curCountryCode = $("#countrySelect").val();
+                    var tempCode ={{ province.code }}/100;
+                    tempCode = parseInt(tempCode);
 
 
+                    if (curCountryCode == tempCode) {
+                        $("#provinceSelect").append(
+                            "<option value='" +
+                            "{{ province.code }}" +
+                            "'>" +
+                            "{{ province.name }}" +
+                            "</option>"
+                        );
+                    };
+                {% endfor %}
+            });
+
+
+            $("#provinceSelect").change(function () {
+                $("#citySelect").empty();
+                $("#citySelect").append("<option value='' selected>城市</option>")
+                {% for city in allCity %}
+
+                    var curProvinceCode = $("#provinceSelect").val();
+                    var tempCode ={{ city.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+                    if (curProvinceCode == tempCode) {
+                        $("#citySelect").append(
+                            "<option value='" +
+                            "{{ city.code }}" +
+                            "'>" +
+                            "{{ city.name }}" +
+                            "</option>"
+                        );
+                    };
+
+                {% endfor %}
+            })
+
+
+            {% for rule in allRule %}
+                if ({{ rule.id }}=={{ id }}) {
+                    $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
+                    $("#countrySelect").change()
+
+                    $("#provinceSelect").find("option[value='{{ condition.province }}']").attr("selected", true);
+                    $("#provinceSelect").change()
+
+                    $("#citySelect").find("option[value='{{ condition.city }}']").attr("selected", true);
+
+                    $("#hostText").val("{{ condition.host }}");
+                    $("#appidText").val({{ condition.appid }});
+
+                    $("#rankSelect").val({{ rule.rank }});
+
+                    if ({{ rule.compel }}=={{ 1 }}) {
+                        $("#compelCheckbox").attr("checked", true);
+                    }
+
+                    $("#ttlText").val({{ rule.ttl }});
+                    $("#groupidText").val({{ rule.group_id }});
+                }
             {% endfor %}
         });
 
-        $("#provinceSelect").change(function () {
-            $("#citySelect").empty();
-            $("#citySelect").append("<option value='' selected>城市</option>")
-            {% for city in allCity %}
+    </script>
 
-                var curProvinceCode = $("#provinceSelect").val();
-                var tempCode ={{ city.code }}/100;
-                tempCode = parseInt(tempCode);
-
-                if (curProvinceCode == tempCode) {
-                    $("#citySelect").append(
-                        "<option value='" +
-                        "{{ city.code }}" +
-                        "'>" +
-                        "{{ city.name }}" +
-                        "</option>"
-                    );
-                };
-
-            {% endfor %}
-        })
-
-
-        {% for rule in allRule %}
-            if ({{ rule.id }}=={{ id }}) {
-                $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
-                $("#countrySelect").change()
-
-                $("#provinceSelect").find("option[value='{{ condition.province }}']").attr("selected", true);
-                $("#provinceSelect").change()
-
-                $("#citySelect").find("option[value='{{ condition.city }}']").attr("selected", true);
-
-                $("#hostText").val("{{ condition.host }}");
-                $("#appidText").val({{ condition.appid }});
-
-                $("#rankSelect").val({{ rule.rank }});
-
-                if ({{ rule.compel }}=={{ 1 }}) {
-                    $("#compelCheckbox").attr("checked", true);
-                }
-
-                $("#ttlText").val({{ rule.ttl }});
-                $("#groupidText").val({{ rule.group_id }});
-            }
-        {% endfor %}
-    });
-
-</script>
-
-<table border="1">
-    <thead>
-    <th>国家</th>
-    <th>省份</th>
-    <th>城市</th>
-    <th>host</th>
-    <th>appid</th>
-    <th>net</th>
-    </thead>
-    <tbody>
-    <tr>
-        <td>
-            <select name="country" id="countrySelect">
-                <option value="" selected>国家</option>
-                {% for country in allCountry %}
-                    <option value="{{ country.code }}">{{ country.name }}</option>
-                {% endfor %}
-            </select>
-        </td>
-        <td>
-            <select name="province" id="provinceSelect">
-                <option value="" selected>省份</option>
-            </select>
-        </td>
-        <td>
-            <select name="city" id="citySelect">
-                <option value="" selected>城市</option>
-            </select>
-        </td>
-        <td>
-            <input type="text" name="host" id="hostText"/>
-        </td>
-        <td>
-            <input type="text" name="appid" id="appidText"/>
-        </td>
-        <td>
-            <select name="net" id="netSelect">
-                <option value="" selected>网络</option>
-                {% for net in allNet %}
-                    <option value="{{ net.code }}">{{ net.name }}</option>
-                {% endfor %}
-            </select>
-        </td>
-    </tr>
-    </tbody>
-</table>
+    <table border="1">
+        <thead>
+        <th>国家</th>
+        <th>省份</th>
+        <th>城市</th>
+        <th>host</th>
+        <th>appid</th>
+        <th>net</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                <select name="country" id="countrySelect">
+                    <option value="" selected>国家</option>
+                    {% for country in allCountry %}
+                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="province" id="provinceSelect">
+                    <option value="" selected>省份</option>
+                </select>
+            </td>
+            <td>
+                <select name="city" id="citySelect">
+                    <option value="" selected>城市</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" name="host" id="hostText"/>
+            </td>
+            <td>
+                <input type="text" name="appid" id="appidText"/>
+            </td>
+            <td>
+                <select name="net" id="netSelect">
+                    <option value="" selected>网络</option>
+                    {% for net in allNet %}
+                        <option value="{{ net.code }}">{{ net.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>

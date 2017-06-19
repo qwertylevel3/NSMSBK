@@ -4,11 +4,12 @@
 <script>
     $(document).ready(function () {
         {% for server in allServer %}
-            if ({{ server.id }}=={{ id }})
-                $("#ipText").val("{{ server.ip }}")
-                $("#portText").val("{{ server.port }}")
-                $("#idcText").val("{{ server.idc }}")
-                $("#signText").val("{{ server.sign }}")
+            if ({{ server.id }}=={{ id }}) {
+                $("#ipText").val("{{ server.ip }}");
+                $("#portText").val("{{ server.port }}");
+                $("#idcText").val("{{ server.idc }}");
+                $("#signText").val("{{ server.sign }}");
+            }
         {% endfor %}
     });
 </script>

@@ -27,6 +27,7 @@ def handleServerRevise(request):
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
+
     id = request.POST.get("id", "-1")
     # 查找该项目是否存在
     targetData = ServerList.objects.filter(id=id)
