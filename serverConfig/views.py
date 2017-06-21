@@ -19,15 +19,15 @@ def serverConfigDelete(request):
 
 
 def handleServerRevise(request):
-    ip = request.GET.get("ip", "")
-    port = request.GET.get("port", "")
-    idc = request.GET.get("idc", "")
-    sign = request.GET.get("sign", "")
+    ip = request.POST.get("ip", "")
+    port = request.POST.get("port", "")
+    idc = request.POST.get("idc", "")
+    sign = request.POST.get("sign", "")
 
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    id = request.GET.get("id", "-1")
+    id = request.POST.get("id", "-1")
     # 查找该项目是否存在
     targetData = ServerList.objects.filter(id=id)
 
@@ -54,12 +54,12 @@ def handleServerRevise(request):
 
 
 def serverConfigRevise(request):
-    if request.method == 'GET':
-        id=request.GET.get('id')
-        ip = request.GET.get('ip')
-        port = request.GET.get('port')
-        idc = request.GET.get('idc')
-        sign = request.GET.get('sign')
+    if request.method == 'POST':
+        id=request.POST.get('id')
+        ip = request.POST.get('ip')
+        port = request.POST.get('port')
+        idc = request.POST.get('idc')
+        sign = request.POST.get('sign')
 
         targetData = ServerList.objects.filter(ip=ip, port=port, idc=idc, sign=sign)
 
@@ -71,7 +71,7 @@ def serverConfigRevise(request):
             return_json = {'result': True}
             return JsonResponse(return_json)
     else:
-        id = request.POST.get("id", "-1")
+        id = request.GET.get("id", "-1")
 
         return render(request, 'serverConfig/serverConfigRevise.html',
                       {"id": id,

@@ -15,7 +15,7 @@
                     var idc = $("#idcText").val()
                     var sign = $("#signText").val()
 
-                    $.get(
+                    $.post(
                         '/serverConfigRevise/',
                         {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
                         function (ret) {

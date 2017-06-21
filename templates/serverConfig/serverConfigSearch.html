@@ -25,7 +25,7 @@
     </form>
 
     <div class="addButtonDiv">
-        <form action="/serverConfigRevise/" method="post">
+        <form action="/serverConfigRevise/" method="get">
             <input type="text" name="id" value="-1" hidden>
             <input type="submit" class="button" value="新增"/>
         </form>
@@ -49,7 +49,7 @@
                 <td>{{ line.idc }}</td>
                 <td>{{ line.sign }}</td>
                 <td>
-                    <form action="/serverConfigRevise/" method="post">
+                    <form action="/serverConfigRevise/" method="get">
                         <input type="text" name="id" value="{{ line.id }}" hidden/>
                         <input type="submit" class="tableButton" value="更改"/>
                     </form>
