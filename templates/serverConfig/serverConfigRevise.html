@@ -3,27 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+    {% include "__staticFiles.html" %}
 
     <script>
+        $(document).ready(function () {
+            $("#submitButton").click(function () {
+                var ip = $("#ipText").val();
+                var port = $("#portText").val()
+                var idc = $("#idcText").val()
+                var sign = $("#signText").val()
 
+                $.get(
+                    '/serverConfigRevise/',
+                    {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                    function (ret) {
+                        if (!ret.result) {
+                            alert("该条目已存在")
+                        } else {
+                            window.location.replace('/serverConfigSearch/');
+                        }
+                    }
+                );
+            });
+        });
     </script>
 </head>
 <body>
 {% include "__head.html" %}
 <div class="mainDiv">
 
+
+    <input type="text" name="id" value="{{ id }}" readonly hidden>
+    {% include "serverConfig/__serverConfigTable.html" %}
+    <div class="submitButtonDiv">
+        <!--<input type="submit" class="button" value="提交"/>-->
+        <button id="submitButton" class="button">提交</button>
+    </div>
+    <div class="addButtonDiv">
+        <input type="button" class="button" value="取消" onclick="window.location.replace('/serverConfigSearch/')">
+    </div>
+    <div class="spaceDiv"/>
+
     <form action="/handleServerRevise/" method="post">
-        <input type="text" name="id" value="{{ id }}" readonly hidden>
-        {% include "serverConfig/__serverConfigTable.html" %}
-        <div class="submitButtonDiv">
-            <input type="submit" class="button" value="提交"/>
-        </div>
-        <div class="addButtonDiv">
-            <input type="button" class="button" value="取消" onclick="window.location.replace('/serverConfigSearch/')">
-        </div>
-        <div class="spaceDiv"/>
     </form>
 </div>
 </body>

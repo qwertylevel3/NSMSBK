@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    {% load static %}
-    <script src="{% static "js/jquery-3.2.1.js" %}"></script>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+    {% include "__staticFiles.html" %}
+
     <script>
         $(document).ready(function () {
             {% for server in defaultServer %}

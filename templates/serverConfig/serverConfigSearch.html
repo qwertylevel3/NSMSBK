@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>server</title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+    {% include "__staticFiles.html" %}
 </head>
 <body>
 
@@ -16,9 +15,7 @@
 
 <div class="mainDiv">
 
-
     <h2>server</h2>
-
 
     <form action="/serverConfigSearch/" method="post">
         {% include "serverConfig/__serverConfigTable.html" %}

@@ -99,7 +99,7 @@ class ServerList(models.Model):
 
 
 class ServerRuleDat(models.Model):
-    id=models.IntegerField(primary_key=True,unique=True)
+#    id=models.IntegerField(primary_key=True,unique=True)
     update_time = models.DateTimeField()
     registration_time = models.DateTimeField()
     group_id = models.IntegerField()
