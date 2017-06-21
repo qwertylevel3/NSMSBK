@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+
 from indexPage import views as indexViews
 from ruleConfig import views as ruleConfigViews
 from serverConfig import views as serverConfigViews
 from serverGroupConfig import views as serverGroupConfigViews
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),

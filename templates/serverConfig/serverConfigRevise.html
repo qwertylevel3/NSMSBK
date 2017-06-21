@@ -7,25 +7,49 @@
 
     <script>
         $(document).ready(function () {
-            $("#submitButton").click(function () {
-                var ip = $("#ipText").val();
-                var port = $("#portText").val()
-                var idc = $("#idcText").val()
-                var sign = $("#signText").val()
 
-                $.get(
-                    '/serverConfigRevise/',
-                    {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
-                    function (ret) {
-                        if (!ret.result) {
-                            alert("该条目已存在")
-                        } else {
-                            window.location.replace('/serverConfigSearch/');
-                        }
-                    }
-                );
+            $("#submitButton").click(function () {
+                if (validate_form() == true) {
+                    var ip = $("#ipText").val();
+                    var port = $("#portText").val()
+                    var idc = $("#idcText").val()
+                    var sign = $("#signText").val()
+
+                    $.get(
+                        '/serverConfigRevise/',
+                        {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                        function (ret) {
+                            if (!ret.result) {
+                                alert("该条目已存在")
+                            } else {
+                                window.location.replace('/serverConfigSearch/');
+                            }
+                        });
+                }
             });
         });
+
+        function validate_required(field, alerttxt) {
+            with (field) {
+                if (field.val() == null || field.val() == "") {
+                    alert(alerttxt);
+                    return false
+                } else {
+                    return true
+                }
+            }
+        }
+        function validate_form() {
+            if (validate_required($("#ipText"), "ip must be filled out!") == false) {
+                $("#ipText").focus();
+                return false;
+            }
+            if (validate_required($("#portText"), "port must be filled out!") == false) {
+                $("#portText").focus();
+                return false;
+            }
+            return true;
+        }
     </script>
 </head>
 <body>
