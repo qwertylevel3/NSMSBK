@@ -104,17 +104,13 @@ def ruleConfigDelete(request):
 
 
 def ruleConfigRevise(request):
-    id = request.POST.get("id", "-1")
+    id = request.GET.get("id", "-1")
 
     condition = RuleCondition()
 
     #-1代表新增
     if id == "-1":
         id = -1
-#        for rule in ServerRuleDat.objects.all():
-#            if rule.id > id:
-#                id = rule.id
-#        id = id + 1
     else:
         rule = ServerRuleDat.objects.get(id=id)
         condition.initByStr(rule.rule)

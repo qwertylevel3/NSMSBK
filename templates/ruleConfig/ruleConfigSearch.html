@@ -30,7 +30,7 @@
     </form>
 
     <div class="addButtonDiv">
-        <form action="/ruleConfigRevise/" method="post">
+        <form action="/ruleConfigRevise/" method="get">
             <input type="text" name="id" value="-1" hidden>
             <input type="submit" class="button" value="新增"/>
         </form>
@@ -62,7 +62,7 @@
                     <td>{{ line.ttl }}</td>
                     <td>{{ line.compel }}</td>
                     <td>
-                        <form action="/ruleConfigRevise/" method="post">
+                        <form action="/ruleConfigRevise/" method="get">
                             <input type="text" name="id" value="{{ line.id }}" hidden/>
                             <input type="submit" class="tableButton" value="更改"/>
                         </form>
