@@ -16,7 +16,18 @@
                     r +
                     "</option>"
                 );
-            };
+            }
+            ;
+
+            {% for groupid in allGroupid %}
+                $("#groupidSelect").append(
+                    "<option value='" +
+                    "{{ groupid }}" +
+                    "'>" +
+                    "{{ groupid }}" +
+                    "</option>"
+                );
+            {% endfor %}
 
             {% for rule in allRule %}
                 if ({{ rule.id }}=={{ id }}) {
@@ -27,7 +38,7 @@
                     }
 
                     $("#ttlText").val({{ rule.ttl }});
-                    $("#groupidText").val({{ rule.group_id }});
+                    $("#groupidSelect").val({{ rule.group_id }});
                 }
             {% endfor %}
         });
@@ -97,7 +108,8 @@
                     <input type="text" name="ttl" id="ttlText"/>
                 </td>
                 <td>
-                    <input type="text" name="groupid" id="groupidText"/>
+                    <!--<input type="text" name="groupid" id="groupidText"/>-->
+                    <select name="groupid" id="groupidSelect"/>
                 </td>
             </tr>
             </tbody>

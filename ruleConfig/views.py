@@ -6,7 +6,9 @@ from sqlModels.models import CountryList
 from sqlModels.models import CityList
 from sqlModels.models import ProvList
 from sqlModels.models import NetList
+from sqlModels.models import ServerGroupDat
 import time
+
 
 
 class RuleCondition:
@@ -122,6 +124,13 @@ def ruleConfigRevise(request):
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
     allRule = ServerRuleDat.objects.all()
+    allGroup=ServerGroupDat.objects.all()
+
+    allGroupid=[]
+    for group in allGroup:
+        if group.group_id not in allGroupid:
+            allGroupid.append(group.group_id)
+
 
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
@@ -131,7 +140,8 @@ def ruleConfigRevise(request):
                       "allCountry": allCountry,
                       "allProvince": allProvince,
                       "allCity": allCity,
-                      "allNet": allNet
+                      "allNet": allNet,
+                      "allGroupid":allGroupid
                   })
 
 
