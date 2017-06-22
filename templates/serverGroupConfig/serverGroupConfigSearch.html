@@ -16,9 +16,8 @@
 
     <h2>server group</h2>
 
-
     <div class="centerDiv">
-        <form action="/serverGroupConfigRevise/" method="post">
+        <form action="/serverGroupConfigRevise/" method="get">
             <input type="text" name="id" value="-1" hidden/>
             <input type="submit" class="button" value="新增server group"/>
         </form>
@@ -36,7 +35,7 @@
                 <td>{{ serverGroup.group_id }}</td>
                 <td>{{ serverGroup.server_ids }}</td>
                 <td>
-                    <form action="/serverGroupConfigRevise/" method="post">
+                    <form action="/serverGroupConfigRevise/" method="get">
                         <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
                         <input type="submit" class="tableButton" value="更改"/>
                     </form>

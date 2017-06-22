@@ -62,7 +62,7 @@ def serverGroupConfigSearch(request):
 
 def serverGroupConfigRevise(request):
     defaultServer = []
-    id = request.POST.get("id", "-1")
+    id = request.GET.get("id", "-1")
 
     if id != "-1":
         serverGroup = ServerGroupDat.objects.get(id=id)
