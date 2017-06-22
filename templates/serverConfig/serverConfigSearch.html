@@ -10,12 +10,12 @@
 {% include "__head.html" %}
 
 
-<input type="button" class="button" name="ruleButton" value="返回" onclick="window.location.replace('/index/')">
+<button class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
 
 
 <div class="mainDiv">
 
-    <h2>server</h2>
+    <h2>服务器</h2>
 
     <form action="/serverConfigSearch/" method="post">
         {% include "serverConfig/__serverConfigTable.html" %}
@@ -33,7 +33,7 @@
 
     <div class="spaceDiv"/>
 
-    <h2 style="...">result</h2>
+    <h2>搜索结果</h2>
     <table border="1">
         <thead>
         <th>ip</th>

@@ -19,15 +19,40 @@ h1 {
 h2 {
     font-size: 24pt;
     margin: 20px 50px;
+    text-align: left;
+}
+
+.header {
+    background-color: #00D8C3;
+}
+
+.header-brand{
+    font-family: fantasy;
+    font-size: 28pt;
+    color: #F4FFFF;
+}
+.header-brand:hover{
+    color: #F4F4F4;
+}
+
+.header-btn{
+    font-size: 14pt;
+    color: #F4FFFF;
 }
 
 
-.mainDiv {
+.indexMainDiv {
     width: 1000px;
     margin: 0 auto;
     padding: 20px 20px;
-    border: 1px solid #555555;
-    box-shadow: 0 0 5px #555555;
+    text-align: center;
+}
+
+.mainDiv {
+    width: 1000px;
+    margin: 40px auto;
+    padding: 20px 20px;
+    text-align: center;
 }
 
 .indexDiv {
@@ -213,9 +238,7 @@ caption {
 }
 
 th, td {
-
     padding: .25em;
-
 }
 
 th {
@@ -223,6 +246,8 @@ th {
     nonerepeat: scroll 0 0;
     /* border: 1px solid #777; */
     color: #fff;
+    text-align: center;
+
 }
 
 td {
@@ -286,3 +311,8 @@ tbody tr:nth-child(odd) {
 }
 
 
+.backTopButton{
+    position: fixed;
+    left:1500px;
+    bottom:75px;
+}

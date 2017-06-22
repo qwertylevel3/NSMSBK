@@ -9,43 +9,34 @@
 </head>
 <body>
 {% include "__head.html" %}
-
-<input type="button" class="button" name="ruleButton" value="返回" onclick="window.location.replace('/index/')">
+<button class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
 
 
 <div class="mainDiv">
 
-    <h2 style="...">rule</h2>
-
+    <h2>规则</h2>
 
     <form action="/ruleConfigSearch/" method="post">
 
         {% include "ruleConfig/__conditionTable.html" %}
 
-
         <div class="submitButtonDiv">
             <input type="submit" class="button" value="搜索"/>
         </div>
-
     </form>
-
     <div class="addButtonDiv">
         <form action="/ruleConfigRevise/" method="get">
             <input type="text" name="id" value="-1" hidden>
             <input type="submit" class="button" value="新增"/>
         </form>
     </div>
-
-    <div class="spaceDiv">
-
-    </div>
-
+    <div class="spaceDiv"></div>
 
     <div class="resultTableDiv">
 
 
-        <h2 style="...">result</h2>
-        <table  border="1">
+        <h2>搜索结果</h2>
+        <table class="table-hover table-condensed" border="1">
             <thead>
             <th>group_id</th>
             <th>rules</th>
