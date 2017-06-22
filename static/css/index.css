@@ -44,7 +44,7 @@ h2 {
 .indexMainDiv {
     width: 1000px;
     margin: 0 auto;
-    padding: 20px 20px;
+    padding: 0px 0px;
     text-align: center;
 }
 
@@ -84,9 +84,6 @@ h2 {
     margin: 50px 0px;
 }
 
-.resultTableDiv {
-}
-
 /*button*/
 .button {
     color: #666;
@@ -100,7 +97,7 @@ h2 {
     line-height: 40px;
     height: 40px;
     padding: 0 40px;
-    margin: 0;
+    margin: 20px;
     display: inline-block;
     appearance: none;
     cursor: pointer;

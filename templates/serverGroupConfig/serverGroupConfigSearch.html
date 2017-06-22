@@ -11,39 +11,50 @@
 
 <button class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
 
-<div class="mainDiv">
-
-
-    <h2>服务器组</h2>
-
-    <div class="centerDiv">
-        <form action="/serverGroupConfigRevise/" method="get">
-            <input type="text" name="id" value="-1" hidden/>
-            <input type="submit" class="button" value="新增server group"/>
-        </form>
+<div class="container-fluid mainDiv">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>服务器组</h2>
+        </div>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="centerDiv">
+                <form action="/serverGroupConfigRevise/" method="get">
+                    <input type="text" name="id" value="-1" hidden/>
+                    <input type="submit" class="button" value="新增server group"/>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <table border="1">
-        <thead>
-        <th>groupid</th>
-        <th>server ids</th>
-        </thead>
-        <tbody>
-        {% for serverGroup in allServerGroup %}
-            <tr>
-                <td>{{ serverGroup.group_id }}</td>
-                <td>{{ serverGroup.server_ids }}</td>
-                <td>
-                    <form action="/serverGroupConfigRevise/" method="get">
-                        <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
-                        <input type="submit" class="tableButton" value="更改"/>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+
+            <table border="1">
+                <thead>
+                <th>groupid</th>
+                <th>server ids</th>
+                </thead>
+                <tbody>
+                {% for serverGroup in allServerGroup %}
+                    <tr>
+                        <td>{{ serverGroup.group_id }}</td>
+                        <td>{{ serverGroup.server_ids }}</td>
+                        <td>
+                            <form action="/serverGroupConfigRevise/" method="get">
+                                <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
+                                <input type="submit" class="tableButton" value="更改"/>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 </body>

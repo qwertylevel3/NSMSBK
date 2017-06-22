@@ -54,22 +54,25 @@
 </head>
 <body>
 {% include "__head.html" %}
-<div class="mainDiv">
-    <h2>配置</h2>
-
-    <input type="text" name="id" value="{{ id }}" readonly hidden>
-    {% include "serverConfig/__serverConfigTable.html" %}
-    <div class="submitButtonDiv">
-        <!--<input type="submit" class="button" value="提交"/>-->
-        <button id="submitButton" class="button">提交</button>
+<div class="container-fluid mainDiv">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>配置</h2>
+        </div>
     </div>
-    <div class="addButtonDiv">
-        <input type="button" class="button" value="取消" onclick="window.location.replace('/serverConfigSearch/')">
-    </div>
-    <div class="spaceDiv"/>
+    <div class="row">
+        <div class="col-md-12">
+            <input type="text" name="id" value="{{ id }}" readonly hidden>
+            {% include "serverConfig/__serverConfigTable.html" %}
+            <!--<input type="submit" class="button" value="提交"/>-->
+            <button id="submitButton" class="button">提交</button>
+            <input type="button" class="button" value="取消"
+                   onclick="window.location.replace('/serverConfigSearch/')">
 
-    <form action="/handleServerRevise/" method="post">
-    </form>
+            <form action="/handleServerRevise/" method="post">
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

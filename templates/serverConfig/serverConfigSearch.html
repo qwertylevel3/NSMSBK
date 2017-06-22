@@ -13,58 +13,77 @@
 <button class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
 
 
-<div class="mainDiv">
-
-    <h2>服务器</h2>
-
-    <form action="/serverConfigSearch/" method="post">
-        {% include "serverConfig/__serverConfigTable.html" %}
-        <div class="submitButtonDiv">
-            <input type="submit" class="button" value="搜索"/>
+<div class="container-fluid mainDiv">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>服务器</h2>
         </div>
-    </form>
-
-    <div class="addButtonDiv">
-        <form action="/serverConfigRevise/" method="get">
-            <input type="text" name="id" value="-1" hidden>
-            <input type="submit" class="button" value="新增"/>
-        </form>
     </div>
 
-    <div class="spaceDiv"/>
 
-    <h2>搜索结果</h2>
-    <table border="1">
-        <thead>
-        <th>ip</th>
-        <th>port</th>
-        <th>idc</th>
-        <th>sign</th>
-        </thead>
-        <tbody>
-        {% for line in result %}
-            <tr>
-                <td>{{ line.ip }}</td>
-                <td>{{ line.port }}</td>
-                <td>{{ line.idc }}</td>
-                <td>{{ line.sign }}</td>
-                <td>
-                    <form action="/serverConfigRevise/" method="get">
-                        <input type="text" name="id" value="{{ line.id }}" hidden/>
-                        <input type="submit" class="tableButton" value="更改"/>
-                    </form>
-                </td>
-                <td>
-                    <form action="/serverConfigDelete/" method="post">
-                        <input type="text" name="id" value="{{ line.id }}" hidden/>
-                        <input type="submit" class="tableButton" value="删除"/>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="serverSearchForm" action="/serverConfigSearch/" method="post">
+                {% include "serverConfig/__serverConfigTable.html" %}
+            </form>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-3">
+            <form action="/serverConfigRevise/" method="get">
+                <input type="text" name="id" value="-1" hidden>
+                <input type="submit" class="button" value="新增"/>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <button class="button" type="submit" form="serverSearchForm" value="Submit">搜索</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>搜索结果</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <table border="1">
+                <thead>
+                <th>ip</th>
+                <th>port</th>
+                <th>idc</th>
+                <th>sign</th>
+                </thead>
+                <tbody>
+                {% for line in result %}
+                    <tr>
+                        <td>{{ line.ip }}</td>
+                        <td>{{ line.port }}</td>
+                        <td>{{ line.idc }}</td>
+                        <td>{{ line.sign }}</td>
+                        <td>
+                            <form action="/serverConfigRevise/" method="get">
+                                <input type="text" name="id" value="{{ line.id }}" hidden/>
+                                <input type="submit" class="tableButton" value="更改"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/serverConfigDelete/" method="post">
+                                <input type="text" name="id" value="{{ line.id }}" hidden/>
+                                <input type="submit" class="tableButton" value="删除"/>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 

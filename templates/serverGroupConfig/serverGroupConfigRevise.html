@@ -58,64 +58,74 @@
 
 {% include "__head.html" %}
 
-<div class="mainDiv">
-    <h2>配置</h2>
+<div class="container-fluid mainDiv">
 
-    <form action="/handleServerGroupRevise/" onsubmit="return validate_form(this)" method="post">
-        <input type="text" name="id" value={{ id }} hidden>
-        <table border="1">
-            <thead>
-            <th>id</th>
-            <th>ip</th>
-            <th>port</th>
-            <th>idc</th>
-            <th>sign</th>
-            </thead>
-            <tbody>
-            {% for server in allServer %}
-                <tr>
-                    <td>{{ server.id }}</td>
-                    <td>{{ server.ip }}</td>
-                    <td>{{ server.port }}</td>
-                    <td>{{ server.idc }}</td>
-                    <td>{{ server.sign }}</td>
-                    <td>
-                        <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
-                               id="checkbox{{ server.id }}"/>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <table border="1">
-            <thead>
-            <th>groupid</th>
-            <th>timeout</th>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <input type="tel" name="groupid" id="groupidTel"/>
-                </td>
-                <td>
-                    <input type="tel" name="timeout" id="timeoutTel" value="6000"/>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="submitButtonDiv">
-            <input type="submit" class="button" value="提交"/>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>配置</h2>
         </div>
-        <div class="addButtonDiv">
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <form id="serverGroupForm" action="/handleServerGroupRevise/" onsubmit="return validate_form(this)"
+                  method="post">
+                <input type="text" name="id" value={{ id }} hidden>
+                <table border="1">
+                    <thead>
+                    <th>id</th>
+                    <th>ip</th>
+                    <th>port</th>
+                    <th>idc</th>
+                    <th>sign</th>
+                    </thead>
+                    <tbody>
+                    {% for server in allServer %}
+                        <tr>
+                            <td>{{ server.id }}</td>
+                            <td>{{ server.ip }}</td>
+                            <td>{{ server.port }}</td>
+                            <td>{{ server.idc }}</td>
+                            <td>{{ server.sign }}</td>
+                            <td>
+                                <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
+                                       id="checkbox{{ server.id }}"/>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <table border="1">
+                    <thead>
+                    <th>groupid</th>
+                    <th>timeout</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <input type="tel" name="groupid" id="groupidTel"/>
+                        </td>
+                        <td>
+                            <input type="tel" name="timeout" id="timeoutTel" value="6000"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
             <input type="button" class="button" value="取消"
                    onclick="window.location.replace('/serverGroupConfigSearch/')">
         </div>
-
-        <div class="spaceDiv"/>
-
-
-    </form>
+        <div class="col-md-3">
+            <button class="button" type="submit" form="serverGroupForm" value="Submit">提交</button>
+        </div>
+    </div>
 </div>
 
 </body>

@@ -12,66 +12,78 @@
 <button class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
 
 
-<div class="mainDiv">
+<div class="container-fluid mainDiv">
 
-    <h2>规则</h2>
-
-    <form action="/ruleConfigSearch/" method="post">
-
-        {% include "ruleConfig/__conditionTable.html" %}
-
-        <div class="submitButtonDiv">
-            <input type="submit" class="button" value="搜索"/>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>规则</h2>
         </div>
-    </form>
-    <div class="addButtonDiv">
-        <form action="/ruleConfigRevise/" method="get">
-            <input type="text" name="id" value="-1" hidden>
-            <input type="submit" class="button" value="新增"/>
-        </form>
-    </div>
-    <div class="spaceDiv"></div>
-
-    <div class="resultTableDiv">
-
-
-        <h2>搜索结果</h2>
-        <table class="table-hover table-condensed" border="1">
-            <thead>
-            <th>group_id</th>
-            <th>rules</th>
-            <th>rank</th>
-            <th>ttl</th>
-            <th>compel</th>
-            </thead>
-            <tbody>
-            {% for line in result %}
-                <tr>
-                    <td>{{ line.group_id }}</td>
-                    <td>{{ line.rule }}</td>
-                    <td>{{ line.rank }}</td>
-                    <td>{{ line.ttl }}</td>
-                    <td>{{ line.compel }}</td>
-                    <td>
-                        <form action="/ruleConfigRevise/" method="">
-                            <input type="text" name="id" value="{{ line.id }}" hidden/>
-                            <input type="submit" class="tableButton" value="更改"/>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="/ruleConfigDelete/" method="post">
-                            <input type="text" name="id" value="{{ line.id }}" hidden/>
-                            <input type="submit" class="tableButton" value="删除"/>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
     </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <form id="ruleSearchForm" action="/ruleConfigSearch/" method="post">
+                {% include "ruleConfig/__conditionTable.html" %}
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        </div>
+        <div class="col-md-3">
+            <form action="/ruleConfigRevise/" method="get">
+                <input type="text" name="id" value="-1" hidden>
+                <input type="submit" class="button" value="新增"/>
+            </form>
+        </div>
+        <div class="col-md-3">
+            <button class="button" type="submit" form="ruleSearchForm" value="Submit">搜索</button>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>搜索结果</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+
+            <table class="table-hover table-condensed" border="1">
+                <thead>
+                <th>group_id</th>
+                <th>rules</th>
+                <th>rank</th>
+                <th>ttl</th>
+                <th>compel</th>
+                </thead>
+                <tbody>
+                {% for line in result %}
+                    <tr>
+                        <td>{{ line.group_id }}</td>
+                        <td>{{ line.rule }}</td>
+                        <td>{{ line.rank }}</td>
+                        <td>{{ line.ttl }}</td>
+                        <td>{{ line.compel }}</td>
+                        <td>
+                            <form action="/ruleConfigRevise/" method="">
+                                <input type="text" name="id" value="{{ line.id }}" hidden/>
+                                <input type="submit" class="tableButton" value="更改"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/ruleConfigDelete/" method="post">
+                                <input type="text" name="id" value="{{ line.id }}" hidden/>
+                                <input type="submit" class="tableButton" value="删除"/>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-
-
 </body>
 </html>

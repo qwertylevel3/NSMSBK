@@ -78,54 +78,60 @@
 <body>
 {% include "__head.html" %}
 
-<div class="mainDiv">
-    <h2>配置</h2>
+<div class="container-fluid mainDiv">
 
-    <form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
-
-        <table border="1">
-            <thead>
-            <th hidden>id</th>
-            <th>rank</th>
-            <th>compel</th>
-            <th>ttl</th>
-            <th>groupid</th>
-            </thead>
-            <tbody>
-            <tr>
-                <td hidden>
-                    <input type="text" name="id" value="{{ id }}" readonly>
-                </td>
-                <td>
-                    <select name="rank" id="rankSelect">
-
-                    </select>
-                </td>
-                <td>
-                    <input type="checkbox" class="checkbox" name="compel" id="compelCheckbox"/>
-                </td>
-                <td>
-                    <input type="text" name="ttl" id="ttlText"/>
-                </td>
-                <td>
-                    <!--<input type="text" name="groupid" id="groupidText"/>-->
-                    <select name="groupid" id="groupidSelect"/>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        {% include "ruleConfig/__conditionTable.html" %}
-
-        <div class="submitButtonDiv">
-            <input type="submit" class="button" value="提交"/>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>配置</h2>
         </div>
-        <div class="addButtonDiv">
-            <input type="button" class="button" value="取消" onclick="window.location.replace('/ruleConfigSearch/')">
-        </div>
+    </div>
 
-        <div class="spaceDiv"/>
-    </form>
+    <div class="row">
+        <div class="col-md-12">
+            <form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
+
+                <table border="1">
+                    <thead>
+                    <th hidden>id</th>
+                    <th>rank</th>
+                    <th>compel</th>
+                    <th>ttl</th>
+                    <th>groupid</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td hidden>
+                            <input type="text" name="id" value="{{ id }}" readonly>
+                        </td>
+                        <td>
+                            <select name="rank" id="rankSelect">
+
+                            </select>
+                        </td>
+                        <td>
+                            <input type="checkbox" class="checkbox" name="compel" id="compelCheckbox"/>
+                        </td>
+                        <td>
+                            <input type="text" name="ttl" id="ttlText"/>
+                        </td>
+                        <td>
+                            <!--<input type="text" name="groupid" id="groupidText"/>-->
+                            <select name="groupid" id="groupidSelect"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                {% include "ruleConfig/__conditionTable.html" %}
+
+                <input type="button" class="button" value="取消"
+                       onclick="window.location.replace('/ruleConfigSearch/')">
+
+                <input type="submit" class="button" value="提交"/>
+
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 
