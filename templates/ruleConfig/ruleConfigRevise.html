@@ -16,9 +16,23 @@
                     r +
                     "</option>"
                 );
-            }
-            ;
+            };
+
+            {% for rule in allRule %}
+                if ({{ rule.id }}=={{ id }}) {
+                    $("#rankSelect").val({{ rule.rank }});
+
+                    if ({{ rule.compel }}=={{ 1 }}) {
+                        $("#compelCheckbox").attr("checked", true);
+                    }
+
+                    $("#ttlText").val({{ rule.ttl }});
+                    $("#groupidText").val({{ rule.group_id }});
+                }
+            {% endfor %}
         });
+
+
     </script>
 
 

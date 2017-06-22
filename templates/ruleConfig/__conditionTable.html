@@ -69,15 +69,6 @@
 
                     $("#hostText").val("{{ condition.host }}");
                     $("#appidText").val({{ condition.appid }});
-
-                    $("#rankSelect").val({{ rule.rank }});
-
-                    if ({{ rule.compel }}=={{ 1 }}) {
-                        $("#compelCheckbox").attr("checked", true);
-                    }
-
-                    $("#ttlText").val({{ rule.ttl }});
-                    $("#groupidText").val({{ rule.group_id }});
                 }
             {% endfor %}
         });
