@@ -11,14 +11,27 @@
 
 <h1>rule manager</h1>
 
-<div class="indexDiv">
-    <input type="button" class="button" name="ruleButton" value="管理规则"
-           onclick="window.location.replace('/ruleConfigSearch/')">
-    <input type="button" class="button" name="serverButton" value="管理服务器"
-           onclick="window.location.replace('/serverConfigSearch/')">
-    <input type="button" class="button" name="serverGroupButton" value="管理服务器组"
-           onclick="window.location.replace('/serverGroupConfigSearch/')">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <button class="button" name="ruleButton" onclick="window.location.replace('/ruleConfigSearch/')">管理规则
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button class="button" name="serverButton" onclick="window.location.replace('/serverConfigSearch/')">
+                管理服务器
+            </button>
+        </div>
+        <div class="col-md-2">
+            <button class="button" name="serverGroupButton"
+                    onclick="window.location.replace('/serverGroupConfigSearch/')">管理服务器组
+            </button>
+        </div>
+    </div>
+
+
 </div>
+
 
 </body>
 </html>

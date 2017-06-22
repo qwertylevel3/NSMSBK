@@ -103,6 +103,7 @@ def ruleConfigDelete(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
+# 显示修改rule页面
 def ruleConfigRevise(request):
     id = request.GET.get("id", "-1")
 
@@ -144,7 +145,7 @@ def ruleConfigRevise(request):
 # 接受表单，新增或更改rule数据
 def handleRuleRevise(request):
     if request.method != "POST":
-        return ruleConfigRevise(request)
+        return HttpResponseRedirect('/ruleConfigSearch/')
 
     condition = RuleCondition()
     condition.city = request.POST.get("city", "")

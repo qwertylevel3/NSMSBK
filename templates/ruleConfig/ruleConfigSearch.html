@@ -45,7 +45,7 @@
 
 
         <h2 style="...">result</h2>
-        <table border="1">
+        <table  border="1">
             <thead>
             <th>group_id</th>
             <th>rules</th>
@@ -62,7 +62,7 @@
                     <td>{{ line.ttl }}</td>
                     <td>{{ line.compel }}</td>
                     <td>
-                        <form action="/ruleConfigRevise/" method="get">
+                        <form action="/ruleConfigRevise/" method="">
                             <input type="text" name="id" value="{{ line.id }}" hidden/>
                             <input type="submit" class="tableButton" value="更改"/>
                         </form>
