@@ -1,3 +1,24 @@
+<script>
+
+    $(function () {
+        var headerHeight = $('.header').outerHeight();
+
+        $(window).scroll(function () {
+            var scrollTopPos = $(document).scrollTop();
+            if (scrollTopPos > headerHeight) {
+                $('.header').addClass('headerHide');
+                $('.header').removeClass('headerShow');
+                $('.backTopButton').show()
+            } else {
+                $('.header').removeClass('headerHide');
+                $('.header').addClass('headerShow');
+                $('.backTopButton').hide()
+            }
+
+        });
+    });
+</script>
+
 <nav class="navbar navbar-collapse navbar-fixed-top header">
     <ul class="nav nav-pills">
         <a class="navbar-brand header-brand" href="/index/">Rule Manager</a>
@@ -6,3 +27,4 @@
         <li><a class="navbar-btn header-btn" href="/serverGroupConfigSearch/">管理服务器组</a></li>
     </ul>
 </nav>
+<button style="display: none" class="backTopButton button" onclick="location.href='#top'">Back to Top</button>

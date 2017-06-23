@@ -23,23 +23,25 @@ h2 {
 }
 
 .header {
+    position: fixed;
+    transition: top .5s;
     background-color: #00D8C3;
 }
 
-.header-brand{
+.header-brand {
     font-family: fantasy;
     font-size: 28pt;
     color: #F4FFFF;
 }
-.header-brand:hover{
+
+.header-brand:hover {
     color: #F4F4F4;
 }
 
-.header-btn{
+.header-btn {
     font-size: 14pt;
     color: #F4FFFF;
 }
-
 
 .indexMainDiv {
     width: 1000px;
@@ -307,9 +309,17 @@ tbody tr:nth-child(odd) {
     transform: rotate(-45deg);
 }
 
-
-.backTopButton{
+.backTopButton {
     position: fixed;
-    left:1500px;
-    bottom:75px;
+    left: 1500px;
+    bottom: 75px;
+}
+
+.headerHide {
+    top: -90px;
+}
+
+.headerShow {
+    top: 0;
+    z-index: 9999;
 }
