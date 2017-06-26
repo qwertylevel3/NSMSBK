@@ -8,6 +8,7 @@ from sqlModels.models import CityList
 from sqlModels.models import ProvList
 from sqlModels.models import NetList
 from sqlModels.models import ServerGroupDat
+from sqlModels.models import GroupList
 import time
 
 
@@ -194,7 +195,7 @@ def handleRuleRevise(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
-# 根据国家id返回国家名称
+# 根据国家代码返回国家名称
 def getCountryName(countryID):
     if len(countryID) > 0:
         country = CountryList.objects.get(code=int(countryID))
@@ -202,6 +203,7 @@ def getCountryName(countryID):
     return ""
 
 
+# 根据省份代码返回省份名称
 def getProvinceName(provinceID):
     if len(provinceID) > 0:
         province = ProvList.objects.get(code=int(provinceID))
@@ -209,6 +211,7 @@ def getProvinceName(provinceID):
     return ""
 
 
+# 根据城市代码返回城市名称
 def getCityName(cityID):
     if len(cityID) > 0:
         city = CityList.objects.get(code=int(cityID))
@@ -216,14 +219,21 @@ def getCityName(cityID):
     return ""
 
 
+# 根据服务器组id返回服务器组名称
+def getServerGroupName(serverGroupID):
+    allServerGroup = GroupList.objects.filter(id=serverGroupID)
+    if len(allServerGroup)>0:
+        return allServerGroup[0].name
+    return serverGroupID
+
+
 # 将数据库数据转换为在search页面显示的数据项
-# 主要用来拆开rule为多个子项
 def convert2SearchResult(rawResultData):
     resultData = {}
     ruleCondition = RuleCondition(rawResultData.rule)
 
     resultData["id"] = rawResultData.id
-    resultData["group_id"] = rawResultData.group_id
+    resultData["group_id"] = getServerGroupName(rawResultData.group_id)
     resultData["rank"] = rawResultData.rank
     resultData["ttl"] = rawResultData.ttl
     resultData["compel"] = rawResultData.compel
@@ -272,7 +282,7 @@ def ruleConfigSearch(request):
     resultSize = len(result)
 
     paginator = Paginator(result, 25)
-    page=request.GET.get("page")
+    page = request.GET.get("page")
     try:
         result = paginator.page(page)
     except PageNotAnInteger:

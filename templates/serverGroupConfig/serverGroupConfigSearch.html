@@ -4,6 +4,42 @@
     <meta charset="UTF-8">
     <title>Title</title>
     {% include "__staticFiles.html" %}
+
+
+    <script>
+        $(document).ready(function () {
+            $(".showDetailButton").click(function () {
+                var id = this.value;
+
+                var tableRef = document.getElementById("showDetailTable");
+                var len = tableRef.rows.length;
+                while (len > 1) {
+                    tableRef.deleteRow(len - 1);
+                    len = tableRef.rows.length;
+                }
+
+                $.get(
+                    '/serverGroupShowDetail/',
+                    {'id': id},
+                    function (ret) {
+                        $.each(ret.result, function (index, server) {
+                            var newServerLine = tableRef.insertRow();
+
+                            var idCol = newServerLine.insertCell();
+                            idCol.innerHTML = server.id;
+                            var ipCol = newServerLine.insertCell();
+                            ipCol.innerHTML = server.ip;
+                            var portCol = newServerLine.insertCell();
+                            portCol.innerHTML = server.port;
+                            var idcCol = newServerLine.insertCell();
+                            idcCol.innerHTML = server.idc;
+                            var signCol = newServerLine.insertCell();
+                            signCol.innerHTML = server.sign;
+                        })
+                    });
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -27,7 +63,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-8">
 
             <table border="1">
                 <thead>
@@ -36,10 +72,10 @@
                 <th>server ids</th>
                 </thead>
                 <tbody>
-                {% for serverGroup in allServerGroup %}
+                {% for serverGroup in result %}
                     <tr>
                         <td>{{ serverGroup.id }}</td>
-                        <td>{{ serverGroup.group_id }}</td>
+                        <td>{{ serverGroup.group_name }}</td>
                         <td>{{ serverGroup.server_ids }}</td>
                         <td>
                             <form action="/serverGroupConfigRevise/" method="get">
@@ -47,12 +83,40 @@
                                 <input type="submit" class="tableButton" value="更改"/>
                             </form>
                         </td>
+                        <td>
+                            <button class="showDetailButton"
+                                    id="showDetailButton{{ serverGroup.id }}"
+                                    value="{{ serverGroup.id }}"
+                                    type="button" data-toggle="collapse"
+                                    data-target="#serverDetail" aria-expanded="false"
+                                    aria-controls="collapseExample">
+                                详情
+                            </button>
+                        </td>
+
                     </tr>
+
+
                 {% endfor %}
                 </tbody>
             </table>
 
 
+        </div>
+
+
+        <div class="col-md-4">
+            <table id="showDetailTable" border="1">
+                <thead>
+                <th>id</th>
+                <th>ip</th>
+                <th>port</th>
+                <th>idc</th>
+                <th>sign</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 
