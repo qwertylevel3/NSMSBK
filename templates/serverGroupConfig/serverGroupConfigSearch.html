@@ -31,12 +31,14 @@
 
             <table border="1">
                 <thead>
+                <th>id</th>
                 <th>groupid</th>
                 <th>server ids</th>
                 </thead>
                 <tbody>
                 {% for serverGroup in allServerGroup %}
                     <tr>
+                    <td>{{ serverGroup.id }}</td>
                         <td>{{ serverGroup.group_id }}</td>
                         <td>{{ serverGroup.server_ids }}</td>
                         <td>

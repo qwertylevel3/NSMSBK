@@ -16,8 +16,7 @@
                     r +
                     "</option>"
                 );
-            }
-            ;
+            };
 
             {% for groupid in allGroupid %}
                 $("#groupidSelect").append(
@@ -43,11 +42,6 @@
             {% endfor %}
         });
 
-
-    </script>
-
-
-    <script>
         function validate_required(field, alerttxt) {
             with (field) {
                 if (value == null || value == "") {

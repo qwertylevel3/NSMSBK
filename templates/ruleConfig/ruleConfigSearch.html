@@ -8,9 +8,8 @@
 
 </head>
 <body>
+
 {% include "__head.html" %}
-
-
 
 <div class="container-fluid mainDiv">
 
@@ -44,7 +43,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>搜索结果</h2>
+            <h2>搜索结果(共{{ resultSize }}条)</h2>
         </div>
     </div>
     <div class="row">
@@ -52,8 +51,14 @@
 
             <table class="table-hover table-condensed" border="1">
                 <thead>
-                <th>group_id</th>
-                <th>rules</th>
+                <th>id</th>
+                <th>国家</th>
+                <th>省份</th>
+                <th>城市</th>
+                <th>host</th>
+                <th>appid</th>
+                <th>net</th>
+                <th>服务器组id</th>
                 <th>rank</th>
                 <th>ttl</th>
                 <th>compel</th>
@@ -61,8 +66,14 @@
                 <tbody>
                 {% for line in result %}
                     <tr>
+                        <td>{{ line.id }}</td>
+                        <td>{{ line.country }}</td>
+                        <td>{{ line.province }}</td>
+                        <td>{{ line.city }}</td>
+                        <td>{{ line.host }}</td>
+                        <td>{{ line.appid }}</td>
+                        <td>{{ line.net }}</td>
                         <td>{{ line.group_id }}</td>
-                        <td>{{ line.rule }}</td>
                         <td>{{ line.rank }}</td>
                         <td>{{ line.ttl }}</td>
                         <td>{{ line.compel }}</td>

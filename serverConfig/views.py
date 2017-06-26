@@ -102,7 +102,9 @@ def serverConfigSearch(request):
                     server.is_used == 1):
             result.append(server)
 
+    resultSize=len(result)
     return render(request, 'serverConfig/serverConfigSearch.html',
                   {
                       "result": result,
+                      "resultSize":resultSize
                   })

@@ -195,6 +195,46 @@ def handleRuleRevise(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
+# 根据国家id返回国家名称
+def getCountryName(countryID):
+    if len(countryID)>0:
+        country=CountryList.objects.get(code=int(countryID))
+        return country.name
+    return ""
+
+def getProvinceName(provinceID):
+    if len(provinceID)>0:
+        province=ProvList.objects.get(code=int(provinceID))
+        return province.name
+    return ""
+
+def getCityName(cityID):
+    if len(cityID)>0:
+        city=CityList.objects.get(code=int(cityID))
+        return city.name
+    return ""
+
+
+# 将数据库数据转换为在search页面显示的数据项
+# 主要用来拆开rule为多个子项
+def convert2SearchResult(rawResultData):
+    resultData={}
+    ruleCondition=RuleCondition(rawResultData.rule)
+
+    resultData["id"]=rawResultData.id
+    resultData["group_id"]=rawResultData.group_id
+    resultData["rank"]=rawResultData.rank
+    resultData["ttl"]=rawResultData.ttl
+    resultData["compel"]=rawResultData.compel
+    resultData["country"]=getCountryName(ruleCondition.country)
+    resultData["province"]=getProvinceName(ruleCondition.province)
+    resultData["city"]=getCityName(ruleCondition.city)
+    resultData["host"]=ruleCondition.host
+    resultData["appid"]=ruleCondition.appid
+    resultData["net"]=ruleCondition.net
+
+    return resultData
+
 def ruleConfigSearch(request):
     result = []
     conditions=[]
@@ -222,12 +262,13 @@ def ruleConfigSearch(request):
             if rule.rule.find(condition) == -1:
                 flag = False
         if flag:
-            result.append(rule)
+            result.append(convert2SearchResult(rule))
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
+    resultSize=len(result)
 
     return render(request,
                   "ruleConfig/ruleConfigSearch.html",
@@ -235,5 +276,6 @@ def ruleConfigSearch(request):
                    "allProvince": allProvince,
                    "allCity": allCity,
                    "allNet": allNet,
-                   "result": result
+                   "result": result,
+                   "resultSize":resultSize
                    })

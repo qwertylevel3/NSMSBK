@@ -44,7 +44,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h2>搜索结果</h2>
+            <h2>搜索结果(共{{ resultSize }}条)</h2>
         </div>
     </div>
 
@@ -53,6 +53,7 @@
 
             <table border="1">
                 <thead>
+                <th>id</th>
                 <th>ip</th>
                 <th>port</th>
                 <th>idc</th>
@@ -61,6 +62,7 @@
                 <tbody>
                 {% for line in result %}
                     <tr>
+                        <td>{{ line.id }}</td>
                         <td>{{ line.ip }}</td>
                         <td>{{ line.port }}</td>
                         <td>{{ line.idc }}</td>
