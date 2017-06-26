@@ -21,11 +21,16 @@ from indexPage import views as indexViews
 from ruleConfig import views as ruleConfigViews
 from serverConfig import views as serverConfigViews
 from serverGroupConfig import views as serverGroupConfigViews
+from myAuthority import views as authViews
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'index/', indexViews.index),
+
+    url(r'auth/',authViews.auth),
+    url(r'login/',authViews.login),
+
 
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
