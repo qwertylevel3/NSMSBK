@@ -95,6 +95,25 @@
             </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pagination">
+                <span class="step-links">
+                {% if result.has_previous %}
+                    <a class="button" href="?page={{ result.previous_page_number }}">上一页</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ result.number }} of {{ result.paginator.num_pages }}.
+                </span>
+
+                {% if result.has_next %}
+                    <a  class="button" href="?page={{ result.next_page_number }}">下一页</a>
+                {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

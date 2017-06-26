@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from sqlModels.models import ServerRuleDat
 from sqlModels.models import CountryList
 from sqlModels.models import CityList
@@ -8,7 +9,6 @@ from sqlModels.models import ProvList
 from sqlModels.models import NetList
 from sqlModels.models import ServerGroupDat
 import time
-
 
 
 class RuleCondition:
@@ -67,7 +67,7 @@ class RuleCondition:
         if self.net != "":
             ruleStr += ("&net=" + self.net)
 
-        if ruleStr=="":
+        if ruleStr == "":
             return ruleStr
         else:
             return ruleStr[1:]
@@ -76,11 +76,11 @@ class RuleCondition:
     def getSearchStrList(self):
         conditions = [""]
         if self.city != "":
-            conditions[0] = "="+self.city
+            conditions[0] = "=" + self.city
         if self.province != "" and self.city == "":
-            conditions[0] = "="+self.province
+            conditions[0] = "=" + self.province
         if self.country != "" and self.city == "" and self.province == "":
-            conditions[0] = "="+self.country
+            conditions[0] = "=" + self.country
         if self.host != "":
             conditions.append("host=" + self.host)
         if self.appid != "":
@@ -98,7 +98,7 @@ def ruleConfigDelete(request):
     # 查找成功则设置isuse为0，作为删除操作
     if len(targetData) > 0:
         for data in targetData:
-            data.is_use=0
+            data.is_use = 0
             data.save()
     return HttpResponseRedirect('/ruleConfigSearch/')
 
@@ -109,7 +109,7 @@ def ruleConfigRevise(request):
 
     condition = RuleCondition()
 
-    #-1代表新增
+    # -1代表新增
     if id == "-1":
         id = -1
     else:
@@ -121,13 +121,12 @@ def ruleConfigRevise(request):
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
     allRule = ServerRuleDat.objects.all()
-    allGroup=ServerGroupDat.objects.all()
+    allGroup = ServerGroupDat.objects.all()
 
-    allGroupid=[]
+    allGroupid = []
     for group in allGroup:
         if group.group_id not in allGroupid:
             allGroupid.append(group.group_id)
-
 
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
@@ -138,7 +137,7 @@ def ruleConfigRevise(request):
                       "allProvince": allProvince,
                       "allCity": allCity,
                       "allNet": allNet,
-                      "allGroupid":allGroupid
+                      "allGroupid": allGroupid
                   })
 
 
@@ -197,20 +196,22 @@ def handleRuleRevise(request):
 
 # 根据国家id返回国家名称
 def getCountryName(countryID):
-    if len(countryID)>0:
-        country=CountryList.objects.get(code=int(countryID))
+    if len(countryID) > 0:
+        country = CountryList.objects.get(code=int(countryID))
         return country.name
     return ""
 
+
 def getProvinceName(provinceID):
-    if len(provinceID)>0:
-        province=ProvList.objects.get(code=int(provinceID))
+    if len(provinceID) > 0:
+        province = ProvList.objects.get(code=int(provinceID))
         return province.name
     return ""
 
+
 def getCityName(cityID):
-    if len(cityID)>0:
-        city=CityList.objects.get(code=int(cityID))
+    if len(cityID) > 0:
+        city = CityList.objects.get(code=int(cityID))
         return city.name
     return ""
 
@@ -218,28 +219,28 @@ def getCityName(cityID):
 # 将数据库数据转换为在search页面显示的数据项
 # 主要用来拆开rule为多个子项
 def convert2SearchResult(rawResultData):
-    resultData={}
-    ruleCondition=RuleCondition(rawResultData.rule)
+    resultData = {}
+    ruleCondition = RuleCondition(rawResultData.rule)
 
-    resultData["id"]=rawResultData.id
-    resultData["group_id"]=rawResultData.group_id
-    resultData["rank"]=rawResultData.rank
-    resultData["ttl"]=rawResultData.ttl
-    resultData["compel"]=rawResultData.compel
-    resultData["country"]=getCountryName(ruleCondition.country)
-    resultData["province"]=getProvinceName(ruleCondition.province)
-    resultData["city"]=getCityName(ruleCondition.city)
-    resultData["host"]=ruleCondition.host
-    resultData["appid"]=ruleCondition.appid
-    resultData["net"]=ruleCondition.net
+    resultData["id"] = rawResultData.id
+    resultData["group_id"] = rawResultData.group_id
+    resultData["rank"] = rawResultData.rank
+    resultData["ttl"] = rawResultData.ttl
+    resultData["compel"] = rawResultData.compel
+    resultData["country"] = getCountryName(ruleCondition.country)
+    resultData["province"] = getProvinceName(ruleCondition.province)
+    resultData["city"] = getCityName(ruleCondition.city)
+    resultData["host"] = ruleCondition.host
+    resultData["appid"] = ruleCondition.appid
+    resultData["net"] = ruleCondition.net
 
     return resultData
 
+
 def ruleConfigSearch(request):
     result = []
-    conditions=[]
+    conditions = []
     if request.method == "POST":
-
         ruleCondition = RuleCondition()
 
         ruleCondition.city = request.POST.get("city", "")
@@ -256,8 +257,8 @@ def ruleConfigSearch(request):
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
         flag = True
-        if rule.is_use==0:
-            flag=False
+        if rule.is_use == 0:
+            flag = False
         for condition in conditions:
             if rule.rule.find(condition) == -1:
                 flag = False
@@ -268,7 +269,16 @@ def ruleConfigSearch(request):
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
-    resultSize=len(result)
+    resultSize = len(result)
+
+    paginator = Paginator(result, 25)
+    page=request.GET.get("page")
+    try:
+        result = paginator.page(page)
+    except PageNotAnInteger:
+        result = paginator.page(1)
+    except EmptyPage:
+        result = paginator.page(paginator.num_pages)
 
     return render(request,
                   "ruleConfig/ruleConfigSearch.html",
@@ -277,5 +287,5 @@ def ruleConfigSearch(request):
                    "allCity": allCity,
                    "allNet": allNet,
                    "result": result,
-                   "resultSize":resultSize
+                   "resultSize": resultSize
                    })
