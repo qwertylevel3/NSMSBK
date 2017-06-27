@@ -7,6 +7,18 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 import time
 import json
+import logging
+
+
+def logServerGroupRevise(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : revise server group %s", request.user.username, id)
+
+
+def logServerGroupNew(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : create server group %s", request.user.username, id)
+
 
 
 # Create your views here.
@@ -46,14 +58,16 @@ def handleServerGroupRevise(request):
             data.server_ids = serverListStr
             data.time_out = timeout
             data.save()
+            logServerGroupRevise(request,data.id)
     else:
-        ServerGroupDat.objects.create(
+        data=ServerGroupDat.objects.create(
             group_id=groupid,
             update_time=updateTime,
             registration_time=registrationTime,
             server_ids=serverListStr,
             time_out=timeout
         )
+        logServerGroupNew(request,data.id)
     return HttpResponseRedirect('/serverGroupConfigSearch/')
 
 

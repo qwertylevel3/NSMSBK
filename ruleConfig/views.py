@@ -13,7 +13,21 @@ from sqlModels.models import GroupList
 import time
 import logging
 
-logger = logging.getLogger("sql")
+
+def logRuleRevise(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : revise rule %s", request.user.username, id)
+
+
+def logRuleNew(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : create rule %s", request.user.username, id)
+
+
+def logRuleDelete(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : delete rule %s", request.user.username, id)
+
 
 class RuleCondition:
     def __init__(self, ruleStr=""):
@@ -105,6 +119,9 @@ def ruleConfigDelete(request):
         for data in targetData:
             data.is_use = 0
             data.save()
+            logRuleDelete(request,data.id)
+
+
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
@@ -186,8 +203,9 @@ def handleRuleRevise(request):
             data.ttl = ttl
             data.compel = compel
             data.save()
+            logRuleRevise(request, data.id)
     else:
-        ServerRuleDat.objects.create(
+        data = ServerRuleDat.objects.create(
             update_time=updateTime,
             registration_time=registrationTime,
             group_id=groupid,
@@ -197,8 +215,7 @@ def handleRuleRevise(request):
             compel=compel,
             is_use=1
         )
-
-    logger.info("test")
+        logRuleNew(request, data.id)
 
     return HttpResponseRedirect('/ruleConfigSearch/')
 
@@ -230,7 +247,7 @@ def getCityName(cityID):
 # 根据服务器组id返回服务器组名称
 def getServerGroupName(serverGroupID):
     allServerGroup = GroupList.objects.filter(id=serverGroupID)
-    if len(allServerGroup)>0:
+    if len(allServerGroup) > 0:
         return allServerGroup[0].name
     return serverGroupID
 

@@ -6,6 +6,22 @@ from django.shortcuts import HttpResponse
 from django.contrib.auth.decorators import login_required
 import json
 import time
+import logging
+
+
+def logServerRevise(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : revise server %s", request.user.username, id)
+
+
+def logServerNew(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : create server %s", request.user.username, id)
+
+
+def logServerDelete(request, id):
+    logger = logging.getLogger("sql")
+    logger.info("%s : delete server %s", request.user.username, id)
 
 
 @login_required
@@ -17,6 +33,7 @@ def serverConfigDelete(request):
         for data in targetData:
             data.is_used = 0
             data.save()
+            logServerDelete(request,data.id)
     return HttpResponseRedirect('/serverConfigSearch/')
 
 
@@ -42,9 +59,10 @@ def handleServerRevise(request):
             data.sign = sign
             data.update_time = updateTime
             data.save()
+            logServerRevise(request,data.id)
 
     else:
-        ServerList.objects.create(
+        data=ServerList.objects.create(
             update_time=updateTime,
             registration_time=registrationTime,
             ip=ip,
@@ -53,6 +71,7 @@ def handleServerRevise(request):
             sign=sign,
             is_used=1
         )
+        logServerNew(request,data.id)
     #return HttpResponseRedirect('/serverConfigSearch/')
 
 
