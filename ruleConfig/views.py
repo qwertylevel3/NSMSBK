@@ -28,7 +28,8 @@ def logRuleDelete(request, id):
     logger = logging.getLogger("sql")
     logger.info("%s : delete rule %s", request.user.username, id)
 
-
+# rule匹配规则的六个项的抽象
+# 主要处理六个条件的拼接合并分离以及字符串转换等操作
 class RuleCondition:
     def __init__(self, ruleStr=""):
         self.country = ""
@@ -108,6 +109,7 @@ class RuleCondition:
         return conditions
 
 
+# 删除条目（将is_use设置为0）
 @login_required
 def ruleConfigDelete(request):
     id = request.POST.get("id", "-1")
@@ -119,8 +121,7 @@ def ruleConfigDelete(request):
         for data in targetData:
             data.is_use = 0
             data.save()
-            logRuleDelete(request,data.id)
-
+            logRuleDelete(request, data.id)
 
     return HttpResponseRedirect('/ruleConfigSearch/')
 
@@ -165,6 +166,7 @@ def ruleConfigRevise(request):
 
 
 # 接受表单，新增或更改rule数据
+# 如果表单中id为-1代表新增数据，否则为更改数据
 @login_required
 def handleRuleRevise(request):
     if request.method != "POST":
@@ -251,6 +253,14 @@ def getServerGroupName(serverGroupID):
         return allServerGroup[0].name
     return serverGroupID
 
+# 根据网络代码返回网络名称
+def getNetName(netCode):
+    if len(netCode)>0:
+        net = NetList.objects.filter(code=netCode)
+        if len(net) > 0:
+            return net[0].name
+    return netCode
+
 
 # 将数据库数据转换为在search页面显示的数据项
 def convert2SearchResult(rawResultData):
@@ -267,11 +277,11 @@ def convert2SearchResult(rawResultData):
     resultData["city"] = getCityName(ruleCondition.city)
     resultData["host"] = ruleCondition.host
     resultData["appid"] = ruleCondition.appid
-    resultData["net"] = ruleCondition.net
+    resultData["net"] = getNetName(ruleCondition.net)
 
     return resultData
 
-
+# 显示rule搜索主页面，根据条件condition显示搜索结果result
 @login_required
 def ruleConfigSearch(request):
     result = []

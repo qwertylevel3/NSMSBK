@@ -24,6 +24,7 @@ def logServerDelete(request, id):
     logger.info("%s : delete server %s", request.user.username, id)
 
 
+# 删除一个服务器条目（is_used设置为0）
 @login_required
 def serverConfigDelete(request):
     id = request.POST.get("id", "-1")
@@ -37,6 +38,8 @@ def serverConfigDelete(request):
     return HttpResponseRedirect('/serverConfigSearch/')
 
 
+# 新增或者更改条目
+# 表单中id为-1为新增，否则为更改
 @login_required
 def handleServerRevise(request):
     ip = request.POST.get("ip", "")
@@ -72,9 +75,9 @@ def handleServerRevise(request):
             is_used=1
         )
         logServerNew(request,data.id)
-    #return HttpResponseRedirect('/serverConfigSearch/')
 
 
+# 显示更改服务器信息主界面
 @login_required
 def serverConfigRevise(request):
     if request.method == 'POST':
@@ -103,6 +106,7 @@ def serverConfigRevise(request):
 
 
 
+# 显示搜索服务器主界面
 @login_required
 def serverConfigSearch(request):
     result = []
