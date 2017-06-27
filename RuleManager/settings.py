@@ -138,3 +138,33 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+LOGIN_URL = '/login/'
+
+LOGIN_REDIRECT_URL = '/index/'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'sql': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+    },
+    'handlers': {
+        'sql': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'sql.log',
+            'formatter': 'sql',
+        },
+    },
+    'loggers': {
+        'sql': {
+            'handlers': ['sql'],
+            'level': 'INFO',
+            'propagate': True,
+
+        },
+    },
+}

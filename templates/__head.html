@@ -19,12 +19,20 @@
     });
 </script>
 
-<nav class="navbar navbar-collapse navbar-fixed-top header">
-    <ul class="nav nav-pills">
-        <a class="navbar-brand header-brand" href="/index/">Rule Manager</a>
-        <li><a class="navbar-btn header-btn" href="/ruleConfigSearch/">管理规则</a></li>
-        <li><a class="navbar-btn header-btn" href="/serverConfigSearch/">管理服务器</a></li>
-        <li><a class="navbar-btn header-btn" href="/serverGroupConfigSearch/">管理服务器组</a></li>
-    </ul>
-</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10">
+            <nav class="navbar navbar-collapse navbar-fixed-top header">
+                <ul class="nav nav-pills">
+                    <a class="navbar-brand header-brand" href="/index/">Rule Manager</a>
+                    <li><a class="navbar-btn header-btn" href="/ruleConfigSearch/">管理规则</a></li>
+                    <li><a class="navbar-btn header-btn" href="/serverConfigSearch/">管理服务器</a></li>
+                    <li><a class="navbar-btn header-btn" href="/serverGroupConfigSearch/">管理服务器组</a></li>
+                    <li><a class="navbar-btn header-btn" href="/logout/">登出</a></li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
 <button style="display: none" class="backTopButton button" onclick="location.href='#top'">Back to Top</button>

@@ -4,6 +4,7 @@ from sqlModels.models import ServerList
 from sqlModels.models import GroupList
 from django.shortcuts import HttpResponseRedirect
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 import time
 import json
 
@@ -11,6 +12,7 @@ import json
 # Create your views here.
 
 # 更改服务器组
+@login_required
 def handleServerGroupRevise(request):
     serverIdList = []
 
@@ -75,6 +77,7 @@ def convert2ServerGroupResult(rawServerGroupData):
 
 
 # 查询服务器组
+@login_required
 def serverGroupConfigSearch(request):
     allServerGroup = ServerGroupDat.objects.all()
 
@@ -90,6 +93,7 @@ def serverGroupConfigSearch(request):
 
 
 # 显示更改服务器组页面
+@login_required
 def serverGroupConfigRevise(request):
     defaultServer = []
     id = request.GET.get("id", "-1")
@@ -119,6 +123,7 @@ def server2dict(server):
 
 
 # 显示某个服务器详情
+@login_required
 def showServerGroupDetail(request):
     id=request.GET.get("id","-1")
 

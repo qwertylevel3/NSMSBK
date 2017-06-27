@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.decorators import login_required
 from sqlModels.models import ServerRuleDat
 from sqlModels.models import CountryList
 from sqlModels.models import CityList
@@ -10,7 +11,9 @@ from sqlModels.models import NetList
 from sqlModels.models import ServerGroupDat
 from sqlModels.models import GroupList
 import time
+import logging
 
+logger = logging.getLogger("sql")
 
 class RuleCondition:
     def __init__(self, ruleStr=""):
@@ -91,6 +94,7 @@ class RuleCondition:
         return conditions
 
 
+@login_required
 def ruleConfigDelete(request):
     id = request.POST.get("id", "-1")
     # 查找该项目是否存在
@@ -105,6 +109,7 @@ def ruleConfigDelete(request):
 
 
 # 显示修改rule页面
+@login_required
 def ruleConfigRevise(request):
     id = request.GET.get("id", "-1")
 
@@ -143,6 +148,7 @@ def ruleConfigRevise(request):
 
 
 # 接受表单，新增或更改rule数据
+@login_required
 def handleRuleRevise(request):
     if request.method != "POST":
         return HttpResponseRedirect('/ruleConfigSearch/')
@@ -191,6 +197,8 @@ def handleRuleRevise(request):
             compel=compel,
             is_use=1
         )
+
+    logger.info("test")
 
     return HttpResponseRedirect('/ruleConfigSearch/')
 
@@ -247,6 +255,7 @@ def convert2SearchResult(rawResultData):
     return resultData
 
 
+@login_required
 def ruleConfigSearch(request):
     result = []
     conditions = []

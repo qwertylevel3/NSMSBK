@@ -16,21 +16,20 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
-
 from indexPage import views as indexViews
 from ruleConfig import views as ruleConfigViews
 from serverConfig import views as serverConfigViews
 from serverGroupConfig import views as serverGroupConfigViews
 from myAuthority import views as authViews
-
+from django.contrib.auth.views import login, logout_then_login
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'index/', indexViews.index),
 
-    url(r'auth/',authViews.auth),
-    url(r'login/',authViews.login),
-
+    url(r'^login/$', login, {'template_name': 'auth/login.html'}),  # 指定登录页面模板
+    url(r'^logout/$', logout_then_login),  # 退出登录，并跳转到登录页面
+    url(r'check/', authViews.check),
 
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
@@ -45,5 +44,5 @@ urlpatterns = [
     url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch),
     url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise),
     url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise),
-    url(r'serverGroupShowDetail/',serverGroupConfigViews.showServerGroupDetail),
+    url(r'serverGroupShowDetail/', serverGroupConfigViews.showServerGroupDetail),
 ]

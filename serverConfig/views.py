@@ -3,10 +3,12 @@ from sqlModels.models import ServerList
 from django.shortcuts import HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import HttpResponse
+from django.contrib.auth.decorators import login_required
 import json
 import time
 
 
+@login_required
 def serverConfigDelete(request):
     id = request.POST.get("id", "-1")
     # 查找该项目是否存在
@@ -18,6 +20,7 @@ def serverConfigDelete(request):
     return HttpResponseRedirect('/serverConfigSearch/')
 
 
+@login_required
 def handleServerRevise(request):
     ip = request.POST.get("ip", "")
     port = request.POST.get("port", "")
@@ -53,6 +56,7 @@ def handleServerRevise(request):
     #return HttpResponseRedirect('/serverConfigSearch/')
 
 
+@login_required
 def serverConfigRevise(request):
     if request.method == 'POST':
         id=request.POST.get('id')
@@ -79,6 +83,8 @@ def serverConfigRevise(request):
                        })
 
 
+
+@login_required
 def serverConfigSearch(request):
     result = []
     ip = ""
