@@ -12,7 +12,7 @@
 
 
 
-<div class="container-fluid mainDiv">
+<div class="container-fluid main-div">
     <div class="row">
         <div class="col-md-12">
             <h2>服务器</h2>
@@ -51,7 +51,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table class="mytable" border="1">
+            <table class="result-table" border="1">
                 <thead>
                 <th>id</th>
                 <th>ip</th>
@@ -70,13 +70,13 @@
                         <td>
                             <form action="/serverConfigRevise/" method="get">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="tableButton" value="更改"/>
+                                <input type="submit" class="table-button" value="更改"/>
                             </form>
                         </td>
                         <td>
                             <form action="/serverConfigDelete/" method="post">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="tableButton" value="删除"/>
+                                <input type="submit" class="table-button" value="删除"/>
                             </form>
                         </td>
                     </tr>

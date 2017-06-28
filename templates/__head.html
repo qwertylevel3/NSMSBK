@@ -8,31 +8,24 @@
             if (scrollTopPos > headerHeight) {
                 $('.header').addClass('headerHide');
                 $('.header').removeClass('headerShow');
-                $('.backTopButton').show()
+                $('.back-top-button').show()
             } else {
                 $('.header').removeClass('headerHide');
                 $('.header').addClass('headerShow');
-                $('.backTopButton').hide()
+                $('.back-top-button').hide()
             }
 
         });
     });
 </script>
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-10">
-            <nav class="navbar navbar-collapse navbar-fixed-top header">
-                <ul class="nav nav-pills">
-                    <a class="navbar-brand header-brand" href="/index/">Rule Manager</a>
-                    <li><a class="navbar-btn header-btn" href="/ruleConfigSearch/">管理规则</a></li>
-                    <li><a class="navbar-btn header-btn" href="/serverConfigSearch/">管理服务器</a></li>
-                    <li><a class="navbar-btn header-btn" href="/serverGroupConfigSearch/">管理服务器组</a></li>
-                    <li><a class="navbar-btn header-btn" href="/logout/">登出</a></li>
-                </ul>
-            </nav>
-        </div>
-
-    </div>
-</div>
-<button style="display: none" class="backTopButton button" onclick="location.href='#top'">Back to Top</button>
+<nav class="navbar navbar-collapse navbar-fixed-top header">
+    <ul class="nav nav-pills">
+        <a class="navbar-brand header-brand" href="/index/">Rule Manager</a>
+        <li><a class="navbar-btn header-btn" href="/ruleConfigSearch/">管理规则</a></li>
+        <li><a class="navbar-btn header-btn" href="/serverConfigSearch/">管理服务器</a></li>
+        <li><a class="navbar-btn header-btn" href="/serverGroupConfigSearch/">管理服务器组</a></li>
+        <li><a class="navbar-btn header-btn" href="/logout/">登出</a></li>
+    </ul>
+</nav>
+<button style="display: none" class="back-top-button button" onclick="location.href='#top'">Back to Top</button>

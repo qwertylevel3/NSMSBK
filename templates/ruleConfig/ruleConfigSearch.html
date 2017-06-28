@@ -11,7 +11,7 @@
 
 {% include "__head.html" %}
 
-<div class="container-fluid mainDiv">
+<div class="container-fluid main-div">
 
     <div class="row">
         <div class="col-md-12">
@@ -49,7 +49,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table class="mytable table-hover table-condensed" border="1">
+            <table class="result-table table-hover table-condensed" border="1">
                 <thead>
                 <th>id</th>
                 <th>国家</th>
@@ -80,13 +80,13 @@
                         <td>
                             <form action="/ruleConfigRevise/" method="">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="tableButton" value="更改"/>
+                                <input type="submit" class="table-button" value="更改"/>
                             </form>
                         </td>
                         <td>
                             <form action="/ruleConfigDelete/" method="post">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="tableButton" value="删除"/>
+                                <input type="submit" class="table-button" value="删除"/>
                             </form>
                         </td>
                     </tr>

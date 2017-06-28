@@ -7,9 +7,7 @@ h1 {
   font-style: normal;
   font-variant: small-caps;
   color: #F4FFFF;
-  background-color: #00D8C3;
-  background-position: left top;
-  background-repeat: repeat;
+  background: #00D8C3;
   position: relative;
   right: 0px;
   left: 0px;
@@ -57,31 +55,30 @@ h2 {
 }
 
 /*main*/
-.loginMainDiv {
+.login-main-div {
   width: 500px;
   margin: 250px auto;
   padding: 0px 0px;
   text-align: center;
-  border-style: solid;
-  border-color: #00D8C3;
-  border-width: 7px;
+  border:solid #00D8C3 7px;
+
 }
 
-.indexMainDiv {
+.index-main-div {
   width: 1000px;
   margin: 0 auto;
   padding: 0px 0px;
   text-align: center;
 }
 
-.mainDiv {
+.main-div {
   width: 1000px;
   margin: 40px auto;
   padding: 20px 20px;
   text-align: center;
 }
 
-.baseButton {
+.base-button {
   font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   text-decoration: none;
   text-align: center;
@@ -96,7 +93,7 @@ h2 {
 
 /*button*/
 .button {
-  .baseButton;
+  .base-button;
 
   color: #666;
   background-color: #EEE;
@@ -144,8 +141,8 @@ h2 {
 }
 
 /*tableButton*/
-.tableButton {
-  .baseButton;
+.table-button {
+  .base-button;
 
   color: #fff;
   background-color: #555;
@@ -161,17 +158,17 @@ h2 {
 
 }
 
-.tableButton:visited {
+.table-button:visited {
   color: #666;
 }
 
-.tableButton:hover, .tableButton:focus {
+.table-button:hover, .table-button:focus {
   background-color: #777;
   text-decoration: none;
   outline: none;
 }
 
-.tableButton:active, .tableButton.active, .tableButton.is-active {
+.table-button:active, .table-button.active, .table-button.is-active {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   text-decoration: none;
   background-color: #eeeeee;
@@ -181,7 +178,7 @@ h2 {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-.tableButton.disabled, .tableButton.is-disabled, .tableButton:disabled {
+.table-button.disabled, .table-button.is-disabled, .table-button:disabled {
   top: 0 !important;
   background: #EEE !important;
   border: 1px solid #DDD !important;
@@ -193,27 +190,27 @@ h2 {
   opacity: .8 !important;
 }
 
-.showDetailButton {
-  .tableButton;
+.showdetail-button {
+  .table-button;
 }
 
 /*table*/
-.mytable {
+.result-table {
   border-collapse: collapse;
   font-family: Futura, Arial, sans-serif;
   margin: 0 auto;
 }
 
-.mytable caption {
+.result-table caption {
   font-size: larger;
   margin: 1em auto;
 }
 
-.mytable th, td {
+.result-table th, td {
   padding: .25em;
 }
 
-.mytable th {
+.result-table th {
   background: #555;
   nonerepeat: scroll 0 0;
   color: #fff;
@@ -221,7 +218,7 @@ h2 {
 
 }
 
-.mytable tbody tr:nth-child(odd) {
+.result-table tbody tr:nth-child(odd) {
   background: #B8FFD3;
 }
 
@@ -265,7 +262,7 @@ h2 {
 }
 
 /*backTopButton*/
-.backTopButton {
+.back-top-button {
   position: fixed;
   left: 1500px;
   bottom: 75px;

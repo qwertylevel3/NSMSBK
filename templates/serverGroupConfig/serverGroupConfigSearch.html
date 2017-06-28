@@ -7,8 +7,13 @@
 
 
     <script>
+
         $(document).ready(function () {
-            $(".showDetailButton").click(function () {
+
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
+            $(".showdetail-button").click(function () {
                 var id = this.value;
 
                 var tableRef = document.getElementById("showDetailTable");
@@ -46,26 +51,26 @@
 {% include "__head.html" %}
 
 
-<div class="container-fluid mainDiv">
+<div class="container-fluid main-div">
     <div class="row">
         <div class="col-md-12">
             <h2>服务器组</h2>
         </div>
     </div>
-
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-md-7">
             <form action="/serverGroupConfigRevise/" method="get">
                 <input type="text" name="id" value="-1" hidden/>
-                <input type="submit" class="button" value="新增server group"/>
+                <input type="submit" class="button" value="新增服务器组"/>
             </form>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
 
-            <table class="mytable" border="1">
+    <div class="row">
+        <div class="col-md-7">
+
+            <table class="result-table" border="1">
                 <thead>
                 <th>id</th>
                 <th>groupid</th>
@@ -80,11 +85,11 @@
                         <td>
                             <form action="/serverGroupConfigRevise/" method="get">
                                 <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
-                                <input type="submit" class="tableButton" value="更改"/>
+                                <input type="submit" class="table-button" value="更改"/>
                             </form>
                         </td>
                         <td>
-                            <button class="showDetailButton"
+                            <button class="showdetail-button"
                                     id="showDetailButton{{ serverGroup.id }}"
                                     value="{{ serverGroup.id }}"
                                     type="button" data-toggle="collapse"
@@ -105,19 +110,22 @@
         </div>
 
 
-        <div class="col-md-4">
-            <h3>服务器组详情</h3>
-            <table class="mytable" id="showDetailTable" border="1">
-                <thead>
-                <th>id</th>
-                <th>ip</th>
-                <th>port</th>
-                <th>idc</th>
-                <th>sign</th>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="col-md-5">
+
+            <div class="panel panel-default">
+                <div class="panel-heading">服务器组详情</div>
+                <table class="result-table" id="showDetailTable" border="1">
+                    <thead>
+                    <th>id</th>
+                    <th>ip</th>
+                    <th>port</th>
+                    <th>idc</th>
+                    <th>sign</th>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
