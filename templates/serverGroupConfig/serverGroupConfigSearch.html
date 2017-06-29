@@ -5,7 +5,6 @@
     <title>Title</title>
     {% include "__staticFiles.html" %}
 
-
     <script>
 
         $(document).ready(function () {
@@ -14,6 +13,16 @@
                 $('[data-toggle="popover"]').popover()
             });
             $(".showdetail-button").click(function () {
+
+                if ($("#showDetailTableDiv").hasClass("hidden")) {
+                    $("#addServerGroupButtonDiv").removeClass("col-md-12");
+                    $("#addServerGroupButtonDiv").addClass("col-md-7");
+                    $("#resultTableDiv").removeClass("col-md-12");
+                    $("#resultTableDiv").addClass("col-md-7");
+                    $("#showDetailTableDiv").removeClass("hidden");
+                }
+
+
                 var id = this.value;
 
                 var tableRef = document.getElementById("showDetailTable");
@@ -40,6 +49,7 @@
                             idcCol.innerHTML = server.idc;
                             var signCol = newServerLine.insertCell();
                             signCol.innerHTML = server.sign;
+
                         })
                     });
             });
@@ -57,8 +67,9 @@
             <h2>服务器组</h2>
         </div>
     </div>
+
     <div class="row">
-        <div class="col-md-7">
+        <div id="addServerGroupButtonDiv" class="col-md-12">
             <form action="/serverGroupConfigRevise/" method="get">
                 <input type="text" name="id" value="-1" hidden/>
                 <input type="submit" class="button" value="新增服务器组"/>
@@ -68,9 +79,9 @@
 
 
     <div class="row">
-        <div class="col-md-7">
+        <div id="resultTableDiv" class="col-md-12">
 
-            <table class="result-table" border="1">
+            <table class="result-table table-hover" border="1">
                 <thead>
                 <th>id</th>
                 <th>groupid</th>
@@ -92,28 +103,20 @@
                             <button class="showdetail-button"
                                     id="showDetailButton{{ serverGroup.id }}"
                                     value="{{ serverGroup.id }}"
-                                    type="button" data-toggle="collapse"
-                                    data-target="#serverDetail" aria-expanded="false"
-                                    aria-controls="collapseExample">
+                                    type="button">
                                 详情
                             </button>
                         </td>
-
                     </tr>
-
-
                 {% endfor %}
                 </tbody>
             </table>
-
-
         </div>
 
 
-        <div class="col-md-5">
-
-            <div class="panel panel-default">
-                <div class="panel-heading">服务器组详情</div>
+        <div  class=" col-md-5 ">
+            <div id="showDetailTableDiv" class="hidden">
+                <h3>服务器组详情</h3>
                 <table class="result-table" id="showDetailTable" border="1">
                     <thead>
                     <th>id</th>
@@ -128,8 +131,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 </body>

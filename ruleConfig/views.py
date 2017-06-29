@@ -14,6 +14,7 @@ import time
 import logging
 
 
+
 def logRuleRevise(request, id):
     logger = logging.getLogger("sql")
     logger.info("%s : revise rule %s", request.user.username, id)
@@ -27,6 +28,7 @@ def logRuleNew(request, id):
 def logRuleDelete(request, id):
     logger = logging.getLogger("sql")
     logger.info("%s : delete rule %s", request.user.username, id)
+
 
 # rule匹配规则的六个项的抽象
 # 主要处理六个条件的拼接合并分离以及字符串转换等操作
@@ -253,9 +255,10 @@ def getServerGroupName(serverGroupID):
         return allServerGroup[0].name
     return serverGroupID
 
+
 # 根据网络代码返回网络名称
 def getNetName(netCode):
-    if len(netCode)>0:
+    if len(netCode) > 0:
         net = NetList.objects.filter(code=netCode)
         if len(net) > 0:
             return net[0].name
@@ -280,6 +283,7 @@ def convert2SearchResult(rawResultData):
     resultData["net"] = getNetName(ruleCondition.net)
 
     return resultData
+
 
 # 显示rule搜索主页面，根据条件condition显示搜索结果result
 @login_required
