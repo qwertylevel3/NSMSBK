@@ -13,8 +13,8 @@
             }
             ;
 
-            {% for groupid in allGroupid %}
-                $("#groupidSelect").append($('<option>',{value:{{ groupid }} }).text({{ groupid }}));
+            {% for group in allGroup %}
+                $("#groupidSelect").append($('<option>',{value:{{ group.groupid }} }).text("{{ group.groupidName }}"));
             {% endfor %}
 
             {% for rule in allRule %}
@@ -79,7 +79,7 @@
                     <th>rank</th>
                     <th>compel</th>
                     <th>ttl</th>
-                    <th>groupid</th>
+                    <th>服务器组</th>
                     </thead>
                     <tbody>
                     <tr>
@@ -95,7 +95,7 @@
                             <input type="checkbox" class="checkbox" name="compel" id="compelCheckbox"/>
                         </td>
                         <td>
-                            <input type="text" name="ttl" id="ttlText"/>
+                            <input type="text" name="ttl" id="ttlText" value="6000"/>
                         </td>
                         <td>
                             <!--<input type="text" name="groupid" id="groupidText"/>-->

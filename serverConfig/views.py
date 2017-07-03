@@ -9,19 +9,41 @@ import time
 import logging
 
 
+def serverData2Str(serverData):
+    serverStr = ""
+    serverStr += "id:" + str(serverData.id) + "|"
+    serverStr += "ip:" + serverData.ip + "|"
+    serverStr += "port:" + serverData.port + "|"
+    serverStr += "idc:" + serverData.idc + "|"
+    serverStr += "sign:" + serverData.sign
+    return serverStr
+
+
 def logServerRevise(request, id):
+    server=ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise server %s", request.user.username, id)
+    logger.info("%s : revise server %s[%s]",
+                request.user.username,
+                id,
+                serverData2Str(server))
 
 
 def logServerNew(request, id):
+    server=ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : create server %s", request.user.username, id)
+    logger.info("%s : create server %s[%s]",
+                request.user.username,
+                id,
+                serverData2Str(server))
 
 
 def logServerDelete(request, id):
+    server=ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : delete server %s", request.user.username, id)
+    logger.info("%s : delete server %s[%s]",
+                request.user.username,
+                id,
+                serverData2Str(server))
 
 
 # 删除一个服务器条目（is_used设置为0）
@@ -34,7 +56,7 @@ def serverConfigDelete(request):
         for data in targetData:
             data.is_used = 0
             data.save()
-            logServerDelete(request,data.id)
+            logServerDelete(request, data.id)
     return HttpResponseRedirect('/serverConfigSearch/')
 
 
@@ -62,10 +84,10 @@ def handleServerRevise(request):
             data.sign = sign
             data.update_time = updateTime
             data.save()
-            logServerRevise(request,data.id)
+            logServerRevise(request, data.id)
 
     else:
-        data=ServerList.objects.create(
+        data = ServerList.objects.create(
             update_time=updateTime,
             registration_time=registrationTime,
             ip=ip,
@@ -74,14 +96,14 @@ def handleServerRevise(request):
             sign=sign,
             is_used=1
         )
-        logServerNew(request,data.id)
+        logServerNew(request, data.id)
 
 
 # 显示更改服务器信息主界面
 @login_required
 def serverConfigRevise(request):
     if request.method == 'POST':
-        id=request.POST.get('id')
+        id = request.POST.get('id')
         ip = request.POST.get('ip')
         port = request.POST.get('port')
         idc = request.POST.get('idc')
@@ -103,7 +125,6 @@ def serverConfigRevise(request):
                       {"id": id,
                        "allServer": ServerList.objects.all()
                        })
-
 
 
 # 显示搜索服务器主界面
@@ -131,9 +152,9 @@ def serverConfigSearch(request):
                     server.is_used == 1):
             result.append(server)
 
-    resultSize=len(result)
+    resultSize = len(result)
     return render(request, 'serverConfig/serverConfigSearch.html',
                   {
                       "result": result,
-                      "resultSize":resultSize
+                      "resultSize": resultSize
                   })

@@ -24,6 +24,7 @@
             <form id="ruleSearchForm" action="/ruleConfigSearch/" method="post">
                 {% include "ruleConfig/__conditionTable.html" %}
             </form>
+
         </div>
     </div>
 
@@ -58,7 +59,7 @@
                 <th>host</th>
                 <th>appid</th>
                 <th>net</th>
-                <th>服务器组id</th>
+                <th>服务器组</th>
                 <th>rank</th>
                 <th>ttl</th>
                 <th>compel</th>
@@ -103,13 +104,13 @@
                     <a class="button" href="?page={{ result.previous_page_number }}">上一页</a>
                 {% endif %}
 
-                <span class="current">
+                    <span class="current">
                     Page {{ result.number }} of {{ result.paginator.num_pages }}.
                 </span>
 
-                {% if result.has_next %}
-                    <a  class="button" href="?page={{ result.next_page_number }}">下一页</a>
-                {% endif %}
+                    {% if result.has_next %}
+                        <a class="button" href="?page={{ result.next_page_number }}">下一页</a>
+                    {% endif %}
                 </span>
             </div>
         </div>

@@ -52,6 +52,48 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
+# 根据国家代码返回国家名称
+def getCountryName(countryID):
+    if len(countryID) > 0:
+        country = CountryList.objects.get(code=int(countryID))
+        return country.name
+    return ""
+
+
+# 根据省份代码返回省份名称
+def getProvinceName(provinceID):
+    if len(provinceID) > 0:
+        province = ProvList.objects.get(code=int(provinceID))
+        return province.name
+    return ""
+
+
+# 根据城市代码返回城市名称
+def getCityName(cityID):
+    if len(cityID) > 0:
+        city = CityList.objects.get(code=int(cityID))
+        return city.name
+    return ""
+
+
+# 根据服务器组id返回服务器组名称
+def getServerGroupName(serverGroupID):
+    allServerGroup = GroupList.objects.filter(id=serverGroupID)
+    if len(allServerGroup) > 0:
+        return allServerGroup[0].name
+    return serverGroupID
+
+
+# 根据网络代码返回网络名称
+def getNetName(netCode):
+    if len(netCode) > 0:
+        net = NetList.objects.filter(code=netCode)
+        if len(net) > 0:
+            return net[0].name
+    return netCode
+
+
+
 # rule匹配规则的六个项的抽象
 # 主要处理六个条件的拼接合并分离以及字符串转换等操作
 class RuleCondition:
@@ -150,6 +192,10 @@ def ruleConfigDelete(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
+class GroupData:
+    groupid=""
+    groupidName=""
+
 # 显示修改rule页面
 @login_required
 def ruleConfigRevise(request):
@@ -172,9 +218,14 @@ def ruleConfigRevise(request):
     allGroup = ServerGroupDat.objects.all()
 
     allGroupid = []
+    allGroupData=[]
     for group in allGroup:
         if group.group_id not in allGroupid:
+            groupData=GroupData()
+            groupData.groupid=group.group_id
+            groupData.groupidName=getServerGroupName(group.group_id)
             allGroupid.append(group.group_id)
+            allGroupData.append(groupData)
 
     return render(request, "ruleConfig/ruleConfigRevise.html",
                   {
@@ -185,7 +236,7 @@ def ruleConfigRevise(request):
                       "allProvince": allProvince,
                       "allCity": allCity,
                       "allNet": allNet,
-                      "allGroupid": allGroupid
+                      "allGroup": allGroupData
                   })
 
 
@@ -246,45 +297,6 @@ def handleRuleRevise(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
-# 根据国家代码返回国家名称
-def getCountryName(countryID):
-    if len(countryID) > 0:
-        country = CountryList.objects.get(code=int(countryID))
-        return country.name
-    return ""
-
-
-# 根据省份代码返回省份名称
-def getProvinceName(provinceID):
-    if len(provinceID) > 0:
-        province = ProvList.objects.get(code=int(provinceID))
-        return province.name
-    return ""
-
-
-# 根据城市代码返回城市名称
-def getCityName(cityID):
-    if len(cityID) > 0:
-        city = CityList.objects.get(code=int(cityID))
-        return city.name
-    return ""
-
-
-# 根据服务器组id返回服务器组名称
-def getServerGroupName(serverGroupID):
-    allServerGroup = GroupList.objects.filter(id=serverGroupID)
-    if len(allServerGroup) > 0:
-        return allServerGroup[0].name
-    return serverGroupID
-
-
-# 根据网络代码返回网络名称
-def getNetName(netCode):
-    if len(netCode) > 0:
-        net = NetList.objects.filter(code=netCode)
-        if len(net) > 0:
-            return net[0].name
-    return netCode
 
 
 # 将数据库数据转换为在search页面显示的数据项

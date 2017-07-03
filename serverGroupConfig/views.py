@@ -10,14 +10,31 @@ import json
 import logging
 
 
+def serverGroup2Str(serverGroupData):
+    serverGroupStr=""
+    serverGroupStr+="id:"+str(serverGroupData.id)+"|"
+    serverGroupStr+="group_id:"+str(serverGroupData.group_id)+"|"
+    serverGroupStr+="server_ids:"+serverGroupData.server_ids+"|"
+    serverGroupStr+="time_out:"+str(serverGroupData.time_out)
+    return serverGroupStr
+
+
 def logServerGroupRevise(request, id):
+    serverGroup=ServerGroupDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise server group %s", request.user.username, id)
+    logger.info("%s : revise server group %s[%s]",
+                request.user.username,
+                id,
+                serverGroup2Str(serverGroup))
 
 
 def logServerGroupNew(request, id):
+    serverGroup=ServerGroupDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : create server group %s", request.user.username, id)
+    logger.info("%s : create server group %s[%s]",
+                request.user.username,
+                id,
+                serverGroup2Str(serverGroup))
 
 
 # Create your views here.
