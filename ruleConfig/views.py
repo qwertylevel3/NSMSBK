@@ -14,20 +14,42 @@ import time
 import logging
 
 
+def ruleData2Str(ruleData):
+    ruleStr = ""
+    ruleStr += "id:" + str(ruleData.id) + "|"
+    ruleStr += "group_id:" + str(ruleData.group_id) + "|"
+    ruleStr += "rule:" + ruleData.rule + "|"
+    ruleStr += "rank:" + str(ruleData.rank) + "|"
+    ruleStr += "ttl:" + str(ruleData.ttl) + "|"
+    ruleStr += "compel:" + str(ruleData.compel)
+    return ruleStr
+
 
 def logRuleRevise(request, id):
+    rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise rule %s", request.user.username, id)
+    logger.info("%s : revise rule %s[%s]",
+                request.user.username,
+                id,
+                ruleData2Str(rule))
 
 
 def logRuleNew(request, id):
+    rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : create rule %s", request.user.username, id)
+    logger.info("%s : create rule %s[%s]",
+                request.user.username,
+                id,
+                ruleData2Str(rule))
 
 
 def logRuleDelete(request, id):
+    rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : delete rule %s", request.user.username, id)
+    logger.info("%s : delete rule %s[%s]",
+                request.user.username,
+                id,
+                ruleData2Str(rule))
 
 
 # rule匹配规则的六个项的抽象

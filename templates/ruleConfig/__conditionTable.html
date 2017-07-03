@@ -1,6 +1,5 @@
 <div class="conditionTableDiv">
 
-
     {% load static %}
     <script src="{% static "js/jquery-3.2.1.js" %}"></script>
 
@@ -11,8 +10,8 @@
                 $("#provinceSelect").empty();
                 $("#citySelect").empty();
 
-                $("#provinceSelect").append("<option value='' selected>省份</option>")
-                $("#citySelect").append("<option value='' selected>城市</option>")
+                $("#provinceSelect").append("<option value='' selected>省份</option>");
+                $("#citySelect").append("<option value='' selected>城市</option>");
 
                 {% for province in allProvince %}
 
@@ -23,12 +22,10 @@
 
                     if (curCountryCode == tempCode) {
                         $("#provinceSelect").append(
-                            "<option value='" +
-                            "{{ province.code }}" +
-                            "'>" +
-                            "{{ province.name }}" +
-                            "</option>"
+                            $('<option>',{value:{{province.code}}}).text("{{ province.name }}")
                         );
+
+
                     };
                 {% endfor %}
             });
@@ -44,13 +41,7 @@
                     tempCode = parseInt(tempCode);
 
                     if (curProvinceCode == tempCode) {
-                        $("#citySelect").append(
-                            "<option value='" +
-                            "{{ city.code }}" +
-                            "'>" +
-                            "{{ city.name }}" +
-                            "</option>"
-                        );
+                        $("#citySelect").append($('<option>',{value:{{city.code}}}).text("{{ city.name }}"));
                     };
 
                 {% endfor %}

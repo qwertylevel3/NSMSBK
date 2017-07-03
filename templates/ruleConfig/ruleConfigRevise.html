@@ -9,23 +9,12 @@
     <script>
         $(document).ready(function () {
             for (var r = 1; r <= 7; r++) {
-                $("#rankSelect").append(
-                    "<option value='" +
-                    r +
-                    "'>" +
-                    r +
-                    "</option>"
-                );
-            };
+                $("#rankSelect").append($('<option>', {value: r}).text(r));
+            }
+            ;
 
             {% for groupid in allGroupid %}
-                $("#groupidSelect").append(
-                    "<option value='" +
-                    "{{ groupid }}" +
-                    "'>" +
-                    "{{ groupid }}" +
-                    "</option>"
-                );
+                $("#groupidSelect").append($('<option>',{value:{{ groupid }} }).text({{ groupid }}));
             {% endfor %}
 
             {% for rule in allRule %}
