@@ -93,7 +93,6 @@ def getNetName(netCode):
     return netCode
 
 
-
 # rule匹配规则的六个项的抽象
 # 主要处理六个条件的拼接合并分离以及字符串转换等操作
 class RuleCondition:
@@ -193,8 +192,9 @@ def ruleConfigDelete(request):
 
 
 class GroupData:
-    groupid=""
-    groupidName=""
+    groupid = ""
+    groupidName = ""
+
 
 # 显示修改rule页面
 @login_required
@@ -218,12 +218,12 @@ def ruleConfigRevise(request):
     allGroup = ServerGroupDat.objects.all()
 
     allGroupid = []
-    allGroupData=[]
+    allGroupData = []
     for group in allGroup:
         if group.group_id not in allGroupid:
-            groupData=GroupData()
-            groupData.groupid=group.group_id
-            groupData.groupidName=getServerGroupName(group.group_id)
+            groupData = GroupData()
+            groupData.groupid = group.group_id
+            groupData.groupidName = getServerGroupName(group.group_id)
             allGroupid.append(group.group_id)
             allGroupData.append(groupData)
 
@@ -297,8 +297,6 @@ def handleRuleRevise(request):
     return HttpResponseRedirect('/ruleConfigSearch/')
 
 
-
-
 # 将数据库数据转换为在search页面显示的数据项
 def convert2SearchResult(rawResultData):
     resultData = {}
@@ -315,6 +313,7 @@ def convert2SearchResult(rawResultData):
     resultData["host"] = ruleCondition.host
     resultData["appid"] = ruleCondition.appid
     resultData["net"] = getNetName(ruleCondition.net)
+    resultData["is_use"]=rawResultData.is_use
 
     return resultData
 
@@ -324,6 +323,8 @@ def convert2SearchResult(rawResultData):
 def ruleConfigSearch(request):
     result = []
     conditions = []
+    # 0显示全部,1显示已启用,2显示未启用
+    showState = 0
     if request.method == "POST":
         ruleCondition = RuleCondition()
 
@@ -336,12 +337,16 @@ def ruleConfigSearch(request):
 
         conditions = ruleCondition.getSearchStrList()
 
+        showState = request.POST.get("showState", 0)
+
     allRules = ServerRuleDat.objects.all()
 
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
         flag = True
-        if rule.is_use == 0:
+        if rule.is_use == 0 and showState == "1":
+            flag = False
+        if rule.is_use == 1 and showState == "2":
             flag = False
         for condition in conditions:
             if rule.rule.find(condition) == -1:
