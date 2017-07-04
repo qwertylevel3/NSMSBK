@@ -3,6 +3,7 @@ from django.shortcuts import HttpResponse
 from django.shortcuts import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from sqlModels.models import ServerRuleDat
 from sqlModels.models import CountryList
 from sqlModels.models import CityList
@@ -261,8 +262,10 @@ def ruleConfigDelete(request):
             data.is_use = 0
             data.save()
             logRuleDelete(request, data.id)
-
-    return HttpResponseRedirect('/ruleConfigSearch/')
+            return_json={'result':True}
+            return JsonResponse(return_json)
+    return_json={'result':False}
+    return JsonResponse(return_json)
 
 # 启用条目(is_use 设置为1)
 @login_required
@@ -277,7 +280,10 @@ def ruleConfigReuse(request):
             data.is_use = 1
             data.save()
             logRuleReuse(request, data.id)
-    return HttpResponseRedirect('/ruleConfigSearch/')
+            return_json={'result':True}
+            return JsonResponse(return_json)
+    return_json={'result':False}
+    return JsonResponse(return_json)
 
 class GroupData:
     groupid = ""

@@ -8,6 +8,35 @@
 
     <script>
 
+        function deleteFun(id) {
+            $.post(
+                '/ruleConfigDelete/',
+                {"id":id},
+                function (ret) {
+                    if(ret.result){
+                        alert("操作成功")
+                        window.location.replace('/ruleConfigSearch/');
+                    }else{
+                        alert("操作失败")
+                    }
+                }
+            )
+        }
+        function reuseFun(id) {
+            $.post(
+                '/ruleConfigReuse/',
+                {"id":id},
+                function (ret) {
+                    if(ret.result){
+                        alert("操作成功")
+                        window.location.replace('/ruleConfigSearch/');
+                    }else{
+                        alert("操作失败")
+                    }
+                }
+            )
+        }
+
     </script>
 
 </head>
@@ -93,16 +122,10 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/ruleConfigDelete/" method="post">
-                                <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="table-button" value="禁用"/>
-                            </form>
+                            <button id="deleteButton{{ line.id }}" class="table-button" onclick="deleteFun({{ line.id }})">禁用</button>
                         </td>
                         <td>
-                            <form action="/ruleConfigReuse/" method="post">
-                                <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="table-button" value="启用"/>
-                            </form>
+                            <button id="reuseButton{{ line.id }}" class="table-button" onclick="reuseFun({{ line.id }})">启用</button>
                         </td>
                     </tr>
                 {% endfor %}
