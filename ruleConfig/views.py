@@ -402,7 +402,8 @@ def handleRuleRevise(request):
         )
         logRuleNew(request, data.id)
 
-    return HttpResponseRedirect('/ruleConfigSearch/')
+    json_return={'result':True}
+    return JsonResponse(json_return)
 
 
 # 将数据库数据转换为在search页面显示的数据项

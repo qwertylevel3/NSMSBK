@@ -7,6 +7,23 @@
     {% include "__staticFiles.html" %}
 
     <script>
+
+        function submitForm() {
+            if (validate_form(document.getElementById("reviseRuleForm"))) {
+                $.post(
+                    '/handleRuleRevise/',
+                    $("#reviseRuleForm").serialize(),
+                    function (ret) {
+                        if (ret.result) {
+                            alert("操作成功");
+                            window.location.replace('/ruleConfigSearch/');
+                        } else {
+                            alert("操作失败");
+                        }
+                    }
+                );
+            }
+        }
         $(document).ready(function () {
             for (var r = 1; r <= 7; r++) {
                 $("#rankSelect").append($('<option>', {value: r}).text(r));
@@ -14,7 +31,7 @@
             ;
 
             {% for group in allGroup %}
-                $("#groupidSelect").append($('<option>',{value:{{ group.groupid }} }).text("{{ group.groupidName }}"));
+                $("#groupidSelect").append($('<option>', {value:{{ group.groupid }}}).text("{{ group.groupidName }}"));
             {% endfor %}
 
             {% for rule in allRule %}
@@ -53,6 +70,7 @@
                     return false
                 }
             }
+            return true;
         }
     </script>
 
@@ -71,7 +89,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form action="/handleRuleRevise/" onsubmit="return validate_form(this)" method="post">
+            <form id="reviseRuleForm">
 
                 <table class="result-table" border="1">
                     <thead>
@@ -107,12 +125,14 @@
 
                 {% include "ruleConfig/__conditionTable.html" %}
 
-                <input type="button" class="button" value="取消"
-                       onclick="window.location.replace('/ruleConfigSearch/')">
 
+                <!--
                 <input type="submit" class="button" value="提交"/>
+                -->
 
             </form>
+            <button class="button" onclick="window.location.replace('/ruleConfigSearch/')">取消</button>
+            <button class="button" onclick="submitForm()">提交</button>
         </div>
     </div>
 </div>
