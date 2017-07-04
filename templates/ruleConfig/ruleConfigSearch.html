@@ -6,6 +6,10 @@
 
     {% include "__staticFiles.html" %}
 
+    <script>
+
+    </script>
+
 </head>
 <body>
 
@@ -15,7 +19,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h2>规则</h2>
+            <h2>搜索规则</h2>
         </div>
     </div>
 
@@ -91,7 +95,13 @@
                         <td>
                             <form action="/ruleConfigDelete/" method="post">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="table-button" value="删除"/>
+                                <input type="submit" class="table-button" value="禁用"/>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/ruleConfigReuse/" method="post">
+                                <input type="text" name="id" value="{{ line.id }}" hidden/>
+                                <input type="submit" class="table-button" value="启用"/>
                             </form>
                         </td>
                     </tr>

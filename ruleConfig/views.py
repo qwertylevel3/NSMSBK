@@ -42,6 +42,13 @@ def logRuleNew(request, id):
                 id,
                 ruleData2Str(rule))
 
+def logRuleReuse(request,id):
+    rule = ServerRuleDat.objects.get(id=id)
+    logger = logging.getLogger("sql")
+    logger.info("%s : reuse rule %s[%s]",
+                request.user.username,
+                id,
+                ruleData2Str(rule))
 
 def logRuleDelete(request, id):
     rule = ServerRuleDat.objects.get(id=id)
@@ -95,6 +102,8 @@ def getNetName(netCode):
 
 # rule匹配规则的六个项的抽象
 # 主要处理六个条件的拼接合并分离以及字符串转换等操作
+# 每个条件可以是反条件
+# 反条件用!=,方便字符串切分
 class RuleCondition:
     def __init__(self, ruleStr=""):
         self.country = ""
@@ -103,6 +112,12 @@ class RuleCondition:
         self.host = ""
         self.appid = ""
         self.net = ""
+        self.countryInvert = 0
+        self.provinceInvert = 0
+        self.cityInvert = 0
+        self.hostInvert = 0
+        self.appidInvert = 0
+        self.netInvert = 0
         self.initByStr(ruleStr)
 
     # 用一个rule字符设置内部数据,并自动填充空的country和province数据
@@ -111,18 +126,48 @@ class RuleCondition:
 
         for condition in conditions:
             condition = condition.split("=")
+
             if condition[0] == "country":
                 self.country = condition[1]
+                self.countryInvert = 0
+            elif condition[0] == "country!":
+                self.country = condition[1]
+                self.countryInvert = 1
+
             if condition[0] == "province":
                 self.province = condition[1]
+                self.provinceInvert = 0
+            elif condition[0] == "province!":
+                self.province = condition[1]
+                self.provinceInvert = 1
+
             if condition[0] == "city":
                 self.city = condition[1]
+                self.cityInvert = 0
+            elif condition[0] == "city!":
+                self.city = condition[1]
+                self.cityInvert = 1
+
             if condition[0] == "host":
                 self.host = condition[1]
+                self.hostInvert = 0
+            elif condition[0] == "host!":
+                self.host = condition[1]
+                self.hostInvert = 1
+
             if condition[0] == "appid":
                 self.appid = condition[1]
+                self.appidInvert = 0
+            elif condition[0] == "appid!":
+                self.appid = condition[1]
+                self.appidInvert = 1
+
             if condition[0] == "net":
                 self.net = condition[1]
+                self.netInvert = 0
+            elif condition[0] == "net!":
+                self.net = condition[1]
+                self.netInvert = 1
 
         if self.city != "":
             self.province = self.city[0:5]
@@ -134,22 +179,34 @@ class RuleCondition:
     def convert2Str(self):
         ruleStr = "&"
 
-        if self.country != "":
+        if self.country != "" and self.countryInvert == 0:
             ruleStr = ("&country=" + self.country)
-        if self.province != "":
+        elif self.country != "" and self.countryInvert == 1:
+            ruleStr = ("&country!=" + self.country)
+        if self.province != "" and self.provinceInvert == 0:
             ruleStr = ("&province=" + self.province)
-        if self.city != "":
+        elif self.province != "" and self.provinceInvert == 1:
+            ruleStr = ("&province!=" + self.province)
+        if self.city != "" and self.cityInvert == 0:
             ruleStr = ("&city=" + self.city)
+        elif self.city != "" and self.cityInvert == 1:
+            ruleStr = ("&city!=" + self.city)
 
         if ruleStr == "&":
             ruleStr = ""
 
-        if self.host != "":
+        if self.host != "" and self.hostInvert == 0:
             ruleStr += ("&host=" + self.host)
-        if self.appid != "":
+        elif self.host != "" and self.hostInvert == 1:
+            ruleStr += ("&host!=" + self.host)
+        if self.appid != "" and self.appidInvert == 0:
             ruleStr += ("&appid=" + self.appid)
-        if self.net != "":
+        elif self.appid != "" and self.appidInvert == 1:
+            ruleStr += ("&appid!=" + self.appid)
+        if self.net != "" and self.netInvert == 0:
             ruleStr += ("&net=" + self.net)
+        elif self.net != "" and self.netInvert == 1:
+            ruleStr += ("&net!=" + self.net)
 
         if ruleStr == "":
             return ruleStr
@@ -159,18 +216,35 @@ class RuleCondition:
     # 查找字符串序列
     def getSearchStrList(self):
         conditions = [""]
-        if self.city != "":
+        if self.city != "" and self.cityInvert == 0:
             conditions[0] = "=" + self.city
-        if self.province != "" and self.city == "":
+        elif self.city != "" and self.cityInvert == 1:
+            conditions[0] = "!=" + self.city
+
+        if self.province != "" and self.city == "" and self.provinceInvert == 0:
             conditions[0] = "=" + self.province
-        if self.country != "" and self.city == "" and self.province == "":
+        elif self.province != "" and self.city == "" and self.provinceInvert == 1:
+            conditions[0] = "!=" + self.province
+
+        if self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 0:
             conditions[0] = "=" + self.country
-        if self.host != "":
+        elif self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 1:
+            conditions[0] = "!=" + self.country
+
+        if self.host != "" and self.hostInvert == 0:
             conditions.append("host=" + self.host)
-        if self.appid != "":
+        elif self.host != "" and self.hostInvert == 1:
+            conditions.append("host!=" + self.host)
+
+        if self.appid != "" and self.appidInvert == 0:
             conditions.append("appid=" + self.appid)
-        if self.net != "":
+        elif self.appid != "" and self.appidInvert == 1:
+            conditions.append("appid!=" + self.appid)
+
+        if self.net != "" and self.netInvert == 0:
             conditions.append("net=" + self.net)
+        elif self.net != "" and self.netInvert == 1:
+            conditions.append("net!=" + self.net)
         return conditions
 
 
@@ -190,6 +264,20 @@ def ruleConfigDelete(request):
 
     return HttpResponseRedirect('/ruleConfigSearch/')
 
+# 启用条目(is_use 设置为1)
+@login_required
+def ruleConfigReuse(request):
+    id = request.POST.get("id", "-1")
+    # 查找该项目是否存在
+    targetData = ServerRuleDat.objects.filter(id=id)
+
+    # 查找成功则设置isuse为1，作为启用操作
+    if len(targetData) > 0:
+        for data in targetData:
+            data.is_use = 1
+            data.save()
+            logRuleReuse(request, data.id)
+    return HttpResponseRedirect('/ruleConfigSearch/')
 
 class GroupData:
     groupid = ""
@@ -254,6 +342,20 @@ def handleRuleRevise(request):
     condition.host = request.POST.get("host", "")
     condition.appid = request.POST.get("appid", "")
     condition.net = request.POST.get("net", "")
+
+    if request.POST.get("countryInvert", "off") == "on":
+        condition.countryInvert = 1
+    if request.POST.get("provinceInvert", "off") == "on":
+        condition.provinceInvert = 1
+    if request.POST.get("cityInvert", "off") == "on":
+        condition.cityInvert = 1
+    if request.POST.get("hostInvert", "off") == "on":
+        condition.hostInvert = 1
+    if request.POST.get("appidInvert", "off") == "on":
+        condition.appidInvert = 1
+    if request.POST.get("netInvert", "off") == "on":
+        condition.netInvert = 1
+
     # 拼接为rule字符串用来保存
     conditionStr = condition.convert2Str()
 
@@ -261,7 +363,7 @@ def handleRuleRevise(request):
     ttl = request.POST.get("ttl", "")
     compelStr = request.POST.get("compel", "")
     compel = 0
-    if compelStr == "on":
+    if compelStr == 1:
         compel = 1
     groupid = request.POST.get("groupid", "")
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
@@ -307,33 +409,81 @@ def convert2SearchResult(rawResultData):
     resultData["rank"] = rawResultData.rank
     resultData["ttl"] = rawResultData.ttl
     resultData["compel"] = rawResultData.compel
-    resultData["country"] = getCountryName(ruleCondition.country)
-    resultData["province"] = getProvinceName(ruleCondition.province)
-    resultData["city"] = getCityName(ruleCondition.city)
-    resultData["host"] = ruleCondition.host
-    resultData["appid"] = ruleCondition.appid
-    resultData["net"] = getNetName(ruleCondition.net)
-    resultData["is_use"]=rawResultData.is_use
+
+    if ruleCondition.countryInvert==1:
+        resultData["country"]="!="+getCountryName(ruleCondition.country)
+    else:
+        resultData["country"] = getCountryName(ruleCondition.country)
+
+    if ruleCondition.provinceInvert==1:
+        resultData["province"] ="!="+ getProvinceName(ruleCondition.province)
+    else:
+        resultData["province"] =getProvinceName(ruleCondition.province)
+
+    if ruleCondition.cityInvert==1:
+        resultData["city"] = "!="+ getCityName(ruleCondition.city)
+    else:
+        resultData["city"] = getCityName(ruleCondition.city)
+
+    if ruleCondition.hostInvert==1:
+        resultData["host"] = "!="+ruleCondition.host
+    else:
+        resultData["host"] = ruleCondition.host
+
+    if ruleCondition.appidInvert==1:
+        resultData["appid"] = "!="+ruleCondition.appid
+    else:
+        resultData["appid"] = ruleCondition.appid
+
+    if ruleCondition.netInvert==1:
+        resultData["net"] = "!="+getNetName(ruleCondition.net)
+    else:
+        resultData["net"] = getNetName(ruleCondition.net)
+
+    resultData["is_use"] = rawResultData.is_use
 
     return resultData
+
+
+# 搜索条件
+conditions = []
+# 0显示全部,1显示已启用,2显示未启用
+showState = 0
 
 
 # 显示rule搜索主页面，根据条件condition显示搜索结果result
 @login_required
 def ruleConfigSearch(request):
-    result = []
-    conditions = []
-    # 0显示全部,1显示已启用,2显示未启用
-    showState = 0
-    if request.method == "POST":
-        ruleCondition = RuleCondition()
+    # 搜索结果
+    searchResult = []
 
+    if request.method == "POST":
+        # 将上次的搜索条件置空
+        global showState
+        global conditions
+        del conditions[:]
+        showState = 0
+
+        ruleCondition = RuleCondition()
         ruleCondition.city = request.POST.get("city", "")
         ruleCondition.province = request.POST.get("province", "")
         ruleCondition.country = request.POST.get("country", "")
         ruleCondition.host = request.POST.get("host", "")
         ruleCondition.appid = request.POST.get("appid", "")
         ruleCondition.net = request.POST.get("net", "")
+
+        if request.POST.get("countryInvert", "off") == "on":
+            ruleCondition.countryInvert = 1
+        if request.POST.get("provinceInvert", "off") == "on":
+            ruleCondition.provinceInvert = 1
+        if request.POST.get("cityInvert", "off") == "on":
+            ruleCondition.cityInvert = 1
+        if request.POST.get("hostInvert", "off") == "on":
+            ruleCondition.hostInvert = 1
+        if request.POST.get("appidInvert", "off") == "on":
+            ruleCondition.appidInvert = 1
+        if request.POST.get("netInvert", "off") == "on":
+            ruleCondition.netInvert = 1
 
         conditions = ruleCondition.getSearchStrList()
 
@@ -352,15 +502,15 @@ def ruleConfigSearch(request):
             if rule.rule.find(condition) == -1:
                 flag = False
         if flag:
-            result.append(convert2SearchResult(rule))
+            searchResult.append(convert2SearchResult(rule))
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
-    resultSize = len(result)
+    resultSize = len(searchResult)
 
-    paginator = Paginator(result, 25)
+    paginator = Paginator(searchResult, 25)
     page = request.GET.get("page")
     try:
         result = paginator.page(page)

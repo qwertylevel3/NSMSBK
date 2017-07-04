@@ -22,7 +22,7 @@
 
                     if (curCountryCode == tempCode) {
                         $("#provinceSelect").append(
-                            $('<option>',{value:{{province.code}}}).text("{{ province.name }}")
+                            $('<option>', {value:{{province.code}}}).text("{{ province.name }}")
                         );
 
 
@@ -41,7 +41,7 @@
                     tempCode = parseInt(tempCode);
 
                     if (curProvinceCode == tempCode) {
-                        $("#citySelect").append($('<option>',{value:{{city.code}}}).text("{{ city.name }}"));
+                        $("#citySelect").append($('<option>', {value:{{city.code}}}).text("{{ city.name }}"));
                     };
 
                 {% endfor %}
@@ -61,6 +61,27 @@
                     $("#hostText").val("{{ condition.host }}");
                     $("#appidText").val({{ condition.appid }});
                     $("#netSelect").val({{ condition.net }});
+
+
+                    if ({{ condition.countryInvert }}=={{ 1 }}) {
+                        $("#countryInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.provinceInvert }}=={{ 1 }}) {
+                        $("#provinceInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.cityInvert }}=={{ 1 }}) {
+                        $("#cityInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.hostInvert }}=={{ 1 }}) {
+                        $("#hostInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.appidInvert }}=={{ 1 }}) {
+                        $("#appidInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.netInvert }}=={{ 1 }}) {
+                        $("#netInvertCheckbox").attr("checked", true)
+                    }
+
                 }
             {% endfor %}
         });
@@ -69,6 +90,7 @@
 
     <table class="result-table" border="1">
         <thead>
+        <th></th>
         <th>国家</th>
         <th>省份</th>
         <th>城市</th>
@@ -78,6 +100,7 @@
         </thead>
         <tbody>
         <tr>
+            <td>条件</td>
             <td>
                 <select name="country" id="countrySelect">
                     <option value="" selected>国家</option>
@@ -109,6 +132,28 @@
                         <option value="{{ net.code }}">{{ net.name }}</option>
                     {% endfor %}
                 </select>
+            </td>
+        </tr>
+
+        <tr>
+            <td>取反</td>
+            <td>
+                <input type="checkbox" name="countryInvert" id="countryInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="cityInvert" id="cityInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="hostInvert" id="hostInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="appidInvert" id="appidInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="netInvert" id="netInvertCheckbox" class="checkbox"/>
             </td>
         </tr>
         </tbody>

@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
     url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete),
     url(r'handleRuleRevise/', ruleConfigViews.handleRuleRevise),
+    url(r'ruleConfigReuse/', ruleConfigViews.ruleConfigReuse),
 
     url(r'serverConfigSearch/', serverConfigViews.serverConfigSearch),
     url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise),
