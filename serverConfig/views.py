@@ -153,6 +153,22 @@ def serverConfigRevise(request):
                        })
 
 
+def serverList2dict(serverList):
+    result=[]
+    for server in serverList:
+        result.append(
+            {
+                "id":server.id,
+                "ip":server.ip,
+                "port":server.port,
+                "idc":server.idc,
+                "sign":server.sign,
+                "is_used":server.is_used
+            }
+        )
+    return result
+
+
 # 显示搜索服务器主界面
 @login_required
 def serverConfigSearch(request):
@@ -178,6 +194,11 @@ def serverConfigSearch(request):
             result.append(server)
 
     resultSize = len(result)
+
+    if request.method=="POST":
+        json_return={"result": serverList2dict(result),"resultSize":resultSize}
+        return JsonResponse(json_return)
+
     return render(request, 'serverConfig/serverConfigSearch.html',
                   {
                       "result": result,

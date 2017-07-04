@@ -5,7 +5,56 @@
     <title>server</title>
     {% include "__staticFiles.html" %}
 
+
     <script>
+        function submitSearchServer() {
+            $.post(
+                '/serverConfigSearch/',
+                $("#serverSearchForm").serialize(),
+                function (ret) {
+                    var tableRef = document.getElementById("searchResultTable");
+                    var len = tableRef.rows.length;
+                    while (len > 1) {
+                        tableRef.deleteRow(len - 1);
+                        len = tableRef.rows.length;
+                    }
+
+                    var count = 1;
+                    $.each(ret.result, function (index, server) {
+                        var newServerLine = tableRef.insertRow(count);
+                        count = count + 1;
+                        if (count % 2 == 0) {
+                            addClass(newServerLine,"green-tr");
+                        }
+
+                        var idCol = newServerLine.insertCell();
+                        idCol.innerHTML = server.id;
+                        var ipCol = newServerLine.insertCell();
+                        ipCol.innerHTML = server.ip;
+                        var portCol = newServerLine.insertCell();
+                        portCol.innerHTML = server.port;
+                        var idcCol = newServerLine.insertCell();
+                        idcCol.innerHTML = server.idc;
+                        var signCol = newServerLine.insertCell();
+                        signCol.innerHTML = server.sign;
+                        var is_usedCol = newServerLine.insertCell();
+                        is_usedCol.innerHTML = server.is_used;
+                        var changeCol = newServerLine.insertCell();
+                        changeCol.innerHTML = "<form action='/serverConfigRevise/' method='get'>" +
+                            "<input type='text' name='id' value=" + server.id + " hidden/>" +
+                            "<input type='submit' class='table-button' value='更改'/>" +
+                            "</form>";
+                        var deleteCol = newServerLine.insertCell();
+                        deleteCol.innerHTML = "<button class='table-button' onclick='deleteServer(" + server.id + ")'>禁用</button>"
+
+                        var reuseCol = newServerLine.insertCell();
+                        reuseCol.innerHTML = "<button class='table-button' onclick='reuseServer(" + server.id + ")'>启用</button>"
+                    });
+
+                }
+            )
+        }
+
         function reuseServer(id) {
             $.post(
                 '/serverConfigReuse/',
@@ -20,6 +69,7 @@
                 }
             )
         }
+
         function deleteServer(id) {
             $.post(
                 '/serverConfigDelete/',
@@ -68,7 +118,7 @@
             </form>
         </div>
         <div class="col-md-3">
-            <button class="button" type="submit" form="serverSearchForm" value="Submit">搜索</button>
+            <button class="button" onclick="submitSearchServer()">搜索</button>
         </div>
     </div>
 
@@ -81,7 +131,7 @@
     <div class="row">
         <div class="col-md-12">
 
-            <table class="result-table table-hover" border="1">
+            <table id="searchResultTable" class="result-table table-hover" border="1">
                 <thead>
                 <th>id</th>
                 <th>ip</th>
