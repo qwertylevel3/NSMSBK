@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise),
     url(r'serverConfigDelete/', serverConfigViews.serverConfigDelete),
     url(r'handleServerRevise/', serverConfigViews.handleServerRevise),
+    url(r'serverConfigReuse/', serverConfigViews.serverConfigReuse),
 
     url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch),
     url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise),

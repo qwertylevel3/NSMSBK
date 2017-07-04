@@ -37,6 +37,14 @@ def logServerNew(request, id):
                 serverData2Str(server))
 
 
+def logServerReuse(request,id):
+    server=ServerList.objects.get(id=id)
+    logger = logging.getLogger("sql")
+    logger.info("%s : reuse server %s[%s]",
+                request.user.username,
+                id,
+                serverData2Str(server))
+
 def logServerDelete(request, id):
     server=ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -57,8 +65,26 @@ def serverConfigDelete(request):
             data.is_used = 0
             data.save()
             logServerDelete(request, data.id)
-    return HttpResponseRedirect('/serverConfigSearch/')
+            json_return={"result":True}
+            return JsonResponse(json_return)
+    json_return={"result":False}
+    return JsonResponse(json_return)
 
+# 启用一个服务器条目（is_used设置为1）
+@login_required
+def serverConfigReuse(request):
+    id = request.POST.get("id", "-1")
+    # 查找该项目是否存在
+    targetData = ServerList.objects.filter(id=id)
+    if len(targetData) > 0:
+        for data in targetData:
+            data.is_used = 1
+            data.save()
+            logServerReuse(request, data.id)
+            json_return={"result":True}
+            return JsonResponse(json_return)
+    json_return={"result":False}
+    return JsonResponse(json_return)
 
 # 新增或者更改条目
 # 表单中id为-1为新增，否则为更改
@@ -148,8 +174,7 @@ def serverConfigSearch(request):
         if (ip == "" or server.ip == ip) and (
                         port == "" or server.port == port) and (
                         idc == "" or server.idc == idc) and (
-                        sign == "" or server.sign == sign) and (
-                    server.is_used == 1):
+                        sign == "" or server.sign == sign):
             result.append(server)
 
     resultSize = len(result)

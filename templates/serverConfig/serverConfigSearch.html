@@ -4,12 +4,42 @@
     <meta charset="UTF-8">
     <title>server</title>
     {% include "__staticFiles.html" %}
+
+    <script>
+        function reuseServer(id) {
+            $.post(
+                '/serverConfigReuse/',
+                {"id": id},
+                function (ret) {
+                    if (ret.result) {
+                        alert("操作成功");
+                        window.location.replace('/serverConfigSearch/');
+                    } else {
+                        alert("操作失败");
+                    }
+                }
+            )
+        }
+        function deleteServer(id) {
+            $.post(
+                '/serverConfigDelete/',
+                {"id": id},
+                function (ret) {
+                    if (ret.result) {
+                        alert("操作成功");
+                        window.location.replace('/serverConfigSearch/');
+                    } else {
+                        alert("操作失败");
+                    }
+                }
+            )
+        }
+    </script>
+
 </head>
 <body>
 
 {% include "__head.html" %}
-
-
 
 
 <div class="container-fluid main-div">
@@ -58,6 +88,7 @@
                 <th>port</th>
                 <th>idc</th>
                 <th>sign</th>
+                <th>启用</th>
                 </thead>
                 <tbody>
                 {% for line in result %}
@@ -67,6 +98,7 @@
                         <td>{{ line.port }}</td>
                         <td>{{ line.idc }}</td>
                         <td>{{ line.sign }}</td>
+                        <td>{{ line.is_used }}</td>
                         <td>
                             <form action="/serverConfigRevise/" method="get">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
@@ -74,10 +106,10 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/serverConfigDelete/" method="post">
-                                <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="table-button" value="删除"/>
-                            </form>
+                            <button class="table-button" onclick="deleteServer({{ line.id }})">禁用</button>
+                        </td>
+                        <td>
+                            <button class="table-button" onclick="reuseServer({{ line.id }})">启用</button>
                         </td>
                     </tr>
                 {% endfor %}
