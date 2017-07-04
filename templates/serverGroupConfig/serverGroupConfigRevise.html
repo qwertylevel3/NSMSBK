@@ -7,6 +7,19 @@
     {% include "__staticFiles.html" %}
 
     <script>
+        function searchServer() {
+            var ip=$("#ipText").val();
+            var port=$("#portText").val();
+            var idc=$("#idcText").val();
+            var sign=$("#signText").val();
+
+        }
+        function submitServerGroup() {
+            alert("submit");
+        }
+        function updateServerChoosedTable(){
+            alert("choose");
+        }
         $(document).ready(function () {
             {% for server in defaultServer %}
                 $("#checkbox{{ server }}").attr("checked", true);
@@ -67,63 +80,130 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
-
-            <form id="serverGroupForm" action="/handleServerGroupRevise/" onsubmit="return validate_form(this)"
-                  method="post">
-                <input type="text" name="id" value={{ id }} hidden>
-                <table class="result-table" border="1">
-                    <thead>
-                    <th>id</th>
-                    <th>ip</th>
-                    <th>port</th>
-                    <th>idc</th>
-                    <th>sign</th>
-                    </thead>
-                    <tbody>
-                    {% for server in allServer %}
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="result-table" border="1">
+                        <thead>
+                        <th>ip</th>
+                        <th>port</th>
+                        </thead>
+                        <tbody>
                         <tr>
-                            <td>{{ server.id }}</td>
-                            <td>{{ server.ip }}</td>
-                            <td>{{ server.port }}</td>
-                            <td>{{ server.idc }}</td>
-                            <td>{{ server.sign }}</td>
                             <td>
-                                <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
-                                       id="checkbox{{ server.id }}"/>
+                                <input type="text" name="ip" id="ipText"/>
+                            </td>
+                            <td>
+                                <input type="text" name="port" id="portText"/>
                             </td>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="result-table" border="1">
+                        <thead>
+                        <th>idc</th>
+                        <th>sign</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input type="text" name="idc" id="idcText"/>
+                            </td>
+                            <td>
+                                <input type="text" name="sign" id="signText"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="button" onclick="searchServer()">搜索</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <form id="serverGroupForm" action="/handleServerGroupRevise/" onsubmit="return validate_form(this)"
+                          method="post">
+                        <input type="text" name="id" value={{ id }} hidden>
+                        <table class="result-table" border="1">
+                            <thead>
+                            <th>id</th>
+                            <th>ip</th>
+                            <th>port</th>
+                            <th>idc</th>
+                            <th>sign</th>
+                            </thead>
+                            <tbody>
+                            {% for server in allServer %}
+                                <tr>
+                                    <td>{{ server.id }}</td>
+                                    <td>{{ server.ip }}</td>
+                                    <td>{{ server.port }}</td>
+                                    <td>{{ server.idc }}</td>
+                                    <td>{{ server.sign }}</td>
+                                    <td>
+                                        <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
+                                               id="checkbox{{ server.id }}" onclick="updateServerChoosedTable()" />
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                <table class="result-table" border="1">
-                    <thead>
-                    <th>groupid</th>
-                    <th>timeout</th>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <input type="tel" name="groupid" id="groupidTel"/>
-                        </td>
-                        <td>
-                            <input type="tel" name="timeout" id="timeoutTel" value="6000"/>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-3">
-            <input type="button" class="button" value="取消"
-                   onclick="window.location.replace('/serverGroupConfigSearch/')">
-        </div>
-        <div class="col-md-3">
-            <button class="button" type="submit" form="serverGroupForm" value="Submit">提交</button>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="result-table" border="1">
+                        <thead>
+                        <th>groupid</th>
+                        <th>timeout</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                <input type="tel" name="groupid" id="groupidTel"/>
+                            </td>
+                            <td>
+                                <input type="tel" name="timeout" id="timeoutTel" value="6000"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="button" onclick="window.location.replace('/serverGroupConfigSearch/')">取消</button>
+                </div>
+                <div class="col-md-6">
+                    <button class="button" onclick="submitServerGroup()">提交</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="result-table" id="serverChoosedTable" border="1">
+                        <thead>
+                        <th>id</th>
+                        <th>ip</th>
+                        <th>port</th>
+                        <th>idc</th>
+                        <th>sign</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
