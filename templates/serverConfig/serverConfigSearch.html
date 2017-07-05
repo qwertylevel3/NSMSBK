@@ -9,7 +9,7 @@
     <script>
         function submitSearchServer() {
             $.post(
-                '/serverConfigSearch/',
+                "{% url 'serverSearch' %}",
                 $("#serverSearchForm").serialize(),
                 function (ret) {
                     var tableRef = document.getElementById("searchResultTable");
@@ -24,7 +24,7 @@
                         var newServerLine = tableRef.insertRow(count);
                         count = count + 1;
                         if (count % 2 == 0) {
-                            addClass(newServerLine,"green-tr");
+                            addClass(newServerLine, "green-tr");
                         }
 
                         var idCol = newServerLine.insertCell();
@@ -40,7 +40,7 @@
                         var is_usedCol = newServerLine.insertCell();
                         is_usedCol.innerHTML = server.is_used;
                         var changeCol = newServerLine.insertCell();
-                        changeCol.innerHTML = "<form action='/serverConfigRevise/' method='get'>" +
+                        changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
                             "<input type='text' name='id' value=" + server.id + " hidden/>" +
                             "<input type='submit' class='table-button' value='更改'/>" +
                             "</form>";
@@ -57,12 +57,12 @@
 
         function reuseServer(id) {
             $.post(
-                '/serverConfigReuse/',
+                "{% url 'serverReuse' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
                         alert("操作成功");
-                        window.location.replace('/serverConfigSearch/');
+                        window.location.replace("{% url 'serverSearch' %}");
                     } else {
                         alert("操作失败");
                     }
@@ -72,12 +72,12 @@
 
         function deleteServer(id) {
             $.post(
-                '/serverConfigDelete/',
+                "{% url 'serverDelete' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
                         alert("操作成功");
-                        window.location.replace('/serverConfigSearch/');
+                        window.location.replace("{% url 'serverSearch' %}");
                     } else {
                         alert("操作失败");
                     }
@@ -102,7 +102,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form id="serverSearchForm" action="/serverConfigSearch/" method="post">
+            <form id="serverSearchForm" action="{% url 'serverSearch' %}" method="post">
                 {% include "serverConfig/__serverConfigTable.html" %}
             </form>
         </div>
@@ -112,7 +112,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-3">
-            <form action="/serverConfigRevise/" method="get">
+            <form action="{% url 'serverRevise' %}" method="get">
                 <input type="text" name="id" value="-1" hidden>
                 <input type="submit" class="button" value="新增"/>
             </form>
@@ -150,7 +150,7 @@
                         <td>{{ line.sign }}</td>
                         <td>{{ line.is_used }}</td>
                         <td>
-                            <form action="/serverConfigRevise/" method="get">
+                            <form action="{% url 'serverRevise' %}" method="get">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
                                 <input type="submit" class="table-button" value="更改"/>
                             </form>

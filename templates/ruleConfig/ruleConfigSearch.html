@@ -10,13 +10,13 @@
 
         function deleteFun(id) {
             $.post(
-                '/ruleConfigDelete/',
-                {"id":id},
+                "{% url 'ruleDelete' %}",
+                {"id": id},
                 function (ret) {
-                    if(ret.result){
+                    if (ret.result) {
                         alert("操作成功")
-                        window.location.replace('/ruleConfigSearch/');
-                    }else{
+                        window.location.replace("{% url 'ruleSearch' %}");
+                    } else {
                         alert("操作失败")
                     }
                 }
@@ -24,13 +24,13 @@
         }
         function reuseFun(id) {
             $.post(
-                '/ruleConfigReuse/',
-                {"id":id},
+                "{% url 'ruleReuse' %}",
+                {"id": id},
                 function (ret) {
-                    if(ret.result){
+                    if (ret.result) {
                         alert("操作成功")
-                        window.location.replace('/ruleConfigSearch/');
-                    }else{
+                        window.location.replace("{% url 'ruleSearch' %}");
+                    } else {
                         alert("操作失败")
                     }
                 }
@@ -54,7 +54,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form id="ruleSearchForm" action="/ruleConfigSearch/" method="post">
+            <form id="ruleSearchForm" action="{% url 'ruleSearch' %}" method="post">
                 {% include "ruleConfig/__conditionTable.html" %}
                 <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
                 <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>
@@ -67,7 +67,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-3">
-            <form action="/ruleConfigRevise/" method="get">
+            <form action="{% url 'ruleRevise' %}" method="get">
                 <input type="text" name="id" value="-1" hidden>
                 <input type="submit" class="button" value="新增"/>
             </form>
@@ -116,16 +116,20 @@
                         <td>{{ line.compel }}</td>
                         <td>{{ line.is_use }}</td>
                         <td>
-                            <form action="/ruleConfigRevise/" method="">
+                            <form action="{% url 'ruleRevise' %}" method="">
                                 <input type="text" name="id" value="{{ line.id }}" hidden/>
                                 <input type="submit" class="table-button" value="更改"/>
                             </form>
                         </td>
                         <td>
-                            <button id="deleteButton{{ line.id }}" class="table-button" onclick="deleteFun({{ line.id }})">禁用</button>
+                            <button id="deleteButton{{ line.id }}" class="table-button"
+                                    onclick="deleteFun({{ line.id }})">禁用
+                            </button>
                         </td>
                         <td>
-                            <button id="reuseButton{{ line.id }}" class="table-button" onclick="reuseFun({{ line.id }})">启用</button>
+                            <button id="reuseButton{{ line.id }}" class="table-button"
+                                    onclick="reuseFun({{ line.id }})">启用
+                            </button>
                         </td>
                     </tr>
                 {% endfor %}

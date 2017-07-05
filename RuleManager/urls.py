@@ -24,28 +24,28 @@ from myAuthority import views as authViews
 from django.contrib.auth.views import login, logout_then_login
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'index/', indexViews.index),
+    url(r'^admin/', admin.site.urls,name="admin"),
+    url(r'index/', indexViews.index,name="index"),
 
-    url(r'^login/$', login, {'template_name': 'auth/login.html'}),  # 指定登录页面模板
-    url(r'^logout/$', logout_then_login),  # 退出登录，并跳转到登录页面
-    url(r'check/', authViews.check),
+    url(r'^login/$', login, {'template_name': 'auth/login.html'},name="login"),  # 指定登录页面模板
+    url(r'^logout/$', logout_then_login,name="logout"),  # 退出登录，并跳转到登录页面
+    url(r'check/', authViews.check,name="check"),
 
-    url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch),
-    url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise),
-    url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete),
-    url(r'handleRuleRevise/', ruleConfigViews.handleRuleRevise),
-    url(r'ruleConfigReuse/', ruleConfigViews.ruleConfigReuse),
+    url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch,name="ruleSearch"),
+    url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise,name="ruleRevise"),
+    url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete,name="ruleDelete"),
+    url(r'handleRuleRevise/', ruleConfigViews.handleRuleRevise,name="handleRuleRevise"),
+    url(r'ruleConfigReuse/', ruleConfigViews.ruleConfigReuse,name="ruleReuse"),
 
-    url(r'serverConfigSearch/', serverConfigViews.serverConfigSearch),
-    url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise),
-    url(r'serverConfigDelete/', serverConfigViews.serverConfigDelete),
-    url(r'handleServerRevise/', serverConfigViews.handleServerRevise),
-    url(r'serverConfigReuse/', serverConfigViews.serverConfigReuse),
+    url(r'serverConfigSearch/', serverConfigViews.serverConfigSearch,name="serverSearch"),
+    url(r'serverConfigRevise/', serverConfigViews.serverConfigRevise,name="serverRevise"),
+    url(r'serverConfigDelete/', serverConfigViews.serverConfigDelete,name="serverDelete"),
+    url(r'handleServerRevise/', serverConfigViews.handleServerRevise,name="handleServerRevise"),
+    url(r'serverConfigReuse/', serverConfigViews.serverConfigReuse,name="serverReuse"),
 
-    url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch),
-    url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise),
-    url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise),
-    url(r'serverGroupShowDetail/', serverGroupConfigViews.showServerGroupDetail),
-    url(r'initServerGroupConfigPage/',serverGroupConfigViews.initServerGroupConfigPage),
+    url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch,name="serverGroupSearch"),
+    url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise,name="serverGroupRevise"),
+    url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise,name="handleServerGroupRevise"),
+    url(r'serverGroupShowDetail/', serverGroupConfigViews.showServerGroupDetail,name="serverGroupDetail"),
+    url(r'initServerGroupConfigPage/',serverGroupConfigViews.initServerGroupConfigPage,name="serverGroupReviseInit"),
 ]

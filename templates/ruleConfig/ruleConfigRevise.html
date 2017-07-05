@@ -11,12 +11,12 @@
         function submitForm() {
             if (validate_form(document.getElementById("reviseRuleForm"))) {
                 $.post(
-                    '/handleRuleRevise/',
+                    "{% url 'handleRuleRevise'  %}",
                     $("#reviseRuleForm").serialize(),
                     function (ret) {
                         if (ret.result) {
                             alert("操作成功");
-                            window.location.replace('/ruleConfigSearch/');
+                            window.location.replace("{% url 'ruleSearch' %}");
                         } else {
                             alert("操作失败");
                         }
@@ -131,7 +131,7 @@
                 -->
 
             </form>
-            <button class="button" onclick="window.location.replace('/ruleConfigSearch/')">取消</button>
+            <button class="button" onclick="window.location.replace('{% url 'ruleSearch' %}')">取消</button>
             <button class="button" onclick="submitForm()">提交</button>
         </div>
     </div>

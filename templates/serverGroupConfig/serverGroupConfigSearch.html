@@ -33,7 +33,7 @@
                 }
 
                 $.get(
-                    '/serverGroupShowDetail/',
+                    '{% url "serverGroupDetail" %}',
                     {'id': id},
                     function (ret) {
                         $.each(ret.result, function (index, server) {
@@ -94,7 +94,7 @@
                         <td>{{ serverGroup.group_name }}</td>
                         <td>{{ serverGroup.server_ids }}</td>
                         <td>
-                            <form action="/serverGroupConfigRevise/" method="get">
+                            <form action="{% url 'serverGroupRevise' %}" method="get">
                                 <input type="text" name="id" value="{{ serverGroup.id }}" hidden/>
                                 <input type="submit" class="table-button" value="更改"/>
                             </form>
