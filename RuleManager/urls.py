@@ -27,8 +27,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls,name="admin"),
     url(r'index/', indexViews.index,name="index"),
 
-    url(r'^login/$', login, {'template_name': 'auth/login.html'},name="login"),  # 指定登录页面模板
-    url(r'^logout/$', logout_then_login,name="logout"),  # 退出登录，并跳转到登录页面
+    url(r'^login/$', login, {'template_name': 'auth/login.html'},name="login"),
+    url(r'^logout/$', logout_then_login,name="logout"),
     url(r'check/', authViews.check,name="check"),
 
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch,name="ruleSearch"),
