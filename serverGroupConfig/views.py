@@ -44,17 +44,9 @@ def logServerGroupNew(request, id):
 def handleServerGroupRevise(request):
     serverIdList = []
 
-    for server in ServerList.objects.all():
-        if request.POST.get("checkbox" + str(server.id), "") == "on":
-            serverIdList.append(server.id)
-
-    serverListStr = ""
-
-    for serverid in serverIdList:
-        serverListStr += "," + str(serverid)
-
-    if serverListStr != "":
-        serverListStr = serverListStr[1:]
+    groupid=request.POST.get("groupid","")
+    timeout=request.POST.get("timeout",6000)
+    serverList=request.POST.get("serverList","")
 
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
@@ -63,15 +55,11 @@ def handleServerGroupRevise(request):
     # 查找该项目是否存在
     targetData = ServerGroupDat.objects.filter(id=id)
 
-    timeout = request.POST.get("timeout", 6000)
-
-    groupid = int(request.POST.get("groupid", 99))
-
     if len(targetData) > 0:
         for data in targetData:
             data.group_id = groupid
             data.update_time = updateTime
-            data.server_ids = serverListStr
+            data.server_ids = serverList
             data.time_out = timeout
             data.save()
             logServerGroupRevise(request, data.id)
@@ -80,11 +68,12 @@ def handleServerGroupRevise(request):
             group_id=groupid,
             update_time=updateTime,
             registration_time=registrationTime,
-            server_ids=serverListStr,
+            server_ids=serverList,
             time_out=timeout
         )
         logServerGroupNew(request, data.id)
-    return HttpResponseRedirect('/serverGroupConfigSearch/')
+    json_return={"result":True}
+    return JsonResponse(json_return)
 
 
 # 根据服务器组id返回服务器组名称
