@@ -43,9 +43,9 @@ urlpatterns = [
     url(r'handleServerRevise/', serverConfigViews.handleServerRevise,name="handleServerRevise"),
     url(r'serverConfigReuse/', serverConfigViews.serverConfigReuse,name="serverReuse"),
 
-    url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupConfigSearch,name="serverGroupSearch"),
+    url(r'serverGroupConfigSearch/', serverGroupConfigViews.serverGroupSearch, name="serverGroupSearch"),
     url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise,name="serverGroupRevise"),
-    url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise,name="handleServerGroupRevise"),
-    url(r'serverGroupShowDetail/', serverGroupConfigViews.showServerGroupDetail,name="serverGroupDetail"),
-    url(r'initServerGroupConfigPage/',serverGroupConfigViews.initServerGroupConfigPage,name="serverGroupReviseInit"),
+    url(r'handleServerGroupRevise/', serverGroupConfigViews.ajHandleServerGroupRevise, name="handleServerGroupRevise"),
+    url(r'serverGroupShowDetail/', serverGroupConfigViews.ajShowServerGroupDetail, name="serverGroupDetail"),
+    url(r'initServerGroupConfigPage/', serverGroupConfigViews.ajInitServerGroupRevisePage, name="serverGroupReviseInit"),
 ]
