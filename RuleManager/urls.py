@@ -47,4 +47,5 @@ urlpatterns = [
     url(r'serverGroupConfigRevise/', serverGroupConfigViews.serverGroupConfigRevise),
     url(r'handleServerGroupRevise/', serverGroupConfigViews.handleServerGroupRevise),
     url(r'serverGroupShowDetail/', serverGroupConfigViews.showServerGroupDetail),
+    url(r'initServerGroupConfigPage/',serverGroupConfigViews.initServerGroupConfigPage),
 ]

@@ -8,34 +8,187 @@
 
     <script>
         function searchServer() {
-            var ip=$("#ipText").val();
-            var port=$("#portText").val();
-            var idc=$("#idcText").val();
-            var sign=$("#signText").val();
+            var ip = $("#ipText").val();
+            var port = $("#portText").val();
+            var idc = $("#idcText").val();
+            var sign = $("#signText").val();
 
+            $.post(
+                '/serverConfigSearch/',
+                {"ip": ip, "port": port, "idc": idc, "sign": sign},
+                function (ret) {
+                    var tableRef = document.getElementById("searchResultTable");
+                    var len = tableRef.rows.length;
+                    while (len > 1) {
+                        tableRef.deleteRow(len - 1);
+                        len = tableRef.rows.length;
+                    }
+
+                    var serverChoosedTableRef = document.getElementById("serverChoosedTable");
+
+                    var count = 1;
+                    $.each(ret.result, function (index, server) {
+                        var newServerLine = tableRef.insertRow(count);
+                        count = count + 1;
+                        if (count % 2 == 0) {
+                            addClass(newServerLine, "green-tr");
+                        }
+
+                        var idCol = newServerLine.insertCell();
+                        idCol.innerHTML = server.id;
+                        var ipCol = newServerLine.insertCell();
+                        ipCol.innerHTML = server.ip;
+                        var portCol = newServerLine.insertCell();
+                        portCol.innerHTML = server.port;
+                        var idcCol = newServerLine.insertCell();
+                        idcCol.innerHTML = server.idc;
+                        var signCol = newServerLine.insertCell();
+                        signCol.innerHTML = server.sign;
+                        var is_usedCol = newServerLine.insertCell();
+                        is_usedCol.innerHTML = server.is_used;
+
+
+                        //如果已选表格中有该项，则设置打勾
+                        var flag = 0;
+                        for (var i = 0; i < serverChoosedTableRef.rows.length; i++) {
+                            if (serverChoosedTableRef.rows[i].cells[0].innerHTML == server.id) {
+                                var addCol = newServerLine.insertCell();
+                                addCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='addServer(" + server.id + ")' checked='checked'/>"
+                                flag = 1;
+                                break;
+                            }
+                        }
+                        if (flag == 0) {
+                            var addCol = newServerLine.insertCell();
+                            addCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='changeServer("
+                                + server.id +
+                                ")'/>"
+                        }
+                    });
+
+                }
+            )
         }
+        //向已选表格中添加一项
+        function addServer(id) {
+            var searchResultTableRef = document.getElementById("searchResultTable");
+            var serverChoosedTableRef = document.getElementById("serverChoosedTable");
+
+            for (var i = 0; i < searchResultTableRef.rows.length; i++) {
+                if (searchResultTableRef.rows[i].cells[0].innerHTML == id.toString()) {
+
+                    var newServerLine = serverChoosedTableRef.insertRow();
+
+                    for (var j = 0; j < 6; j++) {
+                        var col = newServerLine.insertCell();
+                        col.innerHTML = searchResultTableRef.rows[i].cells[j].innerHTML;
+                    }
+                    break;
+                }
+            }
+        }
+        //删除已选表格中的一项
+        function deleteServer(id) {
+            var searchResultTableRef = document.getElementById("searchResultTable");
+            var serverChoosedTableRef = document.getElementById("serverChoosedTable");
+
+            for (var i = 0; i < serverChoosedTableRef.rows.length; i++) {
+                if (serverChoosedTableRef.rows[i].cells[0].innerHTML == id.toString()) {
+                    serverChoosedTableRef.deleteRow(i);
+                    break;
+                }
+            }
+        }
+        function changeServer(id) {
+            var searchResultTableRef = document.getElementById("searchResultTable");
+            var serverChoosedTableRef = document.getElementById("serverChoosedTable");
+
+            //检查已选表格中是否有该项
+            //如果有则删除，否则添加
+            var flag = 0;
+            for (var i = 0; i < serverChoosedTableRef.rows.length; i++) {
+                if (serverChoosedTableRef.rows[i].cells[0].innerHTML == id.toString()) {
+                    flag = 1;
+                    break;
+                }
+            }
+
+            if (flag == 1) {
+                deleteServer(id);
+            } else {
+                addServer(id);
+            }
+        }
+
         function submitServerGroup() {
             alert("submit");
         }
-        function updateServerChoosedTable(){
+        function updateServerChoosedTable() {
             alert("choose");
         }
         $(document).ready(function () {
-            {% for server in defaultServer %}
-                $("#checkbox{{ server }}").attr("checked", true);
+            $.post(
+                '/initServerGroupConfigPage/',
+                {"id": {{ id }}},
+                function (ret) {
+                    var tableRef = document.getElementById("searchResultTable");
+                    var len = tableRef.rows.length;
+                    while (len > 1) {
+                        tableRef.deleteRow(len - 1);
+                        len = tableRef.rows.length;
+                    }
 
-            {% endfor %}
+                    var serverChoosedTableRef = document.getElementById("serverChoosedTable");
+
+                    var count = 1;
+                    $.each(ret.serverList, function (index, server) {
+                        var newServerLine = tableRef.insertRow(count);
+                        count = count + 1;
+                        if (count % 2 == 0) {
+                            addClass(newServerLine, "green-tr");
+                        }
+
+                        var idCol = newServerLine.insertCell();
+                        idCol.innerHTML = server.id;
+                        var ipCol = newServerLine.insertCell();
+                        ipCol.innerHTML = server.ip;
+                        var portCol = newServerLine.insertCell();
+                        portCol.innerHTML = server.port;
+                        var idcCol = newServerLine.insertCell();
+                        idcCol.innerHTML = server.idc;
+                        var signCol = newServerLine.insertCell();
+                        signCol.innerHTML = server.sign;
+                        var is_usedCol = newServerLine.insertCell();
+                        is_usedCol.innerHTML = server.is_used;
+
+
+                        var addCol = newServerLine.insertCell();
+                        addCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='changeServer("
+                            + server.id +
+                            ")'/>";
+
+                    });
+                    $.each(ret.defaultServerList,function (index,serverid) {
+                        var checkbox=document.getElementById("checkbox"+serverid);
+                        checkbox.checked=true;
+                        addServer(serverid);
+                    });
+
+                }
+            )
 
             {% for serverGroup in allServerGroup %}
-                if ({{ serverGroup.id }}=={{ id }})
+                if ({{ serverGroup.id }}=={{ id }}) {
                     $("#timeoutTel").val({{ serverGroup.time_out }})
-                $("#groupidTel").val({{ serverGroup.group_id }})
+                    $("#groupidTel").val({{ serverGroup.group_id }})
+                }
             {% endfor %}
 
             if ({{ id }}=={{ -1 }}) {
                 $("#timeoutTel").val("")
                 $("#groupidTel").val("")
             }
+
         });
 
     </script>
@@ -128,34 +281,18 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <form id="serverGroupForm" action="/handleServerGroupRevise/" onsubmit="return validate_form(this)"
-                          method="post">
-                        <input type="text" name="id" value={{ id }} hidden>
-                        <table class="result-table" border="1">
-                            <thead>
-                            <th>id</th>
-                            <th>ip</th>
-                            <th>port</th>
-                            <th>idc</th>
-                            <th>sign</th>
-                            </thead>
-                            <tbody>
-                            {% for server in allServer %}
-                                <tr>
-                                    <td>{{ server.id }}</td>
-                                    <td>{{ server.ip }}</td>
-                                    <td>{{ server.port }}</td>
-                                    <td>{{ server.idc }}</td>
-                                    <td>{{ server.sign }}</td>
-                                    <td>
-                                        <input type="checkbox" class="checkbox" name="checkbox{{ server.id }}"
-                                               id="checkbox{{ server.id }}" onclick="updateServerChoosedTable()" />
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </form>
+                    <input type="text" name="id" value={{ id }} hidden>
+                    <table id="searchResultTable" class="result-table" border="1">
+                        <thead>
+                        <th>id</th>
+                        <th>ip</th>
+                        <th>port</th>
+                        <th>idc</th>
+                        <th>sign</th>
+                        <th>启用</th>
+                        </thead>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -198,6 +335,7 @@
                         <th>port</th>
                         <th>idc</th>
                         <th>sign</th>
+                        <th>启用</th>
                         </thead>
                         <tbody>
                         </tbody>

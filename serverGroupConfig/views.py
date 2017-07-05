@@ -11,16 +11,16 @@ import logging
 
 
 def serverGroup2Str(serverGroupData):
-    serverGroupStr=""
-    serverGroupStr+="id:"+str(serverGroupData.id)+"|"
-    serverGroupStr+="group_id:"+str(serverGroupData.group_id)+"|"
-    serverGroupStr+="server_ids:"+serverGroupData.server_ids+"|"
-    serverGroupStr+="time_out:"+str(serverGroupData.time_out)
+    serverGroupStr = ""
+    serverGroupStr += "id:" + str(serverGroupData.id) + "|"
+    serverGroupStr += "group_id:" + str(serverGroupData.group_id) + "|"
+    serverGroupStr += "server_ids:" + serverGroupData.server_ids + "|"
+    serverGroupStr += "time_out:" + str(serverGroupData.time_out)
     return serverGroupStr
 
 
 def logServerGroupRevise(request, id):
-    serverGroup=ServerGroupDat.objects.get(id=id)
+    serverGroup = ServerGroupDat.objects.get(id=id)
     logger = logging.getLogger("sql")
     logger.info("%s : revise server group %s[%s]",
                 request.user.username,
@@ -29,7 +29,7 @@ def logServerGroupRevise(request, id):
 
 
 def logServerGroupNew(request, id):
-    serverGroup=ServerGroupDat.objects.get(id=id)
+    serverGroup = ServerGroupDat.objects.get(id=id)
     logger = logging.getLogger("sql")
     logger.info("%s : create server group %s[%s]",
                 request.user.username,
@@ -169,3 +169,41 @@ def showServerGroupDetail(request):
 
     return_json = {'result': serverList}
     return JsonResponse(return_json)
+
+
+def serverList2dict(serverList):
+    result = []
+    for server in serverList:
+        result.append(
+            {
+                "id": server.id,
+                "ip": server.ip,
+                "port": server.port,
+                "idc": server.idc,
+                "sign": server.sign,
+                "is_used": server.is_used
+            }
+        )
+    return result
+
+
+# 返回所有服务器信息，并根据id返回初始服务器id列表
+# serverGroupRevise页面调用
+@login_required
+def initServerGroupConfigPage(request):
+    serverList = []
+
+    id = request.POST.get("id", "-1")
+
+    allServer = ServerList.objects.all()
+
+    for server in allServer:
+        serverList.append(server)
+
+    defaultServerList=[]
+    if id != "-1":
+        serverGroup = ServerGroupDat.objects.get(id=id)
+        defaultServerList = serverGroup.server_ids.split(',')
+
+    json_return = {"serverList": serverList2dict(serverList), "defaultServerList": defaultServerList}
+    return JsonResponse(json_return)
