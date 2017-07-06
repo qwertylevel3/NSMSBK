@@ -327,30 +327,90 @@ def ajHandleRuleRevise(request):
     return JsonResponse(json_return)
 
 
-# 搜索条件
-conditions = []
-# 0显示全部,1显示已启用,2显示未启用
-showState = 0
-
-
-# 显示rule搜索主页面，根据条件condition显示搜索结果result
+# 显示rule搜索主页面
+#
+# get:
+#
+# ret:
+# allCountry(数据库中所有国家信息，用来优化下拉框)
+# allProvince(数据库中所有省份信息，用来优化下拉框)
+# allCity(数据库中所有城市信息，用来优化下拉框)
+# allNet(数据库中所有网络信息，用来优化下拉框)
 @login_required
 def ruleConfigSearch(request):
-    # 搜索结果
+    allCountry = CountryList.objects.all()
+    allProvince = ProvList.objects.all()
+    allCity = CityList.objects.all()
+    allNet = NetList.objects.all()
+
+    return render(request,
+                  "ruleConfig/ruleSearch.html",
+                  {"allCountry": allCountry,
+                   "allProvince": allProvince,
+                   "allCity": allCity,
+                   "allNet": allNet,
+                   })
+
+
+# result分页并序列化
+def result2dict(searchResult, page):
+    searchLen=len(searchResult)
+
+    paginator = Paginator(searchResult, 25)
+    try:
+        result = paginator.page(page)
+    except PageNotAnInteger:
+        result = paginator.page(1)
+    except EmptyPage:
+        result = paginator.page(paginator.num_pages)
+
+    ruleList = []
+    for rule in result:
+        ruleList.append(rule)
+
+    return {
+        "searchLen":searchLen,
+        "has_previous": result.has_previous(),
+        "page_num": result.number,
+        "has_next": result.has_next(),
+        "all_page_num": result.paginator.num_pages,
+        "ruleList": ruleList
+    }
+
+
+# 根据提交的rule条件搜索所有对应的rule
+#
+# post:
+# showState(显示条件：0显示所有,1显示已启用,2显示未启用)
+# page(结果中第几页，以25个一页计)
+# country
+# province
+# city
+# host
+# appid
+# net
+# invertCountry(on为取反)
+# invertProvince(on为取反)
+# invertCity(on为取反)
+# invertHost(on为取反)
+# invertAppid(on为取反)
+# invertNet(on为取反)
+#
+# ret:
+# has_previous(true存在上一页，false不存在上一页)
+# page_num(当前是第几页)
+# has_next(true存在下一页，false不存在下一页)
+# all_page_num(一共有多少页)
+# ruleList(rule组成的列表)
+def ajRuleSearch(request):
+    page = request.POST.get("page")
     searchResult = []
 
-    if request.method == "POST":
-        # 将上次的搜索条件置空
-        global showState
-        global conditions
-        del conditions[:]
-        showState = 0
+    ruleCondition = RuleCondition()
+    ruleCondition.initByReq(request)
 
-        ruleCondition = RuleCondition()
-        ruleCondition.initByReq(request)
-
-        conditions = ruleCondition.getSearchStrList()
-        showState = request.POST.get("showState", 0)
+    conditions = ruleCondition.getSearchStrList()
+    showState = request.POST.get("showState", 0)
 
     allRules = ServerRuleDat.objects.all()
 
@@ -367,27 +427,4 @@ def ruleConfigSearch(request):
         if flag:
             searchResult.append(convert2SearchResult(rule))
 
-    allCountry = CountryList.objects.all()
-    allProvince = ProvList.objects.all()
-    allCity = CityList.objects.all()
-    allNet = NetList.objects.all()
-    resultSize = len(searchResult)
-
-    paginator = Paginator(searchResult, 25)
-    page = request.GET.get("page")
-    try:
-        result = paginator.page(page)
-    except PageNotAnInteger:
-        result = paginator.page(1)
-    except EmptyPage:
-        result = paginator.page(paginator.num_pages)
-
-    return render(request,
-                  "ruleConfig/ruleSearch.html",
-                  {"allCountry": allCountry,
-                   "allProvince": allProvince,
-                   "allCity": allCity,
-                   "allNet": allNet,
-                   "result": result,
-                   "resultSize": resultSize
-                   })
+    return JsonResponse(result2dict(searchResult, page))

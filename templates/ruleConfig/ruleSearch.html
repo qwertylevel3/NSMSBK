@@ -7,36 +7,138 @@
     {% include "__staticFiles.html" %}
 
     <script>
+        function search() {
+            $("#pageText").val(1);
+            submitSearchForm();
+        }
 
-        function deleteFun(id) {
+        function submitSearchForm() {
+            $.post(
+                "{% url 'ajRuleSearch' %}",
+                $("#ruleSearchForm").serialize(),
+                function (ret) {
+                    var searchResultTable = document.getElementById("searchResultTable");
+
+                    var len = searchResultTable.rows.length;
+                    while (len > 1) {
+                        searchResultTable.deleteRow(len - 1);
+                        len = searchResultTable.rows.length;
+                    }
+
+                    var count = 1;
+                    $.each(ret.ruleList, function (index, rule) {
+                        var newRuleLine = searchResultTable.insertRow();
+                        count = count + 1;
+                        if (count % 2 == 0) {
+                            addClass(newRuleLine, "green-tr");
+                        }
+                        var idCol = newRuleLine.insertCell();
+                        idCol.innerHTML = rule.id;
+                        var countryCol = newRuleLine.insertCell();
+                        countryCol.innerHTML = rule.country;
+                        var provinceCol = newRuleLine.insertCell();
+                        provinceCol.innerHTML = rule.province;
+                        var cityCol = newRuleLine.insertCell();
+                        cityCol.innerHTML = rule.city;
+                        var hostCol = newRuleLine.insertCell();
+                        hostCol.innerHTML = rule.host;
+                        var appidCol = newRuleLine.insertCell();
+                        appidCol.innerHTML = rule.appid;
+                        var netCol = newRuleLine.insertCell();
+                        netCol.innerHTML = rule.net;
+                        var group_idCol = newRuleLine.insertCell();
+                        group_idCol.innerHTML = rule.group_id;
+                        var rankCol = newRuleLine.insertCell();
+                        rankCol.innerHTML = rule.rank;
+                        var ttlCol = newRuleLine.insertCell();
+                        ttlCol.innerHTML = rule.ttl;
+                        var compelCol = newRuleLine.insertCell();
+                        compelCol.innerHTML = rule.compel;
+
+                        var is_usedCol = newRuleLine.insertCell();
+                        is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + rule.id + "' class='checkbox' onclick='ruleUseChange(" + rule.id + ")'>" +
+                            "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + rule.id + "'/>"
+
+                        var changeCol = newRuleLine.insertCell();
+                        changeCol.innerHTML = "<form action='" + "{% url 'ruleRevise' %}" + "' method=''>" +
+                            "<input type='text' name='id' value='" + rule.id + "' hidden/>" +
+                            "<input type='submit' class='table-button' value='更改'/>" +
+                            "</form>"
+                    });
+                    $.each(ret.ruleList, function (index, rule) {
+                        if (rule.is_use == "1") {
+                            var checkbox = document.getElementById("checkbox" + rule.id);
+                            checkbox.checked = true;
+                        }
+                    });
+                    if (ret.has_previous) {
+                        $("#previousDiv").show();
+                    } else {
+                        $("#previousDiv").hide();
+                    }
+                    if (ret.has_next) {
+                        $("#nextDiv").show();
+                    } else {
+                        $("#nextDiv").hide();
+                    }
+                    var curPageLabel = document.getElementById("curPageLabel");
+                    curPageLabel.innerHTML = "第" + ret.page_num + "页" + "共" + ret.all_page_num + "页";
+
+                    $("#pageText").val(ret.page_num);
+
+                    var searchLenH2 = document.getElementById("searchLenH2");
+                    searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen - 1) + "条)";
+                }
+            )
+        }
+
+        function nextPage() {
+            var curPage = $("#pageText").val();
+            $("#pageText").val(parseInt(curPage) + 1);
+            submitSearchForm();
+        }
+        function previousPage() {
+            var curPage = $("#pageText").val();
+            $("#pageText").val(parseInt(curPage) - 1);
+            submitSearchForm();
+        }
+
+        function ruleUseChange(id) {
+            var checkbox = document.getElementById("checkbox" + id);
+            var state = checkbox.checked;
+
+            if (state) {
+                reuseRule(id);
+            } else {
+                deleteRule(id);
+            }
+        }
+
+        function deleteRule(id) {
             $.post(
                 "{% url 'ruleDelete' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
-                        alert("操作成功")
-                        window.location.replace("{% url 'ruleSearch' %}");
                     } else {
-                        alert("操作失败")
                     }
                 }
             )
         }
-        function reuseFun(id) {
+        function reuseRule(id) {
             $.post(
                 "{% url 'ruleReuse' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
-                        alert("操作成功")
-                        window.location.replace("{% url 'ruleSearch' %}");
                     } else {
-                        alert("操作失败")
                     }
                 }
             )
         }
-
+        $(document).ready(function () {
+            submitSearchForm();
+        })
     </script>
 
 </head>
@@ -54,11 +156,12 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form id="ruleSearchForm" action="{% url 'ruleSearch' %}" method="post">
+            <form id="ruleSearchForm">
                 {% include "ruleConfig/__conditionTable.html" %}
                 <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
                 <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>
                 <label><input type="radio" name="showState" id="showNotUsed" value="2"/>仅搜索未启用</label>
+                <input type="Tel" name="page" id="pageText" value="1" hidden/>
             </form>
         </div>
     </div>
@@ -73,19 +176,19 @@
             </form>
         </div>
         <div class="col-md-3">
-            <button class="button" type="submit" form="ruleSearchForm" value="Submit">搜索</button>
+            <button class="button" onclick="search()">搜索</button>
         </div>
 
     </div>
     <div class="row">
         <div class="col-md-12">
-            <h2>搜索结果(共{{ resultSize }}条)</h2>
+            <h2 id="searchLenH2"></h2>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
 
-            <table class="result-table table-hover table-condensed" border="1">
+            <table id="searchResultTable" class="result-table table-hover table-condensed" border="1">
                 <thead>
                 <th>id</th>
                 <th>国家</th>
@@ -123,12 +226,12 @@
                         </td>
                         <td>
                             <button id="deleteButton{{ line.id }}" class="table-button"
-                                    onclick="deleteFun({{ line.id }})">禁用
+                                    onclick="deleteRule({{ line.id }})">禁用
                             </button>
                         </td>
                         <td>
                             <button id="reuseButton{{ line.id }}" class="table-button"
-                                    onclick="reuseFun({{ line.id }})">启用
+                                    onclick="reuseRule({{ line.id }})">启用
                             </button>
                         </td>
                     </tr>
@@ -139,20 +242,14 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="pagination">
-                <span class="step-links">
-                {% if result.has_previous %}
-                    <a class="button" href="?page={{ result.previous_page_number }}">上一页</a>
-                {% endif %}
-
-                    <span class="current">
-                    Page {{ result.number }} of {{ result.paginator.num_pages }}.
-                </span>
-
-                    {% if result.has_next %}
-                        <a class="button" href="?page={{ result.next_page_number }}">下一页</a>
-                    {% endif %}
-                </span>
+            <div id="previousDiv">
+                <button id="previousPageButton" class="button" onclick="previousPage()">上一页</button>
+            </div>
+            <div id="curDiv">
+                <label id="curPageLabel"></label>
+            </div>
+            <div id="nextDiv">
+                <button id="nextPageButton" class="button" onclick="nextPage()">下一页</button>
             </div>
         </div>
     </div>
