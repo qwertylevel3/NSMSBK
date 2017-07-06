@@ -33,9 +33,9 @@ urlpatterns = [
 
     url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch, name="ruleSearch"),
     url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise, name="ruleRevise"),
-    url(r'ruleConfigDelete/', ruleConfigViews.ruleConfigDelete, name="ruleDelete"),
-    url(r'handleRuleRevise/', ruleConfigViews.handleRuleRevise, name="handleRuleRevise"),
-    url(r'ruleConfigReuse/', ruleConfigViews.ruleConfigReuse, name="ruleReuse"),
+    url(r'ruleConfigDelete/', ruleConfigViews.ajRuleDelete, name="ruleDelete"),
+    url(r'handleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="handleRuleRevise"),
+    url(r'ruleConfigReuse/', ruleConfigViews.ajRuleReuse, name="ruleReuse"),
 
     url(r'serverSearch/', serverConfigViews.serverSearch, name="serverSearch"),
     url(r'serverRevise/', serverConfigViews.serverRevise, name="serverRevise"),
