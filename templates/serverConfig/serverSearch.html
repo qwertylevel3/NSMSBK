@@ -38,12 +38,9 @@
                         var signCol = newServerLine.insertCell();
                         signCol.innerHTML = server.sign;
                         var is_usedCol = newServerLine.insertCell();
-                        if (server.is_used == "0") {
-                            is_usedCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>"
-                        }
-                        else {
-                            is_usedCol.innerHTML = "<input type='checkbox' checked id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>"
-                        }
+                        is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>" +
+                            "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + server.id + "'/>"
+
 
                         var changeCol = newServerLine.insertCell();
                         changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
@@ -56,6 +53,13 @@
                     var searchLenH2 = document.getElementById("searchLenH2");
                     searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
 
+                    $.each(ret.result,function (index,server) {
+                        if(server.is_used=="1"){
+                            var checkbox=document.getElementById("checkbox"+server.id);
+                            checkbox.checked=true;
+                        }
+                    })
+
                 }
             )
         }
@@ -64,9 +68,9 @@
             var checkbox = document.getElementById("checkbox" + id);
             var state = checkbox.checked;
 
-            if(state) {
+            if (state) {
                 reuseServer(id);
-            }else{
+            } else {
                 deleteServer(id);
             }
         }
