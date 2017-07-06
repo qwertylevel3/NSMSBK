@@ -9,29 +9,27 @@
     <script src="{% static "js/jquery-3.2.1.js" %}"></script>
 
     <script>
-        $(document).ready(function () {
 
-            $("#submitButton").click(function () {
-                if (validate_form() == true) {
-                    var ip = $("#ipText").val();
-                    var port = $("#portText").val()
-                    var idc = $("#idcText").val()
-                    var sign = $("#signText").val()
+        function submitServerForm() {
+            if (validate_form() == true) {
+                var ip = $("#ipText").val();
+                var port = $("#portText").val()
+                var idc = $("#idcText").val()
+                var sign = $("#signText").val()
 
-                    $.post(
-                        "{% url 'serverRevise' %}",
-                        {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
-                        function (ret) {
-                            if (!ret.result) {
-                                alert("该条目已存在")
-                            } else {
-                                alert("操作成功")
-                                window.location.replace("{% url 'serverSearch' %}");
-                            }
-                        });
-                }
-            });
-        });
+                $.post(
+                    "{% url 'ajHandleServerRevise' %}",
+                    {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                    function (ret) {
+                        if (!ret.result) {
+                            alert("该条目已存在")
+                        } else {
+                            alert("操作成功")
+                            window.location.replace("{% url 'serverSearch' %}");
+                        }
+                    });
+            }
+        }
 
         function validate_required(field, alerttxt) {
             with (field) {
@@ -68,11 +66,8 @@
         <div class="col-md-12">
             <input type="text" name="id" value="{{ id }}" readonly hidden>
             {% include "serverConfig/__serverConfigTable.html" %}
-            <input type="button" class="button" value="取消"
-                   onclick="window.location.replace('{% url 'serverSearch' %}')">
-            <button id="submitButton" class="button">提交</button>
-            <form action="{% url 'handleServerRevise' %}" method="post">
-            </form>
+            <button class="button"  onclick="window.location.replace('{% url 'serverSearch' %}')">取消</button>
+            <button id="submitButton" onclick="submitServerForm()" class="button">提交</button>
         </div>
     </div>
 </div>

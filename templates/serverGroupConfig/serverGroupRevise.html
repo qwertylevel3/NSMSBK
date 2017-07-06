@@ -14,7 +14,7 @@
             var sign = $("#signText").val();
 
             $.post(
-                "{% url 'serverSearch' %}",
+                "{% url 'ajServerSearch' %}",
                 {"ip": ip, "port": port, "idc": idc, "sign": sign},
                 function (ret) {
                     var tableRef = document.getElementById("searchResultTable");
@@ -140,7 +140,7 @@
             }
 
             $.post(
-                "{% url 'handleServerGroupRevise' %}",
+                "{% url 'ajHandleServerGroupRevise' %}",
                 {"id":{{ id }}, "groupid": groupid, "timeout": timeout, "serverList": serverListStr},
                 function (ret) {
                     if (ret.result) {
@@ -154,7 +154,7 @@
         }
         $(document).ready(function () {
             $.post(
-                "{% url 'serverGroupReviseInit' %}",
+                "{% url 'ajServerGroupReviseInit' %}",
                 {"id": {{ id }}},
                 function (ret) {
                     var tableRef = document.getElementById("searchResultTable");

@@ -33,7 +33,7 @@
                 }
 
                 $.get(
-                    '{% url "serverGroupDetail" %}',
+                    '{% url "ajServerGroupDetail" %}',
                     {'id': id},
                     function (ret) {
                         $.each(ret.result, function (index, server) {
