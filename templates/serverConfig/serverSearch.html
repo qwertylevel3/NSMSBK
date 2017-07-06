@@ -38,28 +38,41 @@
                         var signCol = newServerLine.insertCell();
                         signCol.innerHTML = server.sign;
                         var is_usedCol = newServerLine.insertCell();
-                        is_usedCol.innerHTML = server.is_used;
+                        if (server.is_used == "0") {
+                            is_usedCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>"
+                        }
+                        else {
+                            is_usedCol.innerHTML = "<input type='checkbox' checked id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>"
+                        }
+
                         var changeCol = newServerLine.insertCell();
                         changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
                             "<input type='text' name='id' value=" + server.id + " hidden/>" +
                             "<input type='submit' class='table-button' value='更改'/>" +
                             "</form>";
-                        var deleteCol = newServerLine.insertCell();
-                        deleteCol.innerHTML = "<button class='table-button' onclick='deleteServer(" + server.id + ")'>禁用</button>"
 
-                        var reuseCol = newServerLine.insertCell();
-                        reuseCol.innerHTML = "<button class='table-button' onclick='reuseServer(" + server.id + ")'>启用</button>"
                     });
 
-                    var searchLenH2=document.getElementById("searchLenH2");
-                    searchLenH2.innerHTML="搜索结果("+(count-1)+"条)";
+                    var searchLenH2 = document.getElementById("searchLenH2");
+                    searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
 
                 }
             )
         }
 
+        function serverUseChange(id) {
+            var checkbox = document.getElementById("checkbox" + id);
+            var state = checkbox.checked;
+
+            if(state) {
+                reuseServer(id);
+            }else{
+                deleteServer(id);
+            }
+        }
+
         $(document).ready(function () {
-           submitSearchServer();
+            submitSearchServer();
         });
 
         function reuseServer(id) {
