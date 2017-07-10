@@ -13,17 +13,18 @@
         }
 
         function submitSearchForm() {
+            var searchResultTable = document.getElementById("searchResultTable");
+
+            var len = searchResultTable.rows.length;
+            while (len > 1) {
+                searchResultTable.deleteRow(len - 1);
+                len = searchResultTable.rows.length;
+            }
             $.post(
                 "{% url 'ajRuleSearch' %}",
                 $("#ruleSearchForm").serialize(),
                 function (ret) {
                     var searchResultTable = document.getElementById("searchResultTable");
-
-                    var len = searchResultTable.rows.length;
-                    while (len > 1) {
-                        searchResultTable.deleteRow(len - 1);
-                        len = searchResultTable.rows.length;
-                    }
 
                     var count = 1;
                     $.each(ret.ruleList, function (index, rule) {

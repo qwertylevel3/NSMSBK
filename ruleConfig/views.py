@@ -378,6 +378,13 @@ def result2dict(searchResult, page):
     }
 
 
+# 检查rule是否满足conditions
+def check(rule,conditions):
+    for condition in conditions:
+        if rule.rule.find(condition) == -1:
+            return False
+    return True
+
 # 根据提交的rule条件搜索所有对应的rule
 #
 # post:
@@ -416,15 +423,11 @@ def ajRuleSearch(request):
 
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
-        flag = True
         if rule.is_use == 0 and showState == "1":
-            flag = False
+            continue
         if rule.is_use == 1 and showState == "2":
-            flag = False
-        for condition in conditions:
-            if rule.rule.find(condition) == -1:
-                flag = False
-        if flag:
+            continue
+        if check(rule,conditions):
             searchResult.append(convert2SearchResult(rule))
 
     return JsonResponse(result2dict(searchResult, page))

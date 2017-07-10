@@ -8,6 +8,12 @@
 
     <script>
         function searchServer() {
+            var tableRef = document.getElementById("searchResultTable");
+            var len = tableRef.rows.length;
+            while (len > 1) {
+                tableRef.deleteRow(len - 1);
+                len = tableRef.rows.length;
+            }
             var ip = $("#ipText").val();
             var port = $("#portText").val();
             var idc = $("#idcText").val();
@@ -18,11 +24,6 @@
                 {"ip": ip, "port": port, "idc": idc, "sign": sign},
                 function (ret) {
                     var tableRef = document.getElementById("searchResultTable");
-                    var len = tableRef.rows.length;
-                    while (len > 1) {
-                        tableRef.deleteRow(len - 1);
-                        len = tableRef.rows.length;
-                    }
 
                     var serverChoosedTableRef = document.getElementById("serverChoosedTable");
 

@@ -17,8 +17,9 @@ class RuleCondition:
         self.appidInvert = 0
         self.netInvert = 0
         self.initByStr(ruleStr)
+
     # 用request初始化数据
-    def initByReq(self,request):
+    def initByReq(self, request):
         self.city = request.POST.get("city", "")
         self.province = request.POST.get("province", "")
         self.country = request.POST.get("country", "")
@@ -135,20 +136,34 @@ class RuleCondition:
     # 查找字符串序列
     def getSearchStrList(self):
         conditions = [""]
+        #        if self.city != "" and self.cityInvert == 0:
+        #            conditions[0] = "=" + self.city
+        #        elif self.city != "" and self.cityInvert == 1:
+        #            conditions[0] = "!=" + self.city
+        #
+        #        if self.province != "" and self.city == "" and self.provinceInvert == 0:
+        #            conditions[0] = "=" + self.province
+        #        elif self.province != "" and self.city == "" and self.provinceInvert == 1:
+        #            conditions[0] = "!=" + self.province
+        #
+        #        if self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 0:
+        #            conditions[0] = "=" + self.country
+        #        elif self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 1:
+        #            conditions[0] = "!=" + self.country
+        if self.country != "" and self.countryInvert == 0:
+            conditions[0] = "=" + self.country
+        elif self.country != "" and self.countryInvert == 1:
+            conditions[0] = "!=" + self.country
+
+        if self.province != "" and self.provinceInvert == 0:
+            conditions[0] = "=" + self.province
+        elif self.province != "" and self.provinceInvert == 1:
+            conditions[0] = "!=" + self.province
+
         if self.city != "" and self.cityInvert == 0:
             conditions[0] = "=" + self.city
         elif self.city != "" and self.cityInvert == 1:
             conditions[0] = "!=" + self.city
-
-        if self.province != "" and self.city == "" and self.provinceInvert == 0:
-            conditions[0] = "=" + self.province
-        elif self.province != "" and self.city == "" and self.provinceInvert == 1:
-            conditions[0] = "!=" + self.province
-
-        if self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 0:
-            conditions[0] = "=" + self.country
-        elif self.country != "" and self.city == "" and self.province == "" and self.countryInvert == 1:
-            conditions[0] = "!=" + self.country
 
         if self.host != "" and self.hostInvert == 0:
             conditions.append("host=" + self.host)

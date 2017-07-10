@@ -8,16 +8,17 @@
 
     <script>
         function submitSearchServer() {
+            var tableRef = document.getElementById("searchResultTable");
+            var len = tableRef.rows.length;
+            while (len > 1) {
+                tableRef.deleteRow(len - 1);
+                len = tableRef.rows.length;
+            }
             $.post(
                 "{% url 'ajServerSearch' %}",
                 $("#serverSearchForm").serialize(),
                 function (ret) {
                     var tableRef = document.getElementById("searchResultTable");
-                    var len = tableRef.rows.length;
-                    while (len > 1) {
-                        tableRef.deleteRow(len - 1);
-                        len = tableRef.rows.length;
-                    }
 
                     var count = 1;
                     $.each(ret.result, function (index, server) {
@@ -53,10 +54,10 @@
                     var searchLenH2 = document.getElementById("searchLenH2");
                     searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
 
-                    $.each(ret.result,function (index,server) {
-                        if(server.is_used=="1"){
-                            var checkbox=document.getElementById("checkbox"+server.id);
-                            checkbox.checked=true;
+                    $.each(ret.result, function (index, server) {
+                        if (server.is_used == "1") {
+                            var checkbox = document.getElementById("checkbox" + server.id);
+                            checkbox.checked = true;
                         }
                     })
 
@@ -69,35 +70,38 @@
             var state = checkbox.checked;
 
             if (state) {
-                reuseServer(id);
+                reuseServer(id, checkbox);
             } else {
-                deleteServer(id);
+                deleteServer(id, checkbox);
             }
         }
 
         $(document).ready(function () {
             submitSearchServer();
-        });
 
-        function reuseServer(id) {
+
+        });
+        function reuseServer(id, checkbox) {
             $.post(
                 "{% url 'ajServerReuse' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
                     } else {
+                        checkbox.checked = false;
                     }
                 }
             )
         }
 
-        function deleteServer(id) {
+        function deleteServer(id, checkbox) {
             $.post(
                 "{% url 'ajServerDelete' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
                     } else {
+                        checkbox.checked = true;
                     }
                 }
             )
