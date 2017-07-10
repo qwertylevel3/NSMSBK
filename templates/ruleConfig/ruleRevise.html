@@ -11,7 +11,7 @@
         function submitForm() {
             if (validate_form(document.getElementById("reviseRuleForm"))) {
                 $.post(
-                    "{% url 'handleRuleRevise'  %}",
+                    "{% url 'ajHandleRuleRevise'  %}",
                     $("#reviseRuleForm").serialize(),
                     function (ret) {
                         if (ret.result) {

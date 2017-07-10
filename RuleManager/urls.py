@@ -31,11 +31,11 @@ urlpatterns = [
     url(r'^logout/$', logout_then_login, name="logout"),
     url(r'check/', authViews.check, name="check"),
 
-    url(r'ruleConfigSearch/', ruleConfigViews.ruleConfigSearch, name="ruleSearch"),
-    url(r'ruleConfigRevise/', ruleConfigViews.ruleConfigRevise, name="ruleRevise"),
-    url(r'ruleConfigDelete/', ruleConfigViews.ajRuleDelete, name="ruleDelete"),
-    url(r'handleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="handleRuleRevise"),
-    url(r'ruleConfigReuse/', ruleConfigViews.ajRuleReuse, name="ruleReuse"),
+    url(r'ruleSearch/', ruleConfigViews.ruleConfigSearch, name="ruleSearch"),
+    url(r'ruleRevise/', ruleConfigViews.ruleConfigRevise, name="ruleRevise"),
+    url(r'ajRuleDelete/', ruleConfigViews.ajRuleDelete, name="ajRuleDelete"),
+    url(r'ajHandleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="ajHandleRuleRevise"),
+    url(r'ajRuleReuse/', ruleConfigViews.ajRuleReuse, name="ajRuleReuse"),
     url(r'ajRuleSearch/',ruleConfigViews.ajRuleSearch,name="ajRuleSearch"),
 
     url(r'serverSearch/', serverConfigViews.serverSearch, name="serverSearch"),

@@ -53,7 +53,7 @@
                         for (var i = 0; i < serverChoosedTableRef.rows.length; i++) {
                             if (serverChoosedTableRef.rows[i].cells[0].innerHTML == server.id) {
                                 var addCol = newServerLine.insertCell();
-                                addCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='addServer(" + server.id + ")' checked='checked'/>"
+                                addCol.innerHTML = "<input type='checkbox' id='checkbox" + server.id + "' class='checkbox' onclick='changeServer(" + server.id + ")' checked='checked'/>"
                                 flag = 1;
                                 break;
                             }
@@ -330,7 +330,7 @@
                 <div class="col-md-12">
                     <table class="result-table" border="1">
                         <thead>
-                        <th>服务器组名</th>
+                        <th>服务器组id</th>
                         <th>timeout</th>
                         </thead>
                         <tbody>

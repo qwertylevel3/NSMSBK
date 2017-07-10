@@ -87,7 +87,8 @@
                     $("#pageText").val(ret.page_num);
 
                     var searchLenH2 = document.getElementById("searchLenH2");
-                    searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen - 1) + "条)";
+                    searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen) + "条)";
+
                 }
             )
         }
@@ -116,7 +117,7 @@
 
         function deleteRule(id) {
             $.post(
-                "{% url 'ruleDelete' %}",
+                "{% url 'ajRuleDelete' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
@@ -127,7 +128,7 @@
         }
         function reuseRule(id) {
             $.post(
-                "{% url 'ruleReuse' %}",
+                "{% url 'ajRuleReuse' %}",
                 {"id": id},
                 function (ret) {
                     if (ret.result) {
