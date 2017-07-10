@@ -5,6 +5,7 @@
     <title>server</title>
     {% include "__staticFiles.html" %}
 
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
 
     <script>
         function submitSearchServer() {
@@ -78,9 +79,11 @@
 
         $(document).ready(function () {
             submitSearchServer();
-
-
+            $(document).ajaxError(function (event, xhr, settings, errorType) {
+                event.id
+            });
         });
+
         function reuseServer(id, checkbox) {
             $.post(
                 "{% url 'ajServerReuse' %}",

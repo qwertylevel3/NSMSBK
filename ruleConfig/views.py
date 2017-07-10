@@ -121,32 +121,32 @@ def convert2SearchResult(rawResultData):
     resultData["compel"] = rawResultData.compel
 
     if ruleCondition.countryInvert == 1:
-        resultData["country"] = "!=" + getCountryName(ruleCondition.country)
+        resultData["country"] = "~" + getCountryName(ruleCondition.country)
     else:
         resultData["country"] = getCountryName(ruleCondition.country)
 
     if ruleCondition.provinceInvert == 1:
-        resultData["province"] = "!=" + getProvinceName(ruleCondition.province)
+        resultData["province"] = "~" + getProvinceName(ruleCondition.province)
     else:
         resultData["province"] = getProvinceName(ruleCondition.province)
 
     if ruleCondition.cityInvert == 1:
-        resultData["city"] = "!=" + getCityName(ruleCondition.city)
+        resultData["city"] = "~" + getCityName(ruleCondition.city)
     else:
         resultData["city"] = getCityName(ruleCondition.city)
 
     if ruleCondition.hostInvert == 1:
-        resultData["host"] = "!=" + ruleCondition.host
+        resultData["host"] = "~" + ruleCondition.host
     else:
         resultData["host"] = ruleCondition.host
 
     if ruleCondition.appidInvert == 1:
-        resultData["appid"] = "!=" + ruleCondition.appid
+        resultData["appid"] = "~" + ruleCondition.appid
     else:
         resultData["appid"] = ruleCondition.appid
 
     if ruleCondition.netInvert == 1:
-        resultData["net"] = "!=" + getNetName(ruleCondition.net)
+        resultData["net"] = "~" + getNetName(ruleCondition.net)
     else:
         resultData["net"] = getNetName(ruleCondition.net)
 
@@ -292,7 +292,7 @@ def ajHandleRuleRevise(request):
     ttl = request.POST.get("ttl", "")
     compelStr = request.POST.get("compel", "")
     compel = 0
-    if compelStr == 1:
+    if compelStr == "on":
         compel = 1
     groupid = request.POST.get("groupid", "")
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
@@ -306,6 +306,7 @@ def ajHandleRuleRevise(request):
             data.update_time = updateTime
             data.group_id = groupid
             data.rule = conditionStr
+            data.rank = rank
             data.ttl = ttl
             data.compel = compel
             data.save()
@@ -337,7 +338,7 @@ def ajHandleRuleRevise(request):
 # allCity(数据库中所有城市信息，用来优化下拉框)
 # allNet(数据库中所有网络信息，用来优化下拉框)
 @login_required
-def ruleConfigSearch(request):
+def ruleSearch(request):
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
@@ -354,7 +355,7 @@ def ruleConfigSearch(request):
 
 # result分页并序列化
 def result2dict(searchResult, page):
-    searchLen=len(searchResult)
+    searchLen = len(searchResult)
 
     paginator = Paginator(searchResult, 25)
     try:
@@ -369,7 +370,7 @@ def result2dict(searchResult, page):
         ruleList.append(rule)
 
     return {
-        "searchLen":searchLen,
+        "searchLen": searchLen,
         "has_previous": result.has_previous(),
         "page_num": result.number,
         "has_next": result.has_next(),
@@ -378,12 +379,38 @@ def result2dict(searchResult, page):
     }
 
 
-# 检查rule是否满足conditions
-def check(rule,conditions):
-    for condition in conditions:
-        if rule.rule.find(condition) == -1:
+def check(rule, condition):
+    tc = RuleCondition()
+    tc.initByStr(rule.rule)
+
+    # condition中需要检查net
+    if condition.net != "":
+        if tc.net != condition.net or tc.netInvert != condition.netInvert:
+            return False
+    # condition中需要检查appid
+    if condition.appid != "":
+        if tc.appid != condition.appid or tc.appidInvert != condition.appidInvert:
+            return False
+    # condition中需要检查host
+    if condition.host != "":
+        if tc.host != condition.host or tc.hostInvert != condition.hostInvert:
+            return False
+    # condition中有city
+    if condition.city != "":
+        if tc.city != condition.city or tc.cityInvert != condition.cityInvert:
+            return False
+
+    # condition中有province
+    if condition.province != "":
+        if tc.province != condition.province or tc.provinceInvert != condition.provinceInvert:
+            return False
+
+    # condition中有country
+    if condition.country != "":
+        if tc.country != condition.country or tc.countryInvert != condition.countryInvert:
             return False
     return True
+
 
 # 根据提交的rule条件搜索所有对应的rule
 #
@@ -416,7 +443,6 @@ def ajRuleSearch(request):
     ruleCondition = RuleCondition()
     ruleCondition.initByReq(request)
 
-    conditions = ruleCondition.getSearchStrList()
     showState = request.POST.get("showState", 0)
 
     allRules = ServerRuleDat.objects.all()
@@ -427,7 +453,9 @@ def ajRuleSearch(request):
             continue
         if rule.is_use == 1 and showState == "2":
             continue
-        if check(rule,conditions):
+        #        if check(rule, conditions):
+        #            searchResult.append(convert2SearchResult(rule))
+        if check(rule, ruleCondition):
             searchResult.append(convert2SearchResult(rule))
 
     return JsonResponse(result2dict(searchResult, page))
