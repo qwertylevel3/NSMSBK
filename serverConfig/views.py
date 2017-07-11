@@ -24,9 +24,8 @@ def serverData2Str(serverData):
 def logServerRevise(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise server %s[%s]",
+    logger.info("%s : revise server [%s]",
                 request.user.username,
-                id,
                 serverData2Str(server))
 
 
@@ -34,9 +33,8 @@ def logServerRevise(request, id):
 def logServerNew(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : create server %s[%s]",
+    logger.info("%s : create server [%s]",
                 request.user.username,
-                id,
                 serverData2Str(server))
 
 
@@ -44,9 +42,8 @@ def logServerNew(request, id):
 def logServerReuse(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : reuse server %s[%s]",
+    logger.info("%s : reuse server [%s]",
                 request.user.username,
-                id,
                 serverData2Str(server))
 
 
@@ -54,9 +51,8 @@ def logServerReuse(request, id):
 def logServerDelete(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : delete server %s[%s]",
+    logger.info("%s : delete server [%s]",
                 request.user.username,
-                id,
                 serverData2Str(server))
 
 

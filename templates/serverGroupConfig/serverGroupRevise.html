@@ -126,6 +126,7 @@
                 return;
             }
 
+
             var groupName = $("#groupNameText").val();
             var timeout = $("#timeoutTel").val();
             var serverList = new Array();
@@ -148,7 +149,7 @@
                         alert("操作成功");
                         window.location.replace("{% url 'serverGroupSearch' %}");
                     } else {
-                        alert("操作失败");
+                        alert("服务器组名称已存在");
                     }
                 }
             )
@@ -232,6 +233,7 @@
             }
         }
         function validate_form() {
+
             if (validate_required($("#groupNameText"), "服务器组id必填") == false) {
                 $("#groupNameText").focus();
                 return false

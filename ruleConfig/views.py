@@ -32,9 +32,8 @@ def ruleData2Str(ruleData):
 def logRuleRevise(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise rule %s[%s]",
+    logger.info("%s : revise rule [%s]",
                 request.user.username,
-                id,
                 ruleData2Str(rule))
 
 
@@ -42,9 +41,8 @@ def logRuleRevise(request, id):
 def logRuleNew(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : create rule %s[%s]",
+    logger.info("%s : create rule [%s]",
                 request.user.username,
-                id,
                 ruleData2Str(rule))
 
 
@@ -52,9 +50,8 @@ def logRuleNew(request, id):
 def logRuleReuse(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : reuse rule %s[%s]",
+    logger.info("%s : reuse rule [%s]",
                 request.user.username,
-                id,
                 ruleData2Str(rule))
 
 
@@ -62,9 +59,8 @@ def logRuleReuse(request, id):
 def logRuleDelete(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
-    logger.info("%s : delete rule %s[%s]",
+    logger.info("%s : delete rule [%s]",
                 request.user.username,
-                id,
                 ruleData2Str(rule))
 
 

@@ -160,9 +160,11 @@
         <div class="col-md-12">
             <form id="ruleSearchForm">
                 {% include "ruleConfig/__conditionTable.html" %}
-                <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
-                <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>
-                <label><input type="radio" name="showState" id="showNotUsed" value="2"/>仅搜索未启用</label>
+                <div class="radioDiv">
+                    <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
+                    <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>
+                    <label><input type="radio" name="showState" id="showNotUsed" value="2"/>仅搜索未启用</label>
+                </div>
                 <input type="Tel" name="page" id="pageText" value="1" hidden/>
             </form>
         </div>
@@ -206,38 +208,6 @@
                 <th>启用</th>
                 </thead>
                 <tbody>
-                {% for line in result %}
-                    <tr>
-                        <td>{{ line.id }}</td>
-                        <td>{{ line.country }}</td>
-                        <td>{{ line.province }}</td>
-                        <td>{{ line.city }}</td>
-                        <td>{{ line.host }}</td>
-                        <td>{{ line.appid }}</td>
-                        <td>{{ line.net }}</td>
-                        <td>{{ line.group_id }}</td>
-                        <td>{{ line.rank }}</td>
-                        <td>{{ line.ttl }}</td>
-                        <td>{{ line.compel }}</td>
-                        <td>{{ line.is_use }}</td>
-                        <td>
-                            <form action="{% url 'ruleRevise' %}" method="">
-                                <input type="text" name="id" value="{{ line.id }}" hidden/>
-                                <input type="submit" class="table-button" value="更改"/>
-                            </form>
-                        </td>
-                        <td>
-                            <button id="deleteButton{{ line.id }}" class="table-button"
-                                    onclick="deleteRule({{ line.id }})">禁用
-                            </button>
-                        </td>
-                        <td>
-                            <button id="reuseButton{{ line.id }}" class="table-button"
-                                    onclick="reuseRule({{ line.id }})">启用
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
                 </tbody>
             </table>
         </div>

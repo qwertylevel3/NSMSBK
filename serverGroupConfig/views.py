@@ -91,6 +91,12 @@ def ajHandleServerGroupRevise(request):
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     if id == "-1":
+        # 查找改groupName是否存在
+        if len(GroupList.objects.filter(name=groupName)) > 0:
+            json_return = {
+                "result": False
+            }
+            return JsonResponse(json_return)
         group = GroupList.objects.create(
             update_time=updateTime,
             registration_time=registrationTime,
@@ -106,19 +112,30 @@ def ajHandleServerGroupRevise(request):
         )
         logServerGroupNew(request, id)
     else:
-        targetGroupData = ServerGroupDat.objects.filter(id=id)
-        for data in targetGroupData:
-            data.update_time = updateTime
-            data.server_ids = serverList
-            data.time_out = timeout
-            data.save()
-            logServerGroupRevise(request, data.group_id)
-            id=data.group_id
-        targetGroup = GroupList.objects.filter(id=id)
-        for group in targetGroup:
-            group.update_time = updateTime
-            group.name = groupName
-            group.save()
+        # 如果是更改操作
+        # 首先观察提交的groupName是否被改动
+        # 如果被改动，检查改groupName是否已经存在
+        # 否则直接修改
+        oldGroup = ServerGroupDat.objects.get(id=id)
+        oldGroupName = GroupList.objects.get(id=oldGroup.group_id).name
+
+        if groupName != oldGroupName:
+            if len(GroupList.objects.filter(name=groupName)) > 0:
+                json_return = {
+                    "result": False
+                }
+                return JsonResponse(json_return)
+
+        oldGroup.update_time = updateTime
+        oldGroup.server_ids = serverList
+        oldGroup.time_out = timeout
+        oldGroup.save()
+        logServerGroupRevise(request, oldGroup.group_id)
+
+        targetGroup = GroupList.objects.get(id=oldGroup.group_id)
+        targetGroup.update_time = updateTime
+        targetGroup.name = groupName
+        targetGroup.save()
 
     json_return = {"result": True}
     return JsonResponse(json_return)
@@ -158,7 +175,7 @@ def serverGroupSearch(request):
 def serverGroupRevise(request):
     defaultServer = []
     id = request.GET.get("id", "-1")
-    groupName=""
+    groupName = ""
 
     # 如果get id不为-1，则为更改服务器组信息
     # 设置该服务器组默认参数
