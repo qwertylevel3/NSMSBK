@@ -46,7 +46,7 @@ urlpatterns = [
     url(r'ajServerReuse/', serverConfigViews.ajServerReuse, name="ajServerReuse"),
 
     url(r'serverGroupSearch/', serverGroupConfigViews.serverGroupSearch, name="serverGroupSearch"),
-    url(r'serverGroupRevise/', serverGroupConfigViews.serverGroupConfigRevise, name="serverGroupRevise"),
+    url(r'serverGroupRevise/', serverGroupConfigViews.serverGroupRevise, name="serverGroupRevise"),
     url(r'ajHandleServerGroupRevise/', serverGroupConfigViews.ajHandleServerGroupRevise,
         name="ajHandleServerGroupRevise"),
     url(r'ajServerGroupShowDetail/', serverGroupConfigViews.ajShowServerGroupDetail, name="ajServerGroupDetail"),

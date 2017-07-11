@@ -21,22 +21,20 @@ def serverGroup2Str(serverGroupData):
 
 
 # 记录服务器组修改操作
-def logServerGroupRevise(request, id):
-    serverGroup = ServerGroupDat.objects.get(id=id)
+def logServerGroupRevise(request, groupid):
+    serverGroup = ServerGroupDat.objects.get(group_id=groupid)
     logger = logging.getLogger("sql")
-    logger.info("%s : revise server group %s[%s]",
+    logger.info("%s : revise server group [%s]",
                 request.user.username,
-                id,
                 serverGroup2Str(serverGroup))
 
 
 # 记录服务器组新增操作
-def logServerGroupNew(request, id):
-    serverGroup = ServerGroupDat.objects.get(id=id)
+def logServerGroupNew(request, groupid):
+    serverGroup = ServerGroupDat.objects.get(group_id=groupid)
     logger = logging.getLogger("sql")
-    logger.info("%s : create server group %s[%s]",
+    logger.info("%s : create server group [%s]",
                 request.user.username,
-                id,
                 serverGroup2Str(serverGroup))
 
 
@@ -46,6 +44,7 @@ def getServerGroupName(serverGroupID):
     if len(allServerGroup) > 0:
         return allServerGroup[0].name
     return serverGroupID
+
 
 # 将数据库记录转换为页面显示数据
 def convert2ServerGroupResult(rawServerGroupData):
@@ -75,6 +74,7 @@ def server2dict(server):
 #
 # post:
 # groupid
+# groupName
 # timeout
 # serverList(服务器组关联所有server id组成的字符串)
 #
@@ -82,37 +82,46 @@ def server2dict(server):
 # result(是否操作成功)
 @login_required
 def ajHandleServerGroupRevise(request):
-    groupid = request.POST.get("groupid", "")
+    id = request.POST.get("id", "-1")
+    groupName = request.POST.get("groupName", "")
     timeout = request.POST.get("timeout", 6000)
     serverList = request.POST.get("serverList", "")
 
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    id = int(request.POST.get("id", "-1"))
-    # 查找该项目是否存在
-    targetData = ServerGroupDat.objects.filter(id=id)
-
-    if len(targetData) > 0:
-        for data in targetData:
-            data.group_id = groupid
-            data.update_time = updateTime
-            data.server_ids = serverList
-            data.time_out = timeout
-            data.save()
-            logServerGroupRevise(request, data.id)
-    else:
-        data = ServerGroupDat.objects.create(
-            group_id=groupid,
+    if id == "-1":
+        group = GroupList.objects.create(
+            update_time=updateTime,
+            registration_time=registrationTime,
+            name=groupName
+        )
+        id = group.id
+        groupData = ServerGroupDat.objects.create(
+            group_id=id,
             update_time=updateTime,
             registration_time=registrationTime,
             server_ids=serverList,
             time_out=timeout
         )
-        logServerGroupNew(request, data.id)
+        logServerGroupNew(request, id)
+    else:
+        targetGroupData = ServerGroupDat.objects.filter(id=id)
+        for data in targetGroupData:
+            data.update_time = updateTime
+            data.server_ids = serverList
+            data.time_out = timeout
+            data.save()
+            logServerGroupRevise(request, data.group_id)
+            id=data.group_id
+        targetGroup = GroupList.objects.filter(id=id)
+        for group in targetGroup:
+            group.update_time = updateTime
+            group.name = groupName
+            group.save()
+
     json_return = {"result": True}
     return JsonResponse(json_return)
-
 
 
 # 显示查询服务器组页面
@@ -146,25 +155,26 @@ def serverGroupSearch(request):
 # allServer(所有服务器)
 # allServerGroup(所有服务器组)
 @login_required
-def serverGroupConfigRevise(request):
+def serverGroupRevise(request):
     defaultServer = []
     id = request.GET.get("id", "-1")
+    groupName=""
 
     # 如果get id不为-1，则为更改服务器组信息
     # 设置该服务器组默认参数
     if id != "-1":
         serverGroup = ServerGroupDat.objects.get(id=id)
         defaultServer = serverGroup.server_ids.split(',')
+        groupName = GroupList.objects.get(id=serverGroup.group_id).name
 
     return render(request, "serverGroupConfig/serverGroupRevise.html",
                   {
                       "id": id,
                       "defaultServer": defaultServer,
+                      "groupName": groupName,
                       "allServer": ServerList.objects.all(),
                       "allServerGroup": ServerGroupDat.objects.all()
                   })
-
-
 
 
 # 显示某个服务器组详情
@@ -224,5 +234,3 @@ def ajInitServerGroupRevisePage(request):
         "defaultServerList": defaultServerList
     }
     return JsonResponse(json_return)
-
-

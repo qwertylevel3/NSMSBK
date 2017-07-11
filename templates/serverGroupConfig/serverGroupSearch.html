@@ -83,14 +83,14 @@
 
             <table class="result-table table-hover" border="1">
                 <thead>
-                <th>id</th>
-                <th>groupid</th>
-                <th>server ids</th>
+                <th hidden>id</th>
+                <th>服务器组名</th>
+                <th>服务器id列表</th>
                 </thead>
                 <tbody>
                 {% for serverGroup in result %}
                     <tr>
-                        <td>{{ serverGroup.id }}</td>
+                        <td hidden>{{ serverGroup.id }}</td>
                         <td>{{ serverGroup.group_name }}</td>
                         <td>{{ serverGroup.server_ids }}</td>
                         <td>
