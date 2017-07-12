@@ -12,10 +12,6 @@
             submitSearchForm();
         }
 
-//        $(document).ajaxError(function (event, xhr, settings, errorType) {
-//            alert("error");
-//        });
-
         function submitSearchForm() {
             var searchResultTable = document.getElementById("searchResultTable");
 
@@ -24,10 +20,14 @@
                 searchResultTable.deleteRow(len - 1);
                 len = searchResultTable.rows.length;
             }
-            $.post(
-                "{% url 'ajRuleSearch' %}",
-                $("#ruleSearchForm").serialize(),
-                function (ret) {
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ajRuleSearch' %}",
+                data: $("#ruleSearchForm").serialize(),
+                beforeSend:function () {
+                    $("#searchButton").attr("disabled",true);
+                },
+                success: function (ret) {
                     var searchResultTable = document.getElementById("searchResultTable");
 
                     var count = 1;
@@ -94,10 +94,11 @@
                     var searchLenH2 = document.getElementById("searchLenH2");
                     searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen) + "条)";
 
+                },
+                complete:function () {
+                    $("#searchButton").attr("disabled",false);
                 }
-            ).fail(function () {
-                alert("连接失败");
-            })
+            });
         }
 
         function nextPage() {
@@ -146,7 +147,12 @@
         }
         $(document).ready(function () {
             submitSearchForm();
-        })
+//            $(document).bind("ajaxSend", function () {
+//                alert("before send");
+//            }).bind("ajaxComplete", function () {
+//                alert("after send");
+//            });
+        });
     </script>
 
 </head>
@@ -186,7 +192,7 @@
             </form>
         </div>
         <div class="col-md-3">
-            <button class="button" onclick="search()">搜索</button>
+            <button id="searchButton" class="button" onclick="search()">搜索</button>
         </div>
 
     </div>

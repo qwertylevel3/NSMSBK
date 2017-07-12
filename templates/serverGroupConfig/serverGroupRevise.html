@@ -234,7 +234,7 @@
         }
         function validate_form() {
 
-            if (validate_required($("#groupNameText"), "服务器组id必填") == false) {
+            if (validate_required($("#groupNameText"), "服务器组名称必填") == false) {
                 $("#groupNameText").focus();
                 return false
             }
@@ -333,7 +333,7 @@
                 <div class="col-md-12">
                     <table class="result-table" border="1">
                         <thead>
-                        <th>服务器组id</th>
+                        <th>服务器组名称</th>
                         <th>timeout</th>
                         </thead>
                         <tbody>
