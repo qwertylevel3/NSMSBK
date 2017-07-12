@@ -45,6 +45,9 @@ class RuleCondition:
         elif self.province != "":
             self.country = self.province[0:3]
 
+        self.host=self.host.strip()
+        self.appid=self.appid.strip()
+
     # 用一个rule字符设置内部数据,并自动填充空的country和province数据
     def initByStr(self, ruleStr):
         conditionStrList = ruleStr.split("&")
@@ -96,6 +99,9 @@ class RuleCondition:
             self.country = self.city[0:3]
         elif self.province != "":
             self.country = self.province[0:3]
+
+        self.host=self.host.strip()
+        self.appid=self.appid.strip()
 
     # 转换为rule字符串
     def convert2Str(self):
