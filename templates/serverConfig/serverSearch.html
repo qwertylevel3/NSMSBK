@@ -94,7 +94,10 @@
                         checkbox.checked = false;
                     }
                 }
-            )
+            ).fail(function () {
+                alert("连接失败")
+                checkbox.checked = false;
+            })
         }
 
         function deleteServer(id, checkbox) {
@@ -107,7 +110,10 @@
                         checkbox.checked = true;
                     }
                 }
-            )
+            ).fail(function () {
+                alert("连接失败")
+                checkbox.checked = true;
+            })
         }
     </script>
 

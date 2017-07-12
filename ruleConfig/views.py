@@ -374,7 +374,8 @@ def result2dict(searchResult, page):
         "ruleList": ruleList
     }
 
-
+# 检查rule是否满足conditoin条件
+# 用来搜索过程中过滤用
 def check(rule, condition):
     tc = RuleCondition()
     tc.initByStr(rule.rule)
