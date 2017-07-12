@@ -12,6 +12,10 @@
             submitSearchForm();
         }
 
+//        $(document).ajaxError(function (event, xhr, settings, errorType) {
+//            alert("error");
+//        });
+
         function submitSearchForm() {
             var searchResultTable = document.getElementById("searchResultTable");
 
@@ -91,7 +95,9 @@
                     searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen) + "条)";
 
                 }
-            )
+            ).fail(function () {
+                alert("连接错误");
+            })
         }
 
         function nextPage() {

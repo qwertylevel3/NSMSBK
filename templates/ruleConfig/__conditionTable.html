@@ -5,6 +5,7 @@
 
     <script>
         $(document).ready(function () {
+            $("#countryInvertCheckbox").attr("disabled", true)
 
             $("#countrySelect").change(function () {
                 $("#provinceSelect").empty();
@@ -28,6 +29,12 @@
 
                     };
                 {% endfor %}
+                if ($("#countrySelect").val() != "") {
+                    $("#countryInvertCheckbox").attr("disabled", false);
+                } else {
+                    $("#countryInvertCheckbox").attr("disabled", true);
+                }
+
             });
 
 
@@ -86,14 +93,37 @@
             {% endfor %}
         });
 
+        function countryInvertCheck() {
+            if ($("#countryInvertCheckbox").is(":checked")) {
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceTh").hide();
+                $("#cityTh").hide();
+                $("#provinceTd0").hide();
+                $("#cityTd0").hide();
+                $("#provinceTd1").hide();
+                $("#cityTd1").hide();
+            } else {
+                $("#provinceTh").show();
+                $("#cityTh").show();
+                $("#provinceTd0").show();
+                $("#cityTd0").show();
+                $("#provinceTd1").show();
+                $("#cityTd1").show();
+
+                $("#countrySelect").change();
+            }
+        }
+
     </script>
 
     <table class="result-table" border="1">
         <thead>
         <th></th>
         <th>国家</th>
-        <th>省份</th>
-        <th>城市</th>
+        <th id="provinceTh">省份</th>
+        <th id="cityTh">城市</th>
         <th>host</th>
         <th>appid</th>
         <th>net</th>
@@ -109,12 +139,12 @@
                     {% endfor %}
                 </select>
             </td>
-            <td>
+            <td id="provinceTd0">
                 <select name="province" id="provinceSelect">
                     <option value="" selected>省份</option>
                 </select>
             </td>
-            <td>
+            <td id="cityTd0">
                 <select name="city" id="citySelect">
                     <option value="" selected>城市</option>
                 </select>
@@ -138,12 +168,14 @@
         <tr>
             <td>取反</td>
             <td>
-                <input type="checkbox" name="countryInvert" id="countryInvertCheckbox" class="checkbox"/>
+                <input type="checkbox" name="countryInvert" onclick="countryInvertCheck()" id="countryInvertCheckbox"
+                       class="checkbox"/>
             </td>
-            <td>
-                <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox" class="checkbox" disabled="true"/>
+            <td id="provinceTd1">
+                <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox" class="checkbox"
+                       disabled="true"/>
             </td>
-            <td>
+            <td id="cityTd1">
                 <input type="checkbox" name="cityInvert" id="cityInvertCheckbox" class="checkbox" disabled="true"/>
             </td>
             <td>
