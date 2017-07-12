@@ -10,15 +10,24 @@
 
         function submitForm() {
             if (validate_form(document.getElementById("reviseRuleForm"))) {
-                $.post(
-                    "{% url 'ajHandleRuleRevise'  %}",
-                    $("#reviseRuleForm").serialize(),
-                    function (ret) {
-                        if (ret.result) {
-                            alert("操作成功");
-                            window.location.replace("{% url 'ruleSearch' %}");
-                        } else {
-                            alert("操作失败");
+                $.ajax({
+                        type: 'POST',
+
+                        url: "{% url 'ajHandleRuleRevise'  %}",
+                        data: $("#reviseRuleForm").serialize(),
+                        beforeSend: function () {
+                            $("#submitButton").attr("disabled", true);
+                        },
+                        success: function (ret) {
+                            if (ret.result) {
+                                alert("操作成功");
+                                window.location.replace("{% url 'ruleSearch' %}");
+                            } else {
+                                alert("操作失败");
+                            }
+                        },
+                        complete: function () {
+                            $("#submitButton").attr("disabled", false);
                         }
                     }
                 );

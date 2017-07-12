@@ -17,17 +17,25 @@
                 var idc = $("#idcText").val()
                 var sign = $("#signText").val()
 
-                $.post(
-                    "{% url 'ajHandleServerRevise' %}",
-                    {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
-                    function (ret) {
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'ajHandleServerRevise' %}",
+                    data: {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                    beforeSend: function () {
+                        $("#submitButton").attr("disabled", true);
+                    },
+                    success: function (ret) {
                         if (!ret.result) {
                             alert(ret.msg);
                         } else {
                             alert(ret.msg);
                             window.location.replace("{% url 'serverSearch' %}");
                         }
-                    });
+                    },
+                    complete: function () {
+                        $("#submitButton").attr("disabled", false);
+                    }
+                });
             }
         }
 
@@ -66,7 +74,7 @@
         <div class="col-md-12">
             <input type="text" name="id" value="{{ id }}" readonly hidden>
             {% include "serverConfig/__serverConfigTable.html" %}
-            <button class="button"  onclick="window.location.replace('{% url 'serverSearch' %}')">取消</button>
+            <button class="button" onclick="window.location.replace('{% url 'serverSearch' %}')">取消</button>
             <button id="submitButton" onclick="submitServerForm()" class="button">提交</button>
         </div>
     </div>

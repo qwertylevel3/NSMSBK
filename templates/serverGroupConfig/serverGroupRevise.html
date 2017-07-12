@@ -19,10 +19,14 @@
             var idc = $("#idcText").val();
             var sign = $("#signText").val();
 
-            $.post(
-                "{% url 'ajServerSearch' %}",
-                {"ip": ip, "port": port, "idc": idc, "sign": sign},
-                function (ret) {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'ajServerSearch' %}",
+                data:{"ip": ip, "port": port, "idc": idc, "sign": sign},
+                beforeSend:function () {
+                     $("#searchButton").attr("disabled",true);
+                },
+                success:function (ret) {
                     var tableRef = document.getElementById("searchResultTable");
 
                     var serverChoosedTableRef = document.getElementById("serverChoosedTable");
@@ -67,8 +71,11 @@
                         }
                     });
 
+                },
+                complete:function () {
+                    $("#searchButton").attr("disabled",false);
                 }
-            )
+            });
         }
         //向已选表格中添加一项
         function addServer(id) {
@@ -141,17 +148,26 @@
                 serverListStr = serverListStr.substr(1);
             }
 
-            $.post(
-                "{% url 'ajHandleServerGroupRevise' %}",
-                {"id":{{ id }}, "groupName": groupName, "timeout": timeout, "serverList": serverListStr},
-                function (ret) {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'ajHandleServerGroupRevise' %}",
+                data:{"id":{{ id }}, "groupName": groupName, "timeout": timeout, "serverList": serverListStr},
+                beforeSend:function () {
+                    $("#submitButton").attr("disabled",true);
+                },
+                success:function (ret) {
                     if (ret.result) {
                         alert("操作成功");
                         window.location.replace("{% url 'serverGroupSearch' %}");
                     } else {
                         alert("服务器组名称已存在");
                     }
+                },
+                complete:function () {
+                    $("#submitButton").attr("disabled",false);
                 }
+            }
+
             )
         }
         $(document).ready(function () {
@@ -301,7 +317,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <button class="button" onclick="searchServer()">搜索</button>
+                    <button id="searchButton" class="button" onclick="searchServer()">搜索</button>
                 </div>
             </div>
             <div class="row">
@@ -355,7 +371,7 @@
                     </button>
                 </div>
                 <div class="col-md-6">
-                    <button class="button" onclick="submitServerGroup()">提交</button>
+                    <button id="submitButton" class="button" onclick="submitServerGroup()">提交</button>
                 </div>
             </div>
             <div class="row">
