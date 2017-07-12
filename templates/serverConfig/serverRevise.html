@@ -22,9 +22,9 @@
                     {'id':{{ id }}, 'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
                     function (ret) {
                         if (!ret.result) {
-                            alert("该条目已存在")
+                            alert(ret.msg);
                         } else {
-                            alert("操作成功")
+                            alert(ret.msg);
                             window.location.replace("{% url 'serverSearch' %}");
                         }
                     });

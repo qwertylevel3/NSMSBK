@@ -109,6 +109,14 @@ def ajServerReuse(request):
     return JsonResponse(json_return)
 
 
+# 检查该ip，port是否已存在
+def validataServer(ip, port):
+    dupData = ServerList.objects.filter(ip=ip, port=port)
+    if len(dupData) > 0:
+        return False
+    return True
+
+
 # 新增或者更改条目
 #
 # post:
@@ -119,7 +127,8 @@ def ajServerReuse(request):
 # sign
 #
 # ret:
-# result(True:操作成功 | False:插入重复数据)
+# result(True:操作成功 | False:插入失败)
+# msg(附加信息)
 @login_required
 def ajHandleServerRevise(request):
     id = request.POST.get("id", "-1")
@@ -131,24 +140,14 @@ def ajHandleServerRevise(request):
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    # 查找该项目是否存在
-    targetData = ServerList.objects.filter(id=id)
-
-    if len(targetData) > 0:
-        for data in targetData:
-            data.ip = ip
-            data.port = port
-            data.idc = idc
-            data.sign = sign
-            data.update_time = updateTime
-            data.save()
-            logServerRevise(request, data.id)
-
-    else:
-        # 如果是新增，观察是否重复
-        dupData = ServerList.objects.filter(ip=ip, port=port, idc=idc, sign=sign)
-        if len(dupData) > 0:
-            return_json = {'result': False}
+    if id == "-1":
+        # 新增
+        # 查重
+        if not validataServer(ip, port):
+            return_json = {
+                'result': False,
+                'msg': "该ip,port已存在"
+            }
             return JsonResponse(return_json)
 
         data = ServerList.objects.create(
@@ -161,7 +160,29 @@ def ajHandleServerRevise(request):
             is_used=1
         )
         logServerNew(request, data.id)
-    return_json = {'result': True}
+    else:
+        # 更改
+        # 首先检查是否更改了ip和port
+        # 如果更改了，查重
+        targetData = ServerList.objects.get(id=id)
+        if targetData.ip != ip or targetData.port != port:
+            if not validataServer(ip, port):
+                return_json = {
+                    'result': False,
+                    'msg': "该ip,port已存在"
+                }
+                return JsonResponse(return_json)
+        targetData.ip = ip
+        targetData.port = port
+        targetData.idc = idc
+        targetData.sign = sign
+        targetData.update_time = updateTime
+        targetData.save()
+        logServerRevise(request, targetData.id)
+    return_json = {
+        'result': True,
+        'msg': "操作成功"
+    }
     return JsonResponse(return_json)
 
 
