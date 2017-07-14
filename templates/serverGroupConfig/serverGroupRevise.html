@@ -219,7 +219,10 @@
                     });
 
                 }
-            )
+            ).fail(function () {
+                alert("连接失败，重试");
+                window.location.replace("{% url 'serverGroupRevise' %}");
+            });
 
             {% for serverGroup in allServerGroup %}
                 if ({{ serverGroup.id }}=={{ id }}) {

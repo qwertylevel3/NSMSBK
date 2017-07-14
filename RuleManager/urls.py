@@ -23,11 +23,12 @@ from serverGroupConfig import views as serverGroupConfigViews
 from myAuthority import views as authViews
 from django.contrib.auth.views import login, logout_then_login
 
+from RuleManager import settings
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
-    url(r'^$',indexViews.index,name="root"),
+    url(r'^$', indexViews.index, name="root"),
     url(r'index/', indexViews.index, name="index"),
-
 
     url(r'^login/$', login, {'template_name': 'auth/login.html'}, name="login"),
     url(r'^logout/$', logout_then_login, name="logout"),
@@ -38,7 +39,7 @@ urlpatterns = [
     url(r'ajRuleDelete/', ruleConfigViews.ajRuleDelete, name="ajRuleDelete"),
     url(r'ajHandleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="ajHandleRuleRevise"),
     url(r'ajRuleReuse/', ruleConfigViews.ajRuleReuse, name="ajRuleReuse"),
-    url(r'ajRuleSearch/',ruleConfigViews.ajRuleSearch,name="ajRuleSearch"),
+    url(r'ajRuleSearch/', ruleConfigViews.ajRuleSearch, name="ajRuleSearch"),
 
     url(r'serverSearch/', serverConfigViews.serverSearch, name="serverSearch"),
     url(r'serverRevise/', serverConfigViews.serverRevise, name="serverRevise"),

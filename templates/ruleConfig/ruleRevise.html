@@ -10,7 +10,8 @@
 
         function submitForm() {
             if (validate_form(document.getElementById("reviseRuleForm"))) {
-                $.ajax({
+                $.ajax(
+                    {
                         type: 'POST',
 
                         url: "{% url 'ajHandleRuleRevise'  %}",
@@ -125,7 +126,6 @@
                             <input type="text" name="ttl" id="ttlText" value="6000"/>
                         </td>
                         <td>
-                            <!--<input type="text" name="groupid" id="groupidText"/>-->
                             <select name="groupid" id="groupidSelect"/>
                         </td>
                     </tr>
@@ -134,10 +134,6 @@
 
                 {% include "ruleConfig/__conditionTable.html" %}
 
-
-                <!--
-                <input type="submit" class="button" value="提交"/>
-                -->
 
             </form>
             <button class="button" onclick="window.location.replace('{% url 'ruleSearch' %}')">取消</button>
