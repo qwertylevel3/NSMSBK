@@ -5,42 +5,61 @@
     <title>server</title>
     {% include "__staticFiles.html" %}
 
-    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
-
     <script>
         function submitServerForm() {
-            if (validate_form() == true) {
-                var ip = $("#ipText").val();
-                var port = $("#portText").val()
-                var idc = $("#idcText").val()
-                var sign = $("#signText").val()
+            var ip = $("#ipText").val();
+            var port = $("#portText").val();
+            var idc = $("#idcText").val();
+            var sign = $("#signText").val();
 
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ajHandleServerAdd' %}",
+                data: {'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                beforeSend: function () {
+                    $("#submitButton").attr("disabled", true);
+                },
+                success: function (ret) {
+                    if (!ret.result) {
+                        alert(ret.msg);
+                    } else {
+                        alert(ret.msg);
+                        window.location.replace("{% url 'serverSearch' %}");
+                    }
+                },
+                complete: function () {
+                    $("#submitButton").attr("disabled", false);
+                }
+            });
+        }
+        function validataServerForm() {
+            if (validate_form() == true) {
                 $.ajax({
                     type: 'POST',
-                    url: "{% url 'ajHandleServerAdd' %}",
-                    data: {'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
-                    beforeSend: function () {
-                        $("#submitButton").attr("disabled", true);
-                    },
+                    url: "{% url 'ajValidateServer' %}",
+                    data: {'ip': $("#ipText").val(), 'port': $("#portText").val()},
                     success: function (ret) {
                         if (!ret.result) {
                             alert(ret.msg);
                         } else {
-                            alert(ret.msg);
-                            window.location.replace("{% url 'serverSearch' %}");
+                            var ip = $("#ipText").val();
+                            var port = $("#portText").val();
+                            var idc = $("#idcText").val();
+                            var sign = $("#signText").val();
+
+
+                            $("#validataAddDiv").html("ip:" + ip + "<br/>port:" + port + "<br/>idc:" + idc + "<br/>sign:" + sign);
+
+                            $("#myModal").modal({});
                         }
-                    },
-                    complete: function () {
-                        $("#submitButton").attr("disabled", false);
                     }
                 });
             }
         }
 
-        function validate_required(field, alerttxt) {
+        function validate_required(field) {
             with (field) {
                 if (field.val() == null || field.val() == "") {
-                    alert(alerttxt);
                     return false
                 } else {
                     return true
@@ -48,11 +67,13 @@
             }
         }
         function validate_form() {
-            if (validate_required($("#ipText"), "ip must be filled out!") == false) {
+            if (validate_required($("#ipText")) == false) {
+                alert("ip必填");
                 $("#ipText").focus();
                 return false;
             }
-            if (validate_required($("#portText"), "port must be filled out!") == false) {
+            if (validate_required($("#portText")) == false) {
+                alert("port必填");
                 $("#portText").focus();
                 return false;
             }
@@ -138,7 +159,13 @@
         }
 
         $(document).ready(function () {
+            $(function () {
+                $('[data-toggle="popover"]').popover()
+            });
+
             submitSearchServer();
+
+
             $(document).ajaxError(function (event, xhr, settings, errorType) {
                 event.id
             });
@@ -203,7 +230,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-3">
-            <button onclick="submitServerForm()" class="button">新增</button>
+            <button onclick="validataServerForm()" class="button">新增</button>
         </div>
         <div class="col-md-3">
             <button id="searchButton" class="button" onclick="submitSearchServer()">搜索</button>
@@ -234,6 +261,27 @@
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">新增服务器信息</h4>
+            </div>
+            <div class="modal-body" id="validataAddDiv">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" onclick="submitServerForm()">确认提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 
 </html>

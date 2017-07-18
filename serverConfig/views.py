@@ -110,11 +110,30 @@ def ajServerReuse(request):
 
 
 # 检查该ip，port是否已存在
-def validataServer(ip, port):
+def validateServer(ip, port):
     dupData = ServerList.objects.filter(ip=ip, port=port)
     if len(dupData) > 0:
         return False
     return True
+
+
+
+
+def ajValidateServer(request):
+    ip=request.POST.get("ip",-1)
+    port=request.POST.get("port",-1)
+
+    if validateServer(ip,port):
+        json_return={
+            "result":True,
+            "msg":"成功"
+        }
+        return JsonResponse(json_return)
+    json_return={
+        "result":False,
+        "msg":"该ip，port已存在"
+    }
+    return JsonResponse(json_return)
 
 
 # 新增或者更改条目
@@ -146,7 +165,7 @@ def ajHandleServerRevise(request):
     # 如果更改了，查重
     targetData = ServerList.objects.get(id=id)
     if targetData.ip != ip or targetData.port != port:
-        if not validataServer(ip, port):
+        if not validateServer(ip, port):
             return_json = {
                 'result': False,
                 'msg': "该ip,port已存在"
@@ -178,7 +197,7 @@ def ajHandleServerAdd(request):
 
     # 新增
     # 查重
-    if not validataServer(ip, port):
+    if not validateServer(ip, port):
         return_json = {
             'result': False,
             'msg': "该ip,port已存在"

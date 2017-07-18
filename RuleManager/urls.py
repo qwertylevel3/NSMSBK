@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'adHandleServerAdd/',serverConfigViews.ajHandleServerAdd,name="ajHandleServerAdd"),
     url(r'ajHandleServerRevise/', serverConfigViews.ajHandleServerRevise, name="ajHandleServerRevise"),
     url(r'ajServerReuse/', serverConfigViews.ajServerReuse, name="ajServerReuse"),
+    url(r'ajValidateServer',serverConfigViews.ajValidateServer,name="ajValidateServer"),
 
     url(r'serverGroupSearch/', serverGroupConfigViews.serverGroupSearch, name="serverGroupSearch"),
     url(r'serverGroupRevise/', serverGroupConfigViews.serverGroupRevise, name="serverGroupRevise"),
