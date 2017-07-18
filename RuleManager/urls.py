@@ -43,8 +43,10 @@ urlpatterns = [
 
     url(r'serverSearch/', serverConfigViews.serverSearch, name="serverSearch"),
     url(r'serverRevise/', serverConfigViews.serverRevise, name="serverRevise"),
+
     url(r'ajServerSearch', serverConfigViews.ajServerSearch, name="ajServerSearch"),
     url(r'ajServerDelete/', serverConfigViews.ajServerDelete, name="ajServerDelete"),
+    url(r'adHandleServerAdd/',serverConfigViews.ajHandleServerAdd,name="ajHandleServerAdd"),
     url(r'ajHandleServerRevise/', serverConfigViews.ajHandleServerRevise, name="ajHandleServerRevise"),
     url(r'ajServerReuse/', serverConfigViews.ajServerReuse, name="ajServerReuse"),
 

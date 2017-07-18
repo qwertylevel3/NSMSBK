@@ -120,7 +120,7 @@ def validataServer(ip, port):
 # 新增或者更改条目
 #
 # post:
-# id(-1为新增，否则为修改)
+# id(修改的项目的id)
 # ip
 # port
 # idc
@@ -140,45 +140,61 @@ def ajHandleServerRevise(request):
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    if id == "-1":
-        # 新增
-        # 查重
+
+    # 更改
+    # 首先检查是否更改了ip和port
+    # 如果更改了，查重
+    targetData = ServerList.objects.get(id=id)
+    if targetData.ip != ip or targetData.port != port:
         if not validataServer(ip, port):
             return_json = {
                 'result': False,
                 'msg': "该ip,port已存在"
             }
             return JsonResponse(return_json)
+    targetData.ip = ip
+    targetData.port = port
+    targetData.idc = idc
+    targetData.sign = sign
+    targetData.update_time = updateTime
+    targetData.save()
+    logServerRevise(request, targetData.id)
 
-        data = ServerList.objects.create(
-            update_time=updateTime,
-            registration_time=registrationTime,
-            ip=ip,
-            port=port,
-            idc=idc,
-            sign=sign,
-            is_used=1
-        )
-        logServerNew(request, data.id)
-    else:
-        # 更改
-        # 首先检查是否更改了ip和port
-        # 如果更改了，查重
-        targetData = ServerList.objects.get(id=id)
-        if targetData.ip != ip or targetData.port != port:
-            if not validataServer(ip, port):
-                return_json = {
-                    'result': False,
-                    'msg': "该ip,port已存在"
-                }
-                return JsonResponse(return_json)
-        targetData.ip = ip
-        targetData.port = port
-        targetData.idc = idc
-        targetData.sign = sign
-        targetData.update_time = updateTime
-        targetData.save()
-        logServerRevise(request, targetData.id)
+    return_json = {
+        'result': True,
+        'msg': "操作成功"
+    }
+    return JsonResponse(return_json)
+
+
+def ajHandleServerAdd(request):
+    ip = request.POST.get("ip", "")
+    port = request.POST.get("port", "")
+    idc = request.POST.get("idc", "")
+    sign = request.POST.get("sign", "")
+
+    updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+
+    # 新增
+    # 查重
+    if not validataServer(ip, port):
+        return_json = {
+            'result': False,
+            'msg': "该ip,port已存在"
+        }
+        return JsonResponse(return_json)
+
+    data = ServerList.objects.create(
+        update_time=updateTime,
+        registration_time=registrationTime,
+        ip=ip,
+        port=port,
+        idc=idc,
+        sign=sign,
+        is_used=1
+    )
+    logServerNew(request, data.id)
     return_json = {
         'result': True,
         'msg': "操作成功"

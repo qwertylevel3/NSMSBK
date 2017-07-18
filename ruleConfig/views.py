@@ -189,7 +189,7 @@ def ajRuleReuse(request):
     return JsonResponse(return_json)
 
 
-# TODO reafactor
+# 传递group信息用
 class GroupData:
     groupid = ""
     groupidName = ""

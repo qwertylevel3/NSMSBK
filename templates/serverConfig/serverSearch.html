@@ -8,6 +8,58 @@
     <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
 
     <script>
+        function submitServerForm() {
+            if (validate_form() == true) {
+                var ip = $("#ipText").val();
+                var port = $("#portText").val()
+                var idc = $("#idcText").val()
+                var sign = $("#signText").val()
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'ajHandleServerAdd' %}",
+                    data: {'ip': ip, 'port': port, 'idc': idc, 'sign': sign},
+                    beforeSend: function () {
+                        $("#submitButton").attr("disabled", true);
+                    },
+                    success: function (ret) {
+                        if (!ret.result) {
+                            alert(ret.msg);
+                        } else {
+                            alert(ret.msg);
+                            window.location.replace("{% url 'serverSearch' %}");
+                        }
+                    },
+                    complete: function () {
+                        $("#submitButton").attr("disabled", false);
+                    }
+                });
+            }
+        }
+
+        function validate_required(field, alerttxt) {
+            with (field) {
+                if (field.val() == null || field.val() == "") {
+                    alert(alerttxt);
+                    return false
+                } else {
+                    return true
+                }
+            }
+        }
+        function validate_form() {
+            if (validate_required($("#ipText"), "ip must be filled out!") == false) {
+                $("#ipText").focus();
+                return false;
+            }
+            if (validate_required($("#portText"), "port must be filled out!") == false) {
+                $("#portText").focus();
+                return false;
+            }
+            return true;
+        }
+
+
         function submitSearchServer() {
             var tableRef = document.getElementById("searchResultTable");
             var len = tableRef.rows.length;
@@ -16,62 +68,61 @@
                 len = tableRef.rows.length;
             }
             $.ajax({
-                type:'POST',
-                url:"{% url 'ajServerSearch' %}",
-                data:$("#serverSearchForm").serialize(),
-                beforeSend:function () {
-                     $("#searchButton").attr("disabled",true);
-                },
-                success:function (ret) {
-                    var tableRef = document.getElementById("searchResultTable");
+                    type: 'POST',
+                    url: "{% url 'ajServerSearch' %}",
+                    data: $("#serverSearchForm").serialize(),
+                    beforeSend: function () {
+                        $("#searchButton").attr("disabled", true);
+                    },
+                    success: function (ret) {
+                        var tableRef = document.getElementById("searchResultTable");
 
-                    var count = 1;
-                    $.each(ret.result, function (index, server) {
-                        var newServerLine = tableRef.insertRow(count);
-                        count = count + 1;
-                        if (count % 2 == 0) {
-                            addClass(newServerLine, "green-tr");
-                        }
+                        var count = 1;
+                        $.each(ret.result, function (index, server) {
+                            var newServerLine = tableRef.insertRow(count);
+                            count = count + 1;
+                            if (count % 2 == 0) {
+                                addClass(newServerLine, "green-tr");
+                            }
 
-                        var idCol = newServerLine.insertCell();
-                        idCol.innerHTML = server.id;
-                        var ipCol = newServerLine.insertCell();
-                        ipCol.innerHTML = server.ip;
-                        var portCol = newServerLine.insertCell();
-                        portCol.innerHTML = server.port;
-                        var idcCol = newServerLine.insertCell();
-                        idcCol.innerHTML = server.idc;
-                        var signCol = newServerLine.insertCell();
-                        signCol.innerHTML = server.sign;
-                        var is_usedCol = newServerLine.insertCell();
-                        is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>" +
-                            "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + server.id + "'/>"
+                            var idCol = newServerLine.insertCell();
+                            idCol.innerHTML = server.id;
+                            var ipCol = newServerLine.insertCell();
+                            ipCol.innerHTML = server.ip;
+                            var portCol = newServerLine.insertCell();
+                            portCol.innerHTML = server.port;
+                            var idcCol = newServerLine.insertCell();
+                            idcCol.innerHTML = server.idc;
+                            var signCol = newServerLine.insertCell();
+                            signCol.innerHTML = server.sign;
+                            var is_usedCol = newServerLine.insertCell();
+                            is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>" +
+                                "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + server.id + "'/>"
 
 
-                        var changeCol = newServerLine.insertCell();
-                        changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
-                            "<input type='text' name='id' value=" + server.id + " hidden/>" +
-                            "<input type='submit' class='table-button' value='更改'/>" +
-                            "</form>";
+                            var changeCol = newServerLine.insertCell();
+                            changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
+                                "<input type='text' name='id' value=" + server.id + " hidden/>" +
+                                "<input type='submit' class='table-button' value='更改'/>" +
+                                "</form>";
 
-                    });
+                        });
 
-                    var searchLenH2 = document.getElementById("searchLenH2");
-                    searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
+                        var searchLenH2 = document.getElementById("searchLenH2");
+                        searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
 
-                    $.each(ret.result, function (index, server) {
-                        if (server.is_used == "1") {
-                            var checkbox = document.getElementById("checkbox" + server.id);
-                            checkbox.checked = true;
-                        }
-                    })
+                        $.each(ret.result, function (index, server) {
+                            if (server.is_used == "1") {
+                                var checkbox = document.getElementById("checkbox" + server.id);
+                                checkbox.checked = true;
+                            }
+                        })
 
-                },
-                complete:function () {
-                    $("#searchButton").attr("disabled",false);
+                    },
+                    complete: function () {
+                        $("#searchButton").attr("disabled", false);
+                    }
                 }
-            }
-
             )
         }
 
@@ -152,10 +203,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-3">
-            <form action="{% url 'serverRevise' %}" method="get">
-                <input type="text" name="id" value="-1" hidden>
-                <input type="submit" class="button" value="新增"/>
-            </form>
+            <button onclick="submitServerForm()" class="button">新增</button>
         </div>
         <div class="col-md-3">
             <button id="searchButton" class="button" onclick="submitSearchServer()">搜索</button>
