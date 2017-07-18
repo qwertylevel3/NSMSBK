@@ -25,9 +25,9 @@
                     },
                     success: function (ret) {
                         if (!ret.result) {
-                            alert(ret.msg);
+                            alert("该ip port已存在")
                         } else {
-                            alert(ret.msg);
+                            alert("操作成功");
                             window.location.replace("{% url 'serverSearch' %}");
                         }
                     },

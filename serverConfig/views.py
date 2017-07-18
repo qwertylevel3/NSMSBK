@@ -126,13 +126,11 @@ def ajValidateServer(request):
 
     if validateServer(ip,port):
         json_return={
-            "result":True,
-            "msg":"成功"
+            "result":True
         }
         return JsonResponse(json_return)
     json_return={
-        "result":False,
-        "msg":"该ip，port已存在"
+        "result":False
     }
     return JsonResponse(json_return)
 
@@ -168,8 +166,7 @@ def ajHandleServerRevise(request):
     if targetData.ip != ip or targetData.port != port:
         if not validateServer(ip, port):
             return_json = {
-                'result': False,
-                'msg': "该ip,port已存在"
+                'result': False
             }
             return JsonResponse(return_json)
     targetData.ip = ip
@@ -181,8 +178,7 @@ def ajHandleServerRevise(request):
     logServerRevise(request, targetData.id)
 
     return_json = {
-        'result': True,
-        'msg': "操作成功"
+        'result': True
     }
     return JsonResponse(return_json)
 
@@ -200,8 +196,7 @@ def ajHandleServerAdd(request):
     # 查重
     if not validateServer(ip, port):
         return_json = {
-            'result': False,
-            'msg': "该ip,port已存在"
+            'result': False
         }
         return JsonResponse(return_json)
 
@@ -215,11 +210,10 @@ def ajHandleServerAdd(request):
         is_used=1
     )
     logServerNew(request, data.id)
-    return_json = {
-        'result': True,
-        'msg': "操作成功"
+    json_return = {
+        'result': True
     }
-    return JsonResponse(return_json)
+    return JsonResponse(json_return)
 
 
 # 显示更改服务器信息主界面
