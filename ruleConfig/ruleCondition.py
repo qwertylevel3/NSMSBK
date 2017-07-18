@@ -1,6 +1,7 @@
-# ruleåŒ¹é…è§„åˆ™çš„å…­ä¸ªé¡¹çš„æŠ½è±¡
-# ä¸»è¦å¤„ç†å…­ä¸ªæ¡ä»¶çš„æ‹¼æ¥åˆå¹¶åˆ†ç¦»ä»¥åŠå­—ç¬¦ä¸²è½¬æ¢ç­‰æ“ä½œ
-# æ¯ä¸ªæ¡ä»¶å¯ä»¥æ˜¯åæ¡ä»¶
+# coding:gbk
+# ruleÆ¥Åä¹æÔòµÄÁù¸öÏîµÄ³éÏó
+# Ö÷Òª´¦ÀíÁù¸öÌõ¼şµÄÆ´½ÓºÏ²¢·ÖÀëÒÔ¼°×Ö·û´®×ª»»µÈ²Ù×÷
+# Ã¿¸öÌõ¼ş¿ÉÒÔÊÇ·´Ìõ¼ş
 class RuleCondition:
     def __init__(self, ruleStr=""):
         self.country = ""
@@ -17,7 +18,7 @@ class RuleCondition:
         self.netInvert = 0
         self.initByStr(ruleStr)
 
-    # ç”¨requeståˆå§‹åŒ–æ•°æ®,å¹¶è‡ªåŠ¨å¡«å……ç©ºçš„countryå’Œprovinceæ•°æ®
+    # ÓÃrequest³õÊ¼»¯Êı¾İ,²¢×Ô¶¯Ìî³ä¿ÕµÄcountryºÍprovinceÊı¾İ
     def initByReq(self, request):
         self.city = request.POST.get("city", "")
         self.province = request.POST.get("province", "")
@@ -48,7 +49,7 @@ class RuleCondition:
         self.host=self.host.strip()
         self.appid=self.appid.strip()
 
-    # ç”¨ä¸€ä¸ªruleå­—ç¬¦è®¾ç½®å†…éƒ¨æ•°æ®,å¹¶è‡ªåŠ¨å¡«å……ç©ºçš„countryå’Œprovinceæ•°æ®
+    # ÓÃÒ»¸örule×Ö·ûÉèÖÃÄÚ²¿Êı¾İ,²¢×Ô¶¯Ìî³ä¿ÕµÄcountryºÍprovinceÊı¾İ
     def initByStr(self, ruleStr):
         conditionStrList = ruleStr.split("&")
 
@@ -103,7 +104,7 @@ class RuleCondition:
         self.host=self.host.strip()
         self.appid=self.appid.strip()
 
-    # è½¬æ¢ä¸ºruleå­—ç¬¦ä¸²
+    # ×ª»»Îªrule×Ö·û´®
     def convert2Str(self):
         ruleStr = "&"
 

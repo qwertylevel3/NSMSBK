@@ -1,3 +1,4 @@
+# coding:gbk
 from django.shortcuts import render
 from sqlModels.models import ServerGroupDat
 from sqlModels.models import ServerList
@@ -10,7 +11,7 @@ import json
 import logging
 
 
-# logç”¨ï¼Œå°†æ•°æ®åº“æ•°æ®è½¬åŒ–ä¸ºå­—ç¬¦ä¸²ç”¨æ¥log
+# logÓÃ£¬½«Êı¾İ¿âÊı¾İ×ª»¯Îª×Ö·û´®ÓÃÀ´log
 def serverGroup2Str(serverGroupData):
     serverGroupStr = ""
     serverGroupStr += "id:" + str(serverGroupData.id) + "|"
@@ -20,7 +21,7 @@ def serverGroup2Str(serverGroupData):
     return serverGroupStr
 
 
-# è®°å½•æœåŠ¡å™¨ç»„ä¿®æ”¹æ“ä½œ
+# ¼ÇÂ¼·şÎñÆ÷×éĞŞ¸Ä²Ù×÷
 def logServerGroupRevise(request, groupid):
     serverGroup = ServerGroupDat.objects.get(group_id=groupid)
     logger = logging.getLogger("sql")
@@ -29,7 +30,7 @@ def logServerGroupRevise(request, groupid):
                 serverGroup2Str(serverGroup))
 
 
-# è®°å½•æœåŠ¡å™¨ç»„æ–°å¢æ“ä½œ
+# ¼ÇÂ¼·şÎñÆ÷×éĞÂÔö²Ù×÷
 def logServerGroupNew(request, groupid):
     serverGroup = ServerGroupDat.objects.get(group_id=groupid)
     logger = logging.getLogger("sql")
@@ -38,7 +39,7 @@ def logServerGroupNew(request, groupid):
                 serverGroup2Str(serverGroup))
 
 
-# æ ¹æ®æœåŠ¡å™¨ç»„idè¿”å›æœåŠ¡å™¨ç»„åç§°
+# ¸ù¾İ·şÎñÆ÷×éid·µ»Ø·şÎñÆ÷×éÃû³Æ
 def getServerGroupName(serverGroupID):
     allServerGroup = GroupList.objects.filter(id=serverGroupID)
     if len(allServerGroup) > 0:
@@ -46,7 +47,7 @@ def getServerGroupName(serverGroupID):
     return serverGroupID
 
 
-# å°†æ•°æ®åº“è®°å½•è½¬æ¢ä¸ºé¡µé¢æ˜¾ç¤ºæ•°æ®
+# ½«Êı¾İ¿â¼ÇÂ¼×ª»»ÎªÒ³ÃæÏÔÊ¾Êı¾İ
 def convert2ServerGroupResult(rawServerGroupData):
     serverGroupData = {}
 
@@ -58,7 +59,7 @@ def convert2ServerGroupResult(rawServerGroupData):
     return serverGroupData
 
 
-# serveråºåˆ—åŒ–,ç”¨æ¥ä¼ é€’jsonæ•°æ®
+# serverĞòÁĞ»¯,ÓÃÀ´´«µİjsonÊı¾İ
 def server2dict(server):
     return {
         'id': server.id,
@@ -70,16 +71,16 @@ def server2dict(server):
     }
 
 
-# æ›´æ”¹æœåŠ¡å™¨ç»„
+# ¸ü¸Ä·şÎñÆ÷×é
 #
 # post:
 # groupid
 # groupName
 # timeout
-# serverList(æœåŠ¡å™¨ç»„å…³è”æ‰€æœ‰server idç»„æˆçš„å­—ç¬¦ä¸²)
+# serverList(·şÎñÆ÷×é¹ØÁªËùÓĞserver id×é³ÉµÄ×Ö·û´®)
 #
 # ret:
-# result(æ˜¯å¦æ“ä½œæˆåŠŸ)
+# result(ÊÇ·ñ²Ù×÷³É¹¦)
 @login_required
 def ajHandleServerGroupRevise(request):
     id = request.POST.get("id", "-1")
@@ -91,7 +92,7 @@ def ajHandleServerGroupRevise(request):
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
     if id == "-1":
-        # æŸ¥æ‰¾æ”¹groupNameæ˜¯å¦å­˜åœ¨
+        # ²éÕÒ¸ÄgroupNameÊÇ·ñ´æÔÚ
         if len(GroupList.objects.filter(name=groupName)) > 0:
             json_return = {
                 "result": False
@@ -112,10 +113,10 @@ def ajHandleServerGroupRevise(request):
         )
         logServerGroupNew(request, id)
     else:
-        # å¦‚æœæ˜¯æ›´æ”¹æ“ä½œ
-        # é¦–å…ˆè§‚å¯Ÿæäº¤çš„groupNameæ˜¯å¦è¢«æ”¹åŠ¨
-        # å¦‚æœè¢«æ”¹åŠ¨ï¼Œæ£€æŸ¥æ”¹groupNameæ˜¯å¦å·²ç»å­˜åœ¨
-        # å¦åˆ™ç›´æ¥ä¿®æ”¹
+        # Èç¹ûÊÇ¸ü¸Ä²Ù×÷
+        # Ê×ÏÈ¹Û²ìÌá½»µÄgroupNameÊÇ·ñ±»¸Ä¶¯
+        # Èç¹û±»¸Ä¶¯£¬¼ì²é¸ÄgroupNameÊÇ·ñÒÑ¾­´æÔÚ
+        # ·ñÔòÖ±½ÓĞŞ¸Ä
         oldGroup = ServerGroupDat.objects.get(id=id)
         oldGroupName = GroupList.objects.get(id=oldGroup.group_id).name
 
@@ -141,16 +142,16 @@ def ajHandleServerGroupRevise(request):
     return JsonResponse(json_return)
 
 
-# æ˜¾ç¤ºæŸ¥è¯¢æœåŠ¡å™¨ç»„é¡µé¢
+# ÏÔÊ¾²éÑ¯·şÎñÆ÷×éÒ³Ãæ
 #
 # get:
 #
 # ret:
-# result(æ‰€æœ‰æœåŠ¡å™¨ç»„ä¿¡æ¯)
+# result(ËùÓĞ·şÎñÆ÷×éĞÅÏ¢)
 @login_required
 def serverGroupSearch(request):
     allServerGroup = ServerGroupDat.objects.all()
-    # æ˜¾ç¤ºæ‰€æœ‰æœåŠ¡å™¨ç»„
+    # ÏÔÊ¾ËùÓĞ·şÎñÆ÷×é
     result = []
     for serverGroup in allServerGroup:
         result.append(convert2ServerGroupResult(serverGroup))
@@ -161,24 +162,24 @@ def serverGroupSearch(request):
                   })
 
 
-# æ˜¾ç¤ºæ›´æ”¹æœåŠ¡å™¨ç»„é¡µé¢
+# ÏÔÊ¾¸ü¸Ä·şÎñÆ÷×éÒ³Ãæ
 #
 # get:
-# id(-1ä¸ºæ–°å»ºæœåŠ¡å™¨ç»„ï¼Œå¦åˆ™ä¸ºæ›´æ”¹æœåŠ¡å™¨ç»„)
+# id(-1ÎªĞÂ½¨·şÎñÆ÷×é£¬·ñÔòÎª¸ü¸Ä·şÎñÆ÷×é)
 #
 # ret:
-# id(åŒä¸Š)
-# defaultServer(æœåŠ¡å™¨ç»„å…³è”æ‰€æœ‰æœåŠ¡å™¨idåˆ—è¡¨)
-# allServer(æ‰€æœ‰æœåŠ¡å™¨)
-# allServerGroup(æ‰€æœ‰æœåŠ¡å™¨ç»„)
+# id(Í¬ÉÏ)
+# defaultServer(·şÎñÆ÷×é¹ØÁªËùÓĞ·şÎñÆ÷idÁĞ±í)
+# allServer(ËùÓĞ·şÎñÆ÷)
+# allServerGroup(ËùÓĞ·şÎñÆ÷×é)
 @login_required
 def serverGroupRevise(request):
     defaultServer = []
     id = request.GET.get("id", "-1")
     groupName = ""
 
-    # å¦‚æœget idä¸ä¸º-1ï¼Œåˆ™ä¸ºæ›´æ”¹æœåŠ¡å™¨ç»„ä¿¡æ¯
-    # è®¾ç½®è¯¥æœåŠ¡å™¨ç»„é»˜è®¤å‚æ•°
+    # Èç¹ûget id²»Îª-1£¬ÔòÎª¸ü¸Ä·şÎñÆ÷×éĞÅÏ¢
+    # ÉèÖÃ¸Ã·şÎñÆ÷×éÄ¬ÈÏ²ÎÊı
     if id != "-1":
         serverGroup = ServerGroupDat.objects.get(id=id)
         defaultServer = serverGroup.server_ids.split(',')
@@ -194,14 +195,14 @@ def serverGroupRevise(request):
                   })
 
 
-# æ˜¾ç¤ºæŸä¸ªæœåŠ¡å™¨ç»„è¯¦æƒ…
-# è¿”å›è¯¥æœåŠ¡å™¨ç»„å…³è”çš„æœåŠ¡å™¨åˆ—è¡¨
+# ÏÔÊ¾Ä³¸ö·şÎñÆ÷×éÏêÇé
+# ·µ»Ø¸Ã·şÎñÆ÷×é¹ØÁªµÄ·şÎñÆ÷ÁĞ±í
 #
 # get:
-# id(æŸ¥è¯¢çš„æŸä¸ªæœåŠ¡å™¨ç»„id)
+# id(²éÑ¯µÄÄ³¸ö·şÎñÆ÷×éid)
 #
 # ret:
-# result(idæœåŠ¡å™¨ç»„æ‰€å…³è”æ‰€æœ‰æœåŠ¡å™¨ä¿¡æ¯åˆ—è¡¨)
+# result(id·şÎñÆ÷×éËù¹ØÁªËùÓĞ·şÎñÆ÷ĞÅÏ¢ÁĞ±í)
 @login_required
 def ajShowServerGroupDetail(request):
     id = request.GET.get("id", "-1")
@@ -219,14 +220,14 @@ def ajShowServerGroupDetail(request):
     return JsonResponse(return_json)
 
 
-# è¿”å›æ‰€æœ‰æœåŠ¡å™¨ä¿¡æ¯ï¼Œå¹¶æ ¹æ®idè¿”å›åˆå§‹æœåŠ¡å™¨idåˆ—è¡¨
+# ·µ»ØËùÓĞ·şÎñÆ÷ĞÅÏ¢£¬²¢¸ù¾İid·µ»Ø³õÊ¼·şÎñÆ÷idÁĞ±í
 #
 # post:
-# id(æœåŠ¡å™¨ç»„id)
+# id(·şÎñÆ÷×éid)
 #
 # ret:
-# serverList(æ‰€æœ‰æœåŠ¡å™¨ä¿¡æ¯)
-# defaultServerList(è¯¥æœåŠ¡å™¨ç»„å…³è”æ‰€æœ‰æœåŠ¡å™¨idåˆ—è¡¨)
+# serverList(ËùÓĞ·şÎñÆ÷ĞÅÏ¢)
+# defaultServerList(¸Ã·şÎñÆ÷×é¹ØÁªËùÓĞ·şÎñÆ÷idÁĞ±í)
 @login_required
 def ajInitServerGroupRevisePage(request):
     serverList = []
@@ -235,12 +236,12 @@ def ajInitServerGroupRevisePage(request):
 
     allServer = ServerList.objects.all()
 
-    # æ˜¾ç¤ºæ‰€æœ‰æœåŠ¡å™¨
+    # ÏÔÊ¾ËùÓĞ·şÎñÆ÷
     for server in allServer:
         serverList.append(server2dict(server))
 
-    # å¦‚æœidé-1ï¼Œåˆ™ä¸ºä¿®æ”¹æ“ä½œ
-    # è®¾ç½®è¯¥æœåŠ¡å™¨ç»„å…³è”æ‰€æœ‰æœåŠ¡å™¨id
+    # Èç¹ûid·Ç-1£¬ÔòÎªĞŞ¸Ä²Ù×÷
+    # ÉèÖÃ¸Ã·şÎñÆ÷×é¹ØÁªËùÓĞ·şÎñÆ÷id
     defaultServerList = []
     if id != "-1":
         serverGroup = ServerGroupDat.objects.get(id=id)

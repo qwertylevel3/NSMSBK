@@ -1,3 +1,4 @@
+# coding:gbk
 from django.shortcuts import render
 from sqlModels.models import ServerList
 from django.shortcuts import HttpResponseRedirect
@@ -9,7 +10,7 @@ import time
 import logging
 
 
-# æ•°æ®åº“æ•°æ®è½¬æ¢ä¸ºå­—ç¬¦ä¸²ï¼Œç”¨æ¥log
+# Êı¾İ¿âÊı¾İ×ª»»Îª×Ö·û´®£¬ÓÃÀ´log
 def serverData2Str(serverData):
     serverStr = ""
     serverStr += "id:" + str(serverData.id) + "|"
@@ -20,7 +21,7 @@ def serverData2Str(serverData):
     return serverStr
 
 
-# logæœåŠ¡å™¨æ›´æ”¹
+# log·şÎñÆ÷¸ü¸Ä
 def logServerRevise(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -29,7 +30,7 @@ def logServerRevise(request, id):
                 serverData2Str(server))
 
 
-# logæœåŠ¡å™¨æ–°å¢
+# log·şÎñÆ÷ĞÂÔö
 def logServerNew(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -38,7 +39,7 @@ def logServerNew(request, id):
                 serverData2Str(server))
 
 
-# logæœåŠ¡å™¨å¯ç”¨
+# log·şÎñÆ÷ÆôÓÃ
 def logServerReuse(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -47,7 +48,7 @@ def logServerReuse(request, id):
                 serverData2Str(server))
 
 
-# logæœåŠ¡å™¨ç¦ç”¨
+# log·şÎñÆ÷½ûÓÃ
 def logServerDelete(request, id):
     server = ServerList.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -56,7 +57,7 @@ def logServerDelete(request, id):
                 serverData2Str(server))
 
 
-# æœåŠ¡å™¨åˆ—è¡¨åºåˆ—åŒ–
+# ·şÎñÆ÷ÁĞ±íĞòÁĞ»¯
 def serverList2dict(serverList):
     result = []
     for server in serverList:
@@ -73,13 +74,13 @@ def serverList2dict(serverList):
     return result
 
 
-# åˆ é™¤ä¸€ä¸ªæœåŠ¡å™¨æ¡ç›®ï¼ˆis_usedè®¾ç½®ä¸º0ï¼‰
+# É¾³ıÒ»¸ö·şÎñÆ÷ÌõÄ¿£¨is_usedÉèÖÃÎª0£©
 #
 # post:
-# id(æœåŠ¡å™¨id)
+# id(·şÎñÆ÷id)
 #
 # ret:
-# result(æ“ä½œæˆåŠŸ)
+# result(²Ù×÷³É¹¦)
 @login_required
 def ajServerDelete(request):
     id = request.POST.get("id", "-1")
@@ -91,13 +92,13 @@ def ajServerDelete(request):
     return JsonResponse(json_return)
 
 
-# å¯ç”¨ä¸€ä¸ªæœåŠ¡å™¨æ¡ç›®ï¼ˆis_usedè®¾ç½®ä¸º1ï¼‰
+# ÆôÓÃÒ»¸ö·şÎñÆ÷ÌõÄ¿£¨is_usedÉèÖÃÎª1£©
 #
 # post:
-# id(æœåŠ¡å™¨id)
+# id(·şÎñÆ÷id)
 #
 # ret:
-# result(æ“ä½œæˆåŠŸ)
+# result(²Ù×÷³É¹¦)
 @login_required
 def ajServerReuse(request):
     id = request.POST.get("id", "-1")
@@ -109,7 +110,7 @@ def ajServerReuse(request):
     return JsonResponse(json_return)
 
 
-# æ£€æŸ¥è¯¥ipï¼Œportæ˜¯å¦å·²å­˜åœ¨
+# ¼ì²é¸Ãip£¬portÊÇ·ñÒÑ´æÔÚ
 def validateServer(ip, port):
     dupData = ServerList.objects.filter(ip=ip, port=port)
     if len(dupData) > 0:
@@ -126,28 +127,28 @@ def ajValidateServer(request):
     if validateServer(ip,port):
         json_return={
             "result":True,
-            "msg":"æˆåŠŸ"
+            "msg":"³É¹¦"
         }
         return JsonResponse(json_return)
     json_return={
         "result":False,
-        "msg":"è¯¥ipï¼Œportå·²å­˜åœ¨"
+        "msg":"¸Ãip£¬portÒÑ´æÔÚ"
     }
     return JsonResponse(json_return)
 
 
-# æ–°å¢æˆ–è€…æ›´æ”¹æ¡ç›®
+# ĞÂÔö»òÕß¸ü¸ÄÌõÄ¿
 #
 # post:
-# id(ä¿®æ”¹çš„é¡¹ç›®çš„id)
+# id(ĞŞ¸ÄµÄÏîÄ¿µÄid)
 # ip
 # port
 # idc
 # sign
 #
 # ret:
-# result(True:æ“ä½œæˆåŠŸ | False:æ’å…¥å¤±è´¥)
-# msg(é™„åŠ ä¿¡æ¯)
+# result(True:²Ù×÷³É¹¦ | False:²åÈëÊ§°Ü)
+# msg(¸½¼ÓĞÅÏ¢)
 @login_required
 def ajHandleServerRevise(request):
     id = request.POST.get("id", "-1")
@@ -160,15 +161,15 @@ def ajHandleServerRevise(request):
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
 
-    # æ›´æ”¹
-    # é¦–å…ˆæ£€æŸ¥æ˜¯å¦æ›´æ”¹äº†ipå’Œport
-    # å¦‚æœæ›´æ”¹äº†ï¼ŒæŸ¥é‡
+    # ¸ü¸Ä
+    # Ê×ÏÈ¼ì²éÊÇ·ñ¸ü¸ÄÁËipºÍport
+    # Èç¹û¸ü¸ÄÁË£¬²éÖØ
     targetData = ServerList.objects.get(id=id)
     if targetData.ip != ip or targetData.port != port:
         if not validateServer(ip, port):
             return_json = {
                 'result': False,
-                'msg': "è¯¥ip,portå·²å­˜åœ¨"
+                'msg': "¸Ãip,portÒÑ´æÔÚ"
             }
             return JsonResponse(return_json)
     targetData.ip = ip
@@ -181,7 +182,7 @@ def ajHandleServerRevise(request):
 
     return_json = {
         'result': True,
-        'msg': "æ“ä½œæˆåŠŸ"
+        'msg': "²Ù×÷³É¹¦"
     }
     return JsonResponse(return_json)
 
@@ -195,12 +196,12 @@ def ajHandleServerAdd(request):
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    # æ–°å¢
-    # æŸ¥é‡
+    # ĞÂÔö
+    # ²éÖØ
     if not validateServer(ip, port):
         return_json = {
             'result': False,
-            'msg': "è¯¥ip,portå·²å­˜åœ¨"
+            'msg': "¸Ãip,portÒÑ´æÔÚ"
         }
         return JsonResponse(return_json)
 
@@ -216,18 +217,18 @@ def ajHandleServerAdd(request):
     logServerNew(request, data.id)
     return_json = {
         'result': True,
-        'msg': "æ“ä½œæˆåŠŸ"
+        'msg': "²Ù×÷³É¹¦"
     }
     return JsonResponse(return_json)
 
 
-# æ˜¾ç¤ºæ›´æ”¹æœåŠ¡å™¨ä¿¡æ¯ä¸»ç•Œé¢
+# ÏÔÊ¾¸ü¸Ä·şÎñÆ÷ĞÅÏ¢Ö÷½çÃæ
 #
 # get:
-# id(éœ€è¦å¤„ç†çš„æœåŠ¡å™¨idï¼Œ-1ä¸ºæ–°å¢ï¼Œä¸»è¦ç”¨æ¥é¡µé¢è®¾ç½®é»˜è®¤å‚æ•°)
+# id(ĞèÒª´¦ÀíµÄ·şÎñÆ÷id£¬-1ÎªĞÂÔö£¬Ö÷ÒªÓÃÀ´Ò³ÃæÉèÖÃÄ¬ÈÏ²ÎÊı)
 #
 # ret:
-# id(åŒä¸Š)
+# id(Í¬ÉÏ)
 # allServer
 @login_required
 def serverRevise(request):
@@ -239,7 +240,7 @@ def serverRevise(request):
                    })
 
 
-# æ˜¾ç¤ºæœç´¢æœåŠ¡å™¨ä¸»é¡µé¢
+# ÏÔÊ¾ËÑË÷·şÎñÆ÷Ö÷Ò³Ãæ
 #
 # get:
 #
@@ -249,7 +250,7 @@ def serverSearch(request):
     return render(request, 'serverConfig/serverSearch.html')
 
 
-# æœç´¢æœåŠ¡å™¨
+# ËÑË÷·şÎñÆ÷
 #
 # get:
 # ip
@@ -258,8 +259,8 @@ def serverSearch(request):
 # sign
 #
 # ret:
-# result(æœç´¢æœåŠ¡å™¨ä¿¡æ¯åˆ—è¡¨)
-# resultSize(åˆ—è¡¨é•¿åº¦)
+# result(ËÑË÷·şÎñÆ÷ĞÅÏ¢ÁĞ±í)
+# resultSize(ÁĞ±í³¤¶È)
 @login_required
 def ajServerSearch(request):
     result = []

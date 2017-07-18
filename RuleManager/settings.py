@@ -80,20 +80,20 @@ WSGI_APPLICATION = 'RuleManager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ifly_cp_msp_name_server',  # 你的数据库名称
-        'USER': 'cobar',  # 你的数据库用户名
-        'PASSWORD': 'test_cobar',  # 你的数据库密码
-        'HOST': '172.16.154.62',  # 你的数据库主机，留空默认为localhost
-        'PORT': '8077'  # 你的数据库端口
+        'NAME': 'ifly_cp_msp_name_server',
+        'USER': 'cobar',
+        'PASSWORD': 'test_cobar',
+        'HOST': '172.16.154.62',
+        'PORT': '8077'
     }
 
     #    'default': {
     #        'ENGINE': 'django.db.backends.mysql',
-    #        'NAME': 'rules',  # 你的数据库名称
-    #        'USER': 'root',  # 你的数据库用户名
-    #        'PASSWORD': 'Ll147258369',  # 你的数据库密码
-    #        'HOST': '',  # 你的数据库主机，留空默认为localhost
-    #        'PORT': '3306',  # 你的数据库端口
+    #        'NAME': 'rules',
+    #        'USER': 'root',
+    #        'PASSWORD': 'Ll147258369',
+    #        'HOST': '',
+    #        'PORT': '3306',
     #        'ATOMIC_REQUESTS': True
     #    }
 }

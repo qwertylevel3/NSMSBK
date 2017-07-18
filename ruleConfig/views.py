@@ -1,3 +1,4 @@
+# coding:gbk
 from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import HttpResponseRedirect
@@ -16,7 +17,7 @@ import logging
 from ruleConfig.ruleCondition import RuleCondition
 
 
-# æ•°æ®åº“ruleä¿¡æ¯è½¬åŒ–ä¸ºå­—ç¬¦ä¸²ï¼Œç”¨æ¥log
+# Êı¾İ¿âruleĞÅÏ¢×ª»¯Îª×Ö·û´®£¬ÓÃÀ´log
 def ruleData2Str(ruleData):
     ruleStr = ""
     ruleStr += "id:" + str(ruleData.id) + "|"
@@ -28,7 +29,7 @@ def ruleData2Str(ruleData):
     return ruleStr
 
 
-# logè§„åˆ™æ›´æ”¹
+# log¹æÔò¸ü¸Ä
 def logRuleRevise(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -37,7 +38,7 @@ def logRuleRevise(request, id):
                 ruleData2Str(rule))
 
 
-# logè§„åˆ™æ–°å¢
+# log¹æÔòĞÂÔö
 def logRuleNew(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -46,7 +47,7 @@ def logRuleNew(request, id):
                 ruleData2Str(rule))
 
 
-# logè§„åˆ™å¯ç”¨
+# log¹æÔòÆôÓÃ
 def logRuleReuse(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -55,7 +56,7 @@ def logRuleReuse(request, id):
                 ruleData2Str(rule))
 
 
-# logè§„åˆ™ç¦ç”¨
+# log¹æÔò½ûÓÃ
 def logRuleDelete(request, id):
     rule = ServerRuleDat.objects.get(id=id)
     logger = logging.getLogger("sql")
@@ -64,7 +65,7 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
-# æ ¹æ®å›½å®¶ä»£ç è¿”å›å›½å®¶åç§°
+# ¸ù¾İ¹ú¼Ò´úÂë·µ»Ø¹ú¼ÒÃû³Æ
 def getCountryName(countryID):
     if len(countryID) > 0:
         country = CountryList.objects.get(code=int(countryID))
@@ -72,7 +73,7 @@ def getCountryName(countryID):
     return ""
 
 
-# æ ¹æ®çœä»½ä»£ç è¿”å›çœä»½åç§°
+# ¸ù¾İÊ¡·İ´úÂë·µ»ØÊ¡·İÃû³Æ
 def getProvinceName(provinceID):
     if len(provinceID) > 0:
         province = ProvList.objects.get(code=int(provinceID))
@@ -80,7 +81,7 @@ def getProvinceName(provinceID):
     return ""
 
 
-# æ ¹æ®åŸå¸‚ä»£ç è¿”å›åŸå¸‚åç§°
+# ¸ù¾İ³ÇÊĞ´úÂë·µ»Ø³ÇÊĞÃû³Æ
 def getCityName(cityID):
     if len(cityID) > 0:
         city = CityList.objects.get(code=int(cityID))
@@ -88,7 +89,7 @@ def getCityName(cityID):
     return ""
 
 
-# æ ¹æ®æœåŠ¡å™¨ç»„idè¿”å›æœåŠ¡å™¨ç»„åç§°
+# ¸ù¾İ·şÎñÆ÷×éid·µ»Ø·şÎñÆ÷×éÃû³Æ
 def getServerGroupName(serverGroupID):
     allServerGroup = GroupList.objects.filter(id=serverGroupID)
     if len(allServerGroup) > 0:
@@ -96,7 +97,7 @@ def getServerGroupName(serverGroupID):
     return serverGroupID
 
 
-# æ ¹æ®ç½‘ç»œä»£ç è¿”å›ç½‘ç»œåç§°
+# ¸ù¾İÍøÂç´úÂë·µ»ØÍøÂçÃû³Æ
 def getNetName(netCode):
     if len(netCode) > 0:
         net = NetList.objects.filter(code=netCode)
@@ -105,7 +106,7 @@ def getNetName(netCode):
     return netCode
 
 
-# å°†æ•°æ®åº“æ•°æ®è½¬æ¢ä¸ºåœ¨searché¡µé¢æ˜¾ç¤ºçš„æ•°æ®é¡¹
+# ½«Êı¾İ¿âÊı¾İ×ª»»ÎªÔÚsearchÒ³ÃæÏÔÊ¾µÄÊı¾İÏî
 def convert2SearchResult(rawResultData):
     resultData = {}
     ruleCondition = RuleCondition(rawResultData.rule)
@@ -151,17 +152,17 @@ def convert2SearchResult(rawResultData):
     return resultData
 
 
-# åˆ é™¤æ¡ç›®ï¼ˆå°†is_useè®¾ç½®ä¸º0ï¼‰
+# É¾³ıÌõÄ¿£¨½«is_useÉèÖÃÎª0£©
 #
 # post:
 # id
 #
 # ret:
-# result(æ“ä½œæˆåŠŸ)
+# result(²Ù×÷³É¹¦)
 @login_required
 def ajRuleDelete(request):
     id = request.POST.get("id", "-1")
-    # æŸ¥æ‰¾è¯¥é¡¹ç›®æ˜¯å¦å­˜åœ¨
+    # ²éÕÒ¸ÃÏîÄ¿ÊÇ·ñ´æÔÚ
     targetData = ServerRuleDat.objects.get(id=id)
     targetData.is_use = 0
     targetData.save()
@@ -170,13 +171,13 @@ def ajRuleDelete(request):
     return JsonResponse(return_json)
 
 
-# å¯ç”¨æ¡ç›®(is_use è®¾ç½®ä¸º1)
+# ÆôÓÃÌõÄ¿(is_use ÉèÖÃÎª1)
 #
 # post:
 # id
 #
 # ret:
-# result(æ“ä½œæˆåŠŸ
+# result(²Ù×÷³É¹¦
 @login_required
 def ajRuleReuse(request):
     id = request.POST.get("id", "-1")
@@ -189,33 +190,33 @@ def ajRuleReuse(request):
     return JsonResponse(return_json)
 
 
-# ä¼ é€’groupä¿¡æ¯ç”¨
+# ´«µİgroupĞÅÏ¢ÓÃ
 class GroupData:
     groupid = ""
     groupidName = ""
 
 
-# æ˜¾ç¤ºä¿®æ”¹ruleé¡µé¢
+# ÏÔÊ¾ĞŞ¸ÄruleÒ³Ãæ
 #
 # get:
-# id(-1ä¸ºæ–°å¢ï¼Œå¦åˆ™ä¸ºä¿®æ”¹æ“ä½œ)
+# id(-1ÎªĞÂÔö£¬·ñÔòÎªĞŞ¸Ä²Ù×÷)
 #
 # ret:
-# condition(ruleConditionçš„é»˜è®¤å‚æ•°)
-# id(åŒä¸Š)
-# allRule(æ•°æ®åº“ä¸­æ‰€æœ‰ruleæ•°æ®)
-# allCountry(æ•°æ®åº“ä¸­æ‰€æœ‰å›½å®¶ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allProvince(æ•°æ®åº“ä¸­æ‰€æœ‰çœä»½ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allCity(æ•°æ®åº“ä¸­æ‰€æœ‰åŸå¸‚ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allNet(æ•°æ®åº“ä¸­æ‰€æœ‰ç½‘ç»œä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allGroup(æ•°æ®åº“ä¸­æ‰€æœ‰æœåŠ¡å™¨ç»„ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
+# condition(ruleConditionµÄÄ¬ÈÏ²ÎÊı)
+# id(Í¬ÉÏ)
+# allRule(Êı¾İ¿âÖĞËùÓĞruleÊı¾İ)
+# allCountry(Êı¾İ¿âÖĞËùÓĞ¹ú¼ÒĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allProvince(Êı¾İ¿âÖĞËùÓĞÊ¡·İĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allCity(Êı¾İ¿âÖĞËùÓĞ³ÇÊĞĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allNet(Êı¾İ¿âÖĞËùÓĞÍøÂçĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allGroup(Êı¾İ¿âÖĞËùÓĞ·şÎñÆ÷×éĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
 @login_required
 def ruleConfigRevise(request):
     id = request.GET.get("id", "-1")
 
     condition = RuleCondition()
 
-    # -1ä»£è¡¨æ–°å¢
+    # -1´ú±íĞÂÔö
     if id == "-1":
         id = -1
     else:
@@ -252,36 +253,36 @@ def ruleConfigRevise(request):
                   })
 
 
-# æ¥å—è¡¨å•ï¼Œæ–°å¢æˆ–æ›´æ”¹ruleæ•°æ®
+# ½ÓÊÜ±íµ¥£¬ĞÂÔö»ò¸ü¸ÄruleÊı¾İ
 #
 # post:
-# id(-1ä¸ºæ–°å¢ï¼Œå¦åˆ™ä¸ºä¿®æ”¹)
+# id(-1ÎªĞÂÔö£¬·ñÔòÎªĞŞ¸Ä)
 # country
 # province
 # city
 # host
 # appid
 # net
-# invertCountry(onä¸ºå–å)
-# invertProvince(onä¸ºå–å)
-# invertCity(onä¸ºå–å)
-# invertHost(onä¸ºå–å)
-# invertAppid(onä¸ºå–å)
-# invertNet(onä¸ºå–å)
+# invertCountry(onÎªÈ¡·´)
+# invertProvince(onÎªÈ¡·´)
+# invertCity(onÎªÈ¡·´)
+# invertHost(onÎªÈ¡·´)
+# invertAppid(onÎªÈ¡·´)
+# invertNet(onÎªÈ¡·´)
 # rank
 # ttl
 # compel
 # groupid
 #
 # ret:
-# result(æ“ä½œæˆåŠŸ)
+# result(²Ù×÷³É¹¦)
 @login_required
 def ajHandleRuleRevise(request):
     id = request.POST.get("id", "-1")
 
     condition = RuleCondition()
     condition.initByReq(request)
-    # æ‹¼æ¥ä¸ºruleå­—ç¬¦ä¸²ç”¨æ¥ä¿å­˜
+    # Æ´½ÓÎªrule×Ö·û´®ÓÃÀ´±£´æ
     conditionStr = condition.convert2Str()
 
     rank = request.POST.get("rank", "")
@@ -294,7 +295,7 @@ def ajHandleRuleRevise(request):
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
 
-    # æŸ¥æ‰¾è¯¥é¡¹ç›®æ˜¯å¦å­˜åœ¨
+    # ²éÕÒ¸ÃÏîÄ¿ÊÇ·ñ´æÔÚ
     targetData = ServerRuleDat.objects.filter(id=id)
 
     if len(targetData) > 0:
@@ -324,15 +325,15 @@ def ajHandleRuleRevise(request):
     return JsonResponse(json_return)
 
 
-# æ˜¾ç¤ºruleæœç´¢ä¸»é¡µé¢
+# ÏÔÊ¾ruleËÑË÷Ö÷Ò³Ãæ
 #
 # get:
 #
 # ret:
-# allCountry(æ•°æ®åº“ä¸­æ‰€æœ‰å›½å®¶ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allProvince(æ•°æ®åº“ä¸­æ‰€æœ‰çœä»½ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allCity(æ•°æ®åº“ä¸­æ‰€æœ‰åŸå¸‚ä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
-# allNet(æ•°æ®åº“ä¸­æ‰€æœ‰ç½‘ç»œä¿¡æ¯ï¼Œç”¨æ¥ä¼˜åŒ–ä¸‹æ‹‰æ¡†)
+# allCountry(Êı¾İ¿âÖĞËùÓĞ¹ú¼ÒĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allProvince(Êı¾İ¿âÖĞËùÓĞÊ¡·İĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allCity(Êı¾İ¿âÖĞËùÓĞ³ÇÊĞĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
+# allNet(Êı¾İ¿âÖĞËùÓĞÍøÂçĞÅÏ¢£¬ÓÃÀ´ÓÅ»¯ÏÂÀ­¿ò)
 @login_required
 def ruleSearch(request):
     allCountry = CountryList.objects.all()
@@ -349,7 +350,7 @@ def ruleSearch(request):
                    })
 
 
-# resultåˆ†é¡µå¹¶åºåˆ—åŒ–
+# result·ÖÒ³²¢ĞòÁĞ»¯
 def result2dict(searchResult, page):
     searchLen = len(searchResult)
 
@@ -374,65 +375,65 @@ def result2dict(searchResult, page):
         "ruleList": ruleList
     }
 
-# æ£€æŸ¥ruleæ˜¯å¦æ»¡è¶³conditoinæ¡ä»¶
-# ç”¨æ¥æœç´¢è¿‡ç¨‹ä¸­è¿‡æ»¤ç”¨
+# ¼ì²éruleÊÇ·ñÂú×ãconditoinÌõ¼ş
+# ÓÃÀ´ËÑË÷¹ı³ÌÖĞ¹ıÂËÓÃ
 def check(rule, condition):
     tc = RuleCondition()
     tc.initByStr(rule.rule)
 
-    # conditionä¸­éœ€è¦æ£€æŸ¥net
+    # conditionÖĞĞèÒª¼ì²énet
     if condition.net != "":
         if tc.net != condition.net or tc.netInvert != condition.netInvert:
             return False
-    # conditionä¸­éœ€è¦æ£€æŸ¥appid
+    # conditionÖĞĞèÒª¼ì²éappid
     if condition.appid != "":
         if tc.appid != condition.appid or tc.appidInvert != condition.appidInvert:
             return False
-    # conditionä¸­éœ€è¦æ£€æŸ¥host
+    # conditionÖĞĞèÒª¼ì²éhost
     if condition.host != "":
         if tc.host != condition.host or tc.hostInvert != condition.hostInvert:
             return False
-    # conditionä¸­æœ‰city
+    # conditionÖĞÓĞcity
     if condition.city != "":
         if tc.city != condition.city or tc.cityInvert != condition.cityInvert:
             return False
 
-    # conditionä¸­æœ‰province
+    # conditionÖĞÓĞprovince
     if condition.province != "":
         if tc.province != condition.province or tc.provinceInvert != condition.provinceInvert:
             return False
 
-    # conditionä¸­æœ‰country
+    # conditionÖĞÓĞcountry
     if condition.country != "":
         if tc.country != condition.country or tc.countryInvert != condition.countryInvert:
             return False
     return True
 
 
-# æ ¹æ®æäº¤çš„ruleæ¡ä»¶æœç´¢æ‰€æœ‰å¯¹åº”çš„rule
+# ¸ù¾İÌá½»µÄruleÌõ¼şËÑË÷ËùÓĞ¶ÔÓ¦µÄrule
 #
 # post:
-# showState(æ˜¾ç¤ºæ¡ä»¶ï¼š0æ˜¾ç¤ºæ‰€æœ‰,1æ˜¾ç¤ºå·²å¯ç”¨,2æ˜¾ç¤ºæœªå¯ç”¨)
-# page(ç»“æœä¸­ç¬¬å‡ é¡µï¼Œä»¥25ä¸ªä¸€é¡µè®¡)
+# showState(ÏÔÊ¾Ìõ¼ş£º0ÏÔÊ¾ËùÓĞ,1ÏÔÊ¾ÒÑÆôÓÃ,2ÏÔÊ¾Î´ÆôÓÃ)
+# page(½á¹ûÖĞµÚ¼¸Ò³£¬ÒÔ25¸öÒ»Ò³¼Æ)
 # country
 # province
 # city
 # host
 # appid
 # net
-# invertCountry(onä¸ºå–å)
-# invertProvince(onä¸ºå–å)
-# invertCity(onä¸ºå–å)
-# invertHost(onä¸ºå–å)
-# invertAppid(onä¸ºå–å)
-# invertNet(onä¸ºå–å)
+# invertCountry(onÎªÈ¡·´)
+# invertProvince(onÎªÈ¡·´)
+# invertCity(onÎªÈ¡·´)
+# invertHost(onÎªÈ¡·´)
+# invertAppid(onÎªÈ¡·´)
+# invertNet(onÎªÈ¡·´)
 #
 # ret:
-# has_previous(trueå­˜åœ¨ä¸Šä¸€é¡µï¼Œfalseä¸å­˜åœ¨ä¸Šä¸€é¡µ)
-# page_num(å½“å‰æ˜¯ç¬¬å‡ é¡µ)
-# has_next(trueå­˜åœ¨ä¸‹ä¸€é¡µï¼Œfalseä¸å­˜åœ¨ä¸‹ä¸€é¡µ)
-# all_page_num(ä¸€å…±æœ‰å¤šå°‘é¡µ)
-# ruleList(ruleç»„æˆçš„åˆ—è¡¨)
+# has_previous(true´æÔÚÉÏÒ»Ò³£¬false²»´æÔÚÉÏÒ»Ò³)
+# page_num(µ±Ç°ÊÇµÚ¼¸Ò³)
+# has_next(true´æÔÚÏÂÒ»Ò³£¬false²»´æÔÚÏÂÒ»Ò³)
+# all_page_num(Ò»¹²ÓĞ¶àÉÙÒ³)
+# ruleList(rule×é³ÉµÄÁĞ±í)
 def ajRuleSearch(request):
     page = request.POST.get("page")
     searchResult = []
@@ -444,7 +445,7 @@ def ajRuleSearch(request):
 
     allRules = ServerRuleDat.objects.all()
 
-    # å¯¹äºæ‰€æœ‰ç¬¦åˆconditionçš„ruleæ·»åŠ åˆ°resultåˆ—è¡¨ä¸­
+    # ¶ÔÓÚËùÓĞ·ûºÏconditionµÄruleÌí¼Óµ½resultÁĞ±íÖĞ
     for rule in allRules:
         if rule.is_use == 0 and showState == "1":
             continue
