@@ -162,7 +162,7 @@ LOGGING = {
         'sql': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'sql.log',
+            'filename': BASE_DIR+'/sql.log',
             'formatter': 'sql',
         },
     },
