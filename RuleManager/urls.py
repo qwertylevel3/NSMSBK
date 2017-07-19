@@ -22,13 +22,17 @@ from serverConfig import views as serverConfigViews
 from serverGroupConfig import views as serverGroupConfigViews
 from myAuthority import views as authViews
 from django.contrib.auth.views import login, logout_then_login
+from django.views.generic.base import RedirectView
 
 from RuleManager import settings
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
     url(r'^$', indexViews.index, name="root"),
     url(r'index/', indexViews.index, name="index"),
+
+    url(r'^favicon\.ico$',RedirectView.as_view(url='static/favicon.ico',permanent=True)),
 
     url(r'^login/$', login, {'template_name': 'auth/login.html'}, name="login"),
     url(r'^logout/$', logout_then_login, name="logout"),
