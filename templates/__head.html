@@ -1,8 +1,8 @@
 <script>
 
     $(function () {
+        //页头下拉消失效果
         var headerHeight = $('.header').outerHeight();
-
         $(window).scroll(function () {
             var scrollTopPos = $(document).scrollTop();
             if (scrollTopPos > headerHeight) {

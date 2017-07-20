@@ -1,5 +1,6 @@
 {% load static %}
 <script>
+    //填充默认参数
     $(document).ready(function () {
         {% for server in allServer %}
             if ({{ server.id }}=={{ id }}) {

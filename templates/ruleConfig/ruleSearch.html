@@ -7,13 +7,17 @@
     {% include "__staticFiles.html" %}
 
     <script>
+        //搜索按钮调用
+        //重置需要接受的page，然后提交表单
         function search() {
             $("#pageText").val(1);
             submitSearchForm();
         }
 
 
+        //提交搜索表单
         function submitSearchForm() {
+            //先把之前查询的结果表格清空
             var searchResultTable = document.getElementById("searchResultTable");
 
             var len = searchResultTable.rows.length;
@@ -21,6 +25,8 @@
                 searchResultTable.deleteRow(len - 1);
                 len = searchResultTable.rows.length;
             }
+
+            //提交ajax请求的时候禁用搜索按钮
             $.ajax({
                 type: 'POST',
                 url: "{% url 'ajRuleSearch' %}",
@@ -32,6 +38,7 @@
                     var searchResultTable = document.getElementById("searchResultTable");
 
                     var count = 1;
+                    //对于每个查找结果，填充搜索结果表
                     $.each(ret.ruleList, function (index, rule) {
                         var newRuleLine = searchResultTable.insertRow();
                         count = count + 1;
@@ -61,37 +68,44 @@
                         var compelCol = newRuleLine.insertCell();
                         compelCol.innerHTML = rule.compel;
 
+                        //增加启用按钮
                         var is_usedCol = newRuleLine.insertCell();
                         is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + rule.id + "' class='checkbox' onclick='ruleUseChange(" + rule.id + ")'>" +
                             "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + rule.id + "'/>"
 
+                        //增加更改按钮
                         var changeCol = newRuleLine.insertCell();
                         changeCol.innerHTML = "<form action='" + "{% url 'ruleRevise' %}" + "' method=''>" +
                             "<input type='text' name='id' value='" + rule.id + "' hidden/>" +
                             "<input type='submit' class='table-button' value='更改'/>" +
                             "</form>"
                     });
+                    //根据规则启用状态设置对应的checkbox
                     $.each(ret.ruleList, function (index, rule) {
                         if (rule.is_use == "1") {
                             var checkbox = document.getElementById("checkbox" + rule.id);
                             checkbox.checked = true;
                         }
                     });
+                    //如果有上一页，则显示上一页按钮
                     if (ret.has_previous) {
                         $("#previousDiv").show();
                     } else {
                         $("#previousDiv").hide();
                     }
+                    //如果有下一页，则显示下一页按钮
                     if (ret.has_next) {
                         $("#nextDiv").show();
                     } else {
                         $("#nextDiv").hide();
                     }
+                    //显示当前页数
                     var curPageLabel = document.getElementById("curPageLabel");
                     curPageLabel.innerHTML = "第" + ret.page_num + "页" + "共" + ret.all_page_num + "页";
 
                     $("#pageText").val(ret.page_num);
 
+                    //显示一共多少条记录
                     var searchLenH2 = document.getElementById("searchLenH2");
                     searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen) + "条)";
 
@@ -113,6 +127,7 @@
             submitSearchForm();
         }
 
+        //根据checkbox改变的状态启用或者禁用某个rule
         function ruleUseChange(id) {
             var checkbox = document.getElementById("checkbox" + id);
             var state = checkbox.checked;
@@ -146,6 +161,7 @@
                 }
             )
         }
+        //页面加载完成自动搜索一下
         $(document).ready(function () {
             submitSearchForm();
         });

@@ -9,11 +9,10 @@
 
         $(document).ready(function () {
 
-            $(function () {
-                $('[data-toggle="popover"]').popover()
-            });
+            //显示详情按钮挂载函数
             $(".showdetail-button").click(function () {
 
+                //显示详情表格
                 if ($("#showDetailTableDiv").hasClass("hidden")) {
                     $("#addServerGroupButtonDiv").removeClass("col-md-12");
                     $("#addServerGroupButtonDiv").addClass("col-md-7");
@@ -25,6 +24,7 @@
 
                 var id = this.value;
 
+                //清空详情表格
                 var tableRef = document.getElementById("showDetailTable");
                 var len = tableRef.rows.length;
                 while (len > 1) {
@@ -36,6 +36,7 @@
                     '{% url "ajServerGroupDetail" %}',
                     {'id': id},
                     function (ret) {
+                        //填充详情表格
                         $.each(ret.result, function (index, server) {
                             var newServerLine = tableRef.insertRow();
 

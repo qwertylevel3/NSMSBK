@@ -4,9 +4,11 @@
     <script src="{% static "js/jquery-3.2.1.js" %}"></script>
 
     <script>
+
         $(document).ready(function () {
             $("#countryInvertCheckbox").attr("disabled", true)
 
+            //国家下拉框更改的时候填充省份下拉框
             $("#countrySelect").change(function () {
                 $("#provinceSelect").empty();
                 $("#citySelect").empty();
@@ -38,6 +40,7 @@
             });
 
 
+            //省份下拉框修改的时候填充城市下拉框
             $("#provinceSelect").change(function () {
                 $("#citySelect").empty();
                 $("#citySelect").append("<option value='' selected>城市</option>")
@@ -55,6 +58,7 @@
             })
 
 
+            //设置默认参数
             {% for rule in allRule %}
                 if ({{ rule.id }}=={{ id }}) {
                     $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
@@ -95,6 +99,8 @@
 
         function countryInvertCheck() {
             if ($("#countryInvertCheckbox").is(":checked")) {
+                //如果国家反选选中
+                //隐藏省份和城市下拉框
                 $("#provinceSelect").empty();
                 $("#citySelect").empty();
 

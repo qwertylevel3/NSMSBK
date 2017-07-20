@@ -13,6 +13,7 @@
     <script>
         $(document).ready(function () {
 
+            //提交表单，登录
             $("#submitButton").click(function () {
                 if (validate_form() == true) {
                     var username = $("#usernameText").val();
@@ -34,6 +35,7 @@
             $("#usernameText").focus()
 
         });
+        //表单验证
         function validate_required(field, alerttxt) {
             with (field) {
                 if (field.val() == null || field.val() == "") {

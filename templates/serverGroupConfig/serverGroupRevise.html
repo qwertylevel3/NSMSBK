@@ -7,7 +7,9 @@
     {% include "__staticFiles.html" %}
 
     <script>
+        //搜索服务器
         function searchServer() {
+            //清空搜索表格
             var tableRef = document.getElementById("searchResultTable");
             var len = tableRef.rows.length;
             while (len > 1) {
@@ -32,6 +34,7 @@
                     var serverChoosedTableRef = document.getElementById("serverChoosedTable");
 
                     var count = 1;
+                    //填充搜索表格
                     $.each(ret.result, function (index, server) {
                         var newServerLine = tableRef.insertRow(count);
                         count = count + 1;
@@ -107,6 +110,7 @@
                 }
             }
         }
+        //根据已选表格状态选择或者删除一项
         function changeServer(id) {
             var searchResultTableRef = document.getElementById("searchResultTable");
             var serverChoosedTableRef = document.getElementById("serverChoosedTable");
@@ -128,6 +132,7 @@
             }
         }
 
+        //提交服务器组修改表单
         function submitServerGroup() {
             if (!validate_form()) {
                 return;
@@ -170,11 +175,15 @@
 
             )
         }
+
+        //页面加载完成初始化
         $(document).ready(function () {
+            //发送一个初始化ajax请求,参数是要修改的服务器组id
             $.post(
                 "{% url 'ajServerGroupReviseInit' %}",
                 {"id": {{ id }}},
                 function (ret) {
+                    //清空搜索表格
                     var tableRef = document.getElementById("searchResultTable");
                     var len = tableRef.rows.length;
                     while (len > 1) {
@@ -185,6 +194,7 @@
                     var serverChoosedTableRef = document.getElementById("serverChoosedTable");
 
                     var count = 1;
+                    //填充搜索表格
                     $.each(ret.serverList, function (index, server) {
                         var newServerLine = tableRef.insertRow(count);
                         count = count + 1;
@@ -212,6 +222,7 @@
                             ")'/>";
 
                     });
+                    //根据接收的当前要修改的服务器组信息设置已勾选的服务器表格
                     $.each(ret.defaultServerList, function (index, serverid) {
                         var checkbox = document.getElementById("checkbox" + serverid);
                         checkbox.checked = true;
@@ -220,10 +231,11 @@
 
                 }
             ).fail(function () {
-                alert("连接失败，重试");
+                alert("连接失败");
                 window.location.replace("{% url 'serverGroupRevise' %}");
             });
 
+            //设置默认参数
             {% for serverGroup in allServerGroup %}
                 if ({{ serverGroup.id }}=={{ id }}) {
                     $("#timeoutTel").val({{ serverGroup.time_out }})

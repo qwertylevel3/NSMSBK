@@ -32,8 +32,11 @@
                 }
             });
         }
+        //表单验证
         function validataServerForm() {
+            //首先查看ip和port是否不为空
             if (validate_form() == true) {
+                //然后发送一个ajax查询，观察是否已存在这个ip和port
                 $.ajax({
                     type: 'POST',
                     url: "{% url 'ajValidateServer' %}",
@@ -42,6 +45,7 @@
                         if (!ret.result) {
                             alert("该ip port已存在")
                         } else {
+                            //成功
                             var ip = $("#ipText").val();
                             var port = $("#portText").val();
                             var idc = $("#idcText").val();
@@ -50,6 +54,7 @@
 
                             $("#validataAddDiv").html("ip:" + ip + "<br/>port:" + port + "<br/>idc:" + idc + "<br/>sign:" + sign);
 
+                            //显示二次确认的模态对话框
                             $("#myModal").modal({});
                         }
                     }
@@ -81,7 +86,9 @@
         }
 
 
+        //提交服务器搜索表单
         function submitSearchServer() {
+            //删除之前搜索结果表格
             var tableRef = document.getElementById("searchResultTable");
             var len = tableRef.rows.length;
             while (len > 1) {
@@ -99,6 +106,7 @@
                         var tableRef = document.getElementById("searchResultTable");
 
                         var count = 1;
+                        //填充搜索表格
                         $.each(ret.result, function (index, server) {
                             var newServerLine = tableRef.insertRow(count);
                             count = count + 1;
@@ -117,10 +125,12 @@
                             var signCol = newServerLine.insertCell();
                             signCol.innerHTML = server.sign;
                             var is_usedCol = newServerLine.insertCell();
+                            //启用状态按钮
                             is_usedCol.innerHTML = "<input type='checkbox' class='tgl tgl-skewed' id='checkbox" + server.id + "' class='checkbox' onclick='serverUseChange(" + server.id + ")'>" +
                                 "<label class='tgl-btn' data-tg-off='off' data-tg-on='on' for='checkbox" + server.id + "'/>"
 
 
+                            //更改按钮
                             var changeCol = newServerLine.insertCell();
                             changeCol.innerHTML = "<form action=" + "{% url 'serverRevise' %}" + " method='get'>" +
                                 "<input type='text' name='id' value=" + server.id + " hidden/>" +
@@ -132,6 +142,7 @@
                         var searchLenH2 = document.getElementById("searchLenH2");
                         searchLenH2.innerHTML = "搜索结果(" + (count - 1) + "条)";
 
+                        //根据服务器启用状态设置相应的checkbox
                         $.each(ret.result, function (index, server) {
                             if (server.is_used == "1") {
                                 var checkbox = document.getElementById("checkbox" + server.id);
@@ -147,6 +158,7 @@
             )
         }
 
+        //禁用或者启用服务器
         function serverUseChange(id) {
             var checkbox = document.getElementById("checkbox" + id);
             var state = checkbox.checked;
@@ -158,17 +170,9 @@
             }
         }
 
+        //页面加载完成自动搜索一下
         $(document).ready(function () {
-            $(function () {
-                $('[data-toggle="popover"]').popover()
-            });
-
             submitSearchServer();
-
-
-            $(document).ajaxError(function (event, xhr, settings, errorType) {
-                event.id
-            });
         });
 
         function reuseServer(id, checkbox) {
