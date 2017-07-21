@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% include "__staticFiles.html" %}
+
+    <script>
+        //表单验证
+        function validate_required(field, alerttxt) {
+            with (field) {
+                if (field.val() == null || field.val() == "") {
+                    alert(alerttxt)
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        function validate_form() {
+            if (validate_required($("#nameText"), "用户名不能为空") == false) {
+                $("#nameText").focus();
+                return false;
+            }
+            if (validate_required($("#pw"), "密码不能为空") == false) {
+                $("#pw").focus();
+                return false;
+            }
+
+            if (($("#pw").val() != $("#validatePW").val())) {
+                alert("两次密码不一致");
+                return false;
+            }
+
+            if ($("#pw").val().length < 8) {
+                alert("密码长度要大于8位");
+                $("#pw").focus();
+                return false;
+            }
+
+
+            return true;
+        }
+
+        function reviseUser() {
+            var name = $("#nameText").val();
+            var pw = $("#pw").val();
+
+
+            var isSuper = "off"
+            if ($("#superuserCheckbox").is(":checked")) {
+                isSuper="on";
+            }
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: "{% url 'ajHandleReviseUser' %}",
+                    data: {"id":{{ id }}, "name": name, "pw": pw, "isSuper": isSuper},
+                    success: function (ret) {
+                        if (!ret.result) {
+                            alert("失败")
+                        } else {
+                            alert("操作成功");
+                            window.location.replace("{% url 'managerUser' %}");
+                        }
+                    }
+                }
+            )
+        }
+
+
+        function submitForm() {
+            if (!validate_form()) {
+                return;
+            }
+
+            if ("{{ name }}" != $("#nameText").val()) {
+                $.ajax(
+                    {
+                        type: 'GET',
+                        url: "{% url 'ajQueryUser' %}",
+                        data: {"name": $("#nameText").val()},
+                        success: function (ret) {
+                            if (!ret.result) {
+                                alert("用户名已存在");
+                                $("#nameText").focus();
+                            } else {
+                                reviseUser();
+                            }
+                        }
+                    }
+                )
+            } else {
+                reviseUser();
+            }
+        }
+
+        $(document).ready(function () {
+            $("#nameText").val("{{ name }}")
+        });
+    </script>
+</head>
+<body>
+
+<div class="container-fluid main-div">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>更改用户</h3>
+        </div>
+    </div>
+
+    {% include "auth/__userTable.html" %}
+
+</div>
+
+</body>
