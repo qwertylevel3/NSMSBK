@@ -26,17 +26,25 @@ from django.views.generic.base import RedirectView
 
 from RuleManager import settings
 
-
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
     url(r'^$', indexViews.index, name="root"),
     url(r'index/', indexViews.index, name="index"),
 
-    url(r'^favicon\.ico$',RedirectView.as_view(url='static/favicon.ico',permanent=True)),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='static/favicon.ico', permanent=True)),
 
     url(r'^login/$', login, {'template_name': 'auth/login.html'}, name="login"),
     url(r'^logout/$', logout_then_login, name="logout"),
     url(r'check/', authViews.check, name="check"),
+    url(r'managerUser/', authViews.managerUser, name="managerUser"),
+    url(r'addUser/',authViews.addUser,name="addUser"),
+    url(r'reviseUser/',authViews.reviseUser,name="reviseUser"),
+    url(r'ajQueryAllUser/', authViews.ajQueryAllUser, name="ajQueryAllUser"),
+    url(r'ajHandleAddUser', authViews.ajHandleAddUser, name="ajHandleAddUser"),
+    url(r'ajHandleReviseUser',authViews.ajHandleReviseUser,name="ajHandleReviseUser"),
+    url(r'ajQueryUser',authViews.ajQueryUser,name="ajQueryUser"),
+    url(r'checkSuper/',authViews.checkSuper,name="checkSuper"),
+
 
     url(r'ruleSearch/', ruleConfigViews.ruleSearch, name="ruleSearch"),
     url(r'ruleRevise/', ruleConfigViews.ruleConfigRevise, name="ruleRevise"),
@@ -50,10 +58,10 @@ urlpatterns = [
 
     url(r'ajServerSearch', serverConfigViews.ajServerSearch, name="ajServerSearch"),
     url(r'ajServerDelete/', serverConfigViews.ajServerDelete, name="ajServerDelete"),
-    url(r'adHandleServerAdd/',serverConfigViews.ajHandleServerAdd,name="ajHandleServerAdd"),
+    url(r'adHandleServerAdd/', serverConfigViews.ajHandleServerAdd, name="ajHandleServerAdd"),
     url(r'ajHandleServerRevise/', serverConfigViews.ajHandleServerRevise, name="ajHandleServerRevise"),
     url(r'ajServerReuse/', serverConfigViews.ajServerReuse, name="ajServerReuse"),
-    url(r'ajValidateServer',serverConfigViews.ajValidateServer,name="ajValidateServer"),
+    url(r'ajValidateServer', serverConfigViews.ajValidateServer, name="ajValidateServer"),
 
     url(r'serverGroupSearch/', serverGroupConfigViews.serverGroupSearch, name="serverGroupSearch"),
     url(r'serverGroupRevise/', serverGroupConfigViews.serverGroupRevise, name="serverGroupRevise"),

@@ -11,26 +11,43 @@
 
 
     <script>
+        function loginSuper() {
+            if (validate_form() == true) {
+                var username = $("#usernameText").val();
+                var password = $("#passwordText").val();
+
+                $.post(
+                    '{% url 'checkSuper' %}',
+                    {'username': username, 'password': password},
+                    function (ret) {
+                        if (!ret.result) {
+                            alert("用户名或密码错误,或权限不够")
+                        } else {
+                            window.location.replace('{% url 'managerUser' %}');
+                        }
+                    });
+            }
+        }
+
+        function login() {
+            if (validate_form() == true) {
+                var username = $("#usernameText").val();
+                var password = $("#passwordText").val();
+
+                $.post(
+                    '{% url 'check' %}',
+                    {'username': username, 'password': password},
+                    function (ret) {
+                        if (!ret.result) {
+                            alert("用户名或密码错误")
+                        } else {
+                            window.location.replace('{% url 'index' %}');
+                        }
+                    });
+            }
+        }
+
         $(document).ready(function () {
-
-            //提交表单，登录
-            $("#submitButton").click(function () {
-                if (validate_form() == true) {
-                    var username = $("#usernameText").val();
-                    var password = $("#passwordText").val();
-
-                    $.post(
-                        '/check/',
-                        {'username': username, 'password': password},
-                        function (ret) {
-                            if (!ret.result) {
-                                alert("用户名或密码错误")
-                            } else {
-                                window.location.replace('/index/');
-                            }
-                        });
-                }
-            });
 
             $("#usernameText").focus()
 
@@ -75,20 +92,24 @@
         <div class="row">
             <div class="col-md-12">
                 <label>Username:</label>
-                <input type="text" id="usernameText" placeholder="username"onkeydown='if(event.keyCode==13){ $("#submitButton").click()}'>
+                <input type="text" id="usernameText" placeholder="username"
+                       onkeydown='if(event.keyCode==13){ $("#submitButton").click()}'>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <label>Password:</label>
-                <input type="password" id="passwordText" placeholder="password" onkeydown='if(event.keyCode==13){ $("#submitButton").click()}'>
+                <input type="password" id="passwordText" placeholder="password"
+                       onkeydown='if(event.keyCode==13){ $("#submitButton").click()}'>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
-                <button class="button" id="submitButton">登录</button>
+                <button class="button" id="submitButton" onclick="login()">登录</button>
+                <button class="button" id="managerUserButton" onclick="loginSuper()">管理用户</button>
             </div>
         </div>
+
     </div>
 </div>
 

@@ -120,6 +120,7 @@ def validateServer(ip, port):
 
 
 
+@login_required
 def ajValidateServer(request):
     ip=request.POST.get("ip",-1)
     port=request.POST.get("port",-1)

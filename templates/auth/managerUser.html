@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    {% include "__staticFiles.html" %}
+
+
+    <script>
+        function queryAllUser() {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: "{% url 'ajQueryAllUser' %}",
+                    data: {},
+                    success: function (ret) {
+                        var count = 1;
+                        var userTable = document.getElementById("userTable");
+                        $.each(ret.userList, function (index, user) {
+                            var newUserLine = userTable.insertRow();
+
+                            count = count + 1;
+
+                            if (count % 2 == 0) {
+                                addClass(newUserLine, "green-tr");
+                            }
+                            var idCol = newUserLine.insertCell();
+                            idCol.innerHTML = user.id;
+                            var nameCol = newUserLine.insertCell();
+                            nameCol.innerHTML = user.name;
+
+                            //增加更改按钮
+                            var changeCol = newUserLine.insertCell();
+                            changeCol.innerHTML = "<form action='" + "{% url 'reviseUser' %}" + "' method=''>" +
+                                "<input type='text' name='id' value='" + user.id + "' hidden/>" +
+                                "<input type='submit' class='table-button' value='更改'/>" +
+                                "</form>"
+                        })
+                    }
+                }
+            )
+        }
+
+        $(document).ready(function () {
+            queryAllUser();
+        })
+
+        $(function () {
+            //页头下拉消失效果
+            var headerHeight = $('.header').outerHeight();
+            $(window).scroll(function () {
+                var scrollTopPos = $(document).scrollTop();
+                if (scrollTopPos > headerHeight) {
+                    $('.header').addClass('headerHide');
+                    $('.header').removeClass('headerShow');
+                    $('.back-top-button').show()
+                } else {
+                    $('.header').removeClass('headerHide');
+                    $('.header').addClass('headerShow');
+                    $('.back-top-button').hide()
+                }
+
+            });
+        });
+
+        function addUser() {
+            window.location.replace("{% url 'addUser' %}")
+        }
+    </script>
+</head>
+<body>
+
+
+<nav class="navbar navbar-collapse navbar-fixed-top header">
+    <ul class="nav nav-pills">
+        <a class="navbar-brand header-brand" href="{% url 'index' %}">Rule Manager</a>
+    </ul>
+</nav>
+<button style="display: none" class="back-top-button button" onclick="location.href='#top'">Back to Top</button>
+
+<div class="container-fluid main-div">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>管理用户</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="button" id="addUserButton" onclick="addUser()">新增</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <table id="userTable" class="result-table table-hover table-condensed" border="1">
+                <thead>
+                <th>id</th>
+                <th>用户名</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -434,6 +434,7 @@ def check(rule, condition):
 # has_next(true存在下一页，false不存在下一页)
 # all_page_num(一共有多少页)
 # ruleList(rule组成的列表)
+@login_required
 def ajRuleSearch(request):
     page = request.POST.get("page")
     searchResult = []

@@ -39,25 +39,25 @@
                 return false;
             }
 
+            ;
 
             return true;
         }
 
-        function reviseUser() {
+        function addUser() {
             var name = $("#nameText").val();
             var pw = $("#pw").val();
 
-
             var isSuper = "off"
             if ($("#superuserCheckbox").is(":checked")) {
-                isSuper="on";
+                isSuper = "on";
             }
 
             $.ajax(
                 {
                     type: 'POST',
-                    url: "{% url 'ajHandleReviseUser' %}",
-                    data: {"id":{{ id }}, "name": name, "pw": pw, "isSuper": isSuper},
+                    url: "{% url 'ajHandleAddUser' %}",
+                    data: {"name": name, "pw": pw, "isSuper": isSuper},
                     success: function (ret) {
                         if (!ret.result) {
                             alert("失败")
@@ -70,42 +70,28 @@
             )
         }
 
-
         function submitForm() {
             if (!validate_form()) {
                 return;
             }
 
-            if ("{{ name }}" != $("#nameText").val()) {
-                $.ajax(
-                    {
-                        type: 'GET',
-                        url: "{% url 'ajQueryUser' %}",
-                        data: {"name": $("#nameText").val()},
-                        success: function (ret) {
-                            if (!ret.result) {
-                                alert("用户名已存在");
-                                $("#nameText").focus();
-                            } else {
-                                reviseUser();
-                            }
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: "{% url 'ajQueryUser' %}",
+                    data: {"name": $("#nameText").val()},
+                    success: function (ret) {
+                        if (!ret.result) {
+                            alert("用户名已存在");
+                            $("#nameText").focus();
+                        } else {
+                            addUser();
                         }
                     }
-                )
-            } else {
-                reviseUser();
-            }
+                }
+            )
+
         }
-
-        $(document).ready(function () {
-            $("#nameText").val("{{ name }}")
-
-            if("{{ isSuper }}"=="True"){
-                $("#superuserCheckbox").attr("checked",true);
-            }else{
-                $("#superuserCheckbox").attr("checked",false);
-            }
-        });
     </script>
 </head>
 <body>
@@ -113,12 +99,12 @@
 <div class="container-fluid main-div">
     <div class="row">
         <div class="col-md-12">
-            <h3>更改用户</h3>
+            <h3>新增用户</h3>
         </div>
     </div>
 
     {% include "auth/__userTable.html" %}
-
 </div>
 
 </body>
+</html>

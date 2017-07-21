@@ -37,10 +37,13 @@
                 success: function (ret) {
                     var searchResultTable = document.getElementById("searchResultTable");
 
+                    var tbody=document.createElement("tbody");
+                    searchResultTable.appendChild(tbody);
+
                     var count = 1;
                     //对于每个查找结果，填充搜索结果表
                     $.each(ret.ruleList, function (index, rule) {
-                        var newRuleLine = searchResultTable.insertRow();
+                        var newRuleLine = tbody.insertRow();
                         count = count + 1;
                         if (count % 2 == 0) {
                             addClass(newRuleLine, "green-tr");
