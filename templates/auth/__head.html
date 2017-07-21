@@ -1,0 +1,26 @@
+<script>
+    $(function () {
+        //页头下拉消失效果
+        var headerHeight = $('.header').outerHeight();
+        $(window).scroll(function () {
+            var scrollTopPos = $(document).scrollTop();
+            if (scrollTopPos > headerHeight) {
+                $('.header').addClass('headerHide');
+                $('.header').removeClass('headerShow');
+                $('.back-top-button').show()
+            } else {
+                $('.header').removeClass('headerHide');
+                $('.header').addClass('headerShow');
+                $('.back-top-button').hide()
+            }
+
+        });
+    });
+</script>
+
+<nav class="navbar navbar-collapse navbar-fixed-top header">
+    <ul class="nav nav-pills">
+        <a class="navbar-brand header-brand" href="{% url 'index' %}">Rule Manager</a>
+    </ul>
+</nav>
+<button style="display: none" class="back-top-button button" onclick="location.href='#top'">Back to Top</button>
