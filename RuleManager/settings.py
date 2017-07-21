@@ -87,17 +87,17 @@ DATABASES = {
         'PASSWORD': 'test_cobar',
         'HOST': '172.16.154.62',
         'PORT': '8077'
-    }
+}
 
-    #    'default': {
-    #        'ENGINE': 'django.db.backends.mysql',
-    #        'NAME': 'rules',
-    #        'USER': 'root',
-    #        'PASSWORD': 'Ll147258369',
-    #        'HOST': '',
-    #        'PORT': '3306',
-    #        'ATOMIC_REQUESTS': True
-    #    }
+#        'default': {
+#            'ENGINE': 'django.db.backends.mysql',
+#            'NAME': 'rules',
+#            'USER': 'root',
+#            'PASSWORD': 'Ll147258369',
+#            'HOST': '',
+#            'PORT': '3306',
+#            'ATOMIC_REQUESTS': True
+#        }
 }
 
 # Password validation
