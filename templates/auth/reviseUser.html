@@ -50,7 +50,7 @@
 
             var isSuper = "off"
             if ($("#superuserCheckbox").is(":checked")) {
-                isSuper="on";
+                isSuper = "on";
             }
 
             $.ajax(
@@ -58,6 +58,9 @@
                     type: 'POST',
                     url: "{% url 'ajHandleReviseUser' %}",
                     data: {"id":{{ id }}, "name": name, "pw": pw, "isSuper": isSuper},
+                    beforeSend: function () {
+                        $("#submitFormButton").attr("disabled", true);
+                    },
                     success: function (ret) {
                         if (!ret.result) {
                             window.alert("失败")
@@ -65,6 +68,9 @@
                             window.alert("操作成功");
                             window.location.replace("{% url 'managerUser' %}");
                         }
+                    },
+                    complete: function () {
+                        $("#submitFormButton").attr("disabled", false);
                     }
                 }
             )
@@ -100,10 +106,10 @@
         $(document).ready(function () {
             $("#nameText").val("{{ name }}")
 
-            if("{{ isSuper }}"=="True"){
-                $("#superuserCheckbox").attr("checked",true);
-            }else{
-                $("#superuserCheckbox").attr("checked",false);
+            if ("{{ isSuper }}" == "True") {
+                $("#superuserCheckbox").attr("checked", true);
+            } else {
+                $("#superuserCheckbox").attr("checked", false);
             }
         });
     </script>
