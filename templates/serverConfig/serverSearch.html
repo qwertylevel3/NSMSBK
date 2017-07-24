@@ -21,9 +21,9 @@
                 },
                 success: function (ret) {
                     if (!ret.result) {
-                        alert("该ip port已存在")
+                        window.alert("该ip port已存在")
                     } else {
-                        alert("操作成功")
+                        window.alert("操作成功")
                         window.location.replace("{% url 'serverSearch' %}");
                     }
                 },
@@ -43,7 +43,7 @@
                     data: {'ip': $("#ipText").val(), 'port': $("#portText").val()},
                     success: function (ret) {
                         if (!ret.result) {
-                            alert("该ip port已存在")
+                            window.alert("该ip port已存在")
                         } else {
                             //成功
                             var ip = $("#ipText").val();
@@ -73,12 +73,12 @@
         }
         function validate_form() {
             if (validate_required($("#ipText")) == false) {
-                alert("ip必填");
+                window.alert("ip必填");
                 $("#ipText").focus();
                 return false;
             }
             if (validate_required($("#portText")) == false) {
-                alert("port必填");
+                window.alert("port必填");
                 $("#portText").focus();
                 return false;
             }
@@ -186,7 +186,7 @@
                     }
                 }
             ).fail(function () {
-                alert("连接失败")
+                window.alert("连接失败")
                 checkbox.checked = false;
             })
         }
@@ -202,7 +202,7 @@
                     }
                 }
             ).fail(function () {
-                alert("连接失败")
+                window.alert("连接失败")
                 checkbox.checked = true;
             })
         }

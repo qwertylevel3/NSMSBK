@@ -19,7 +19,7 @@
                     {'username': username, 'password': password},
                     function (ret) {
                         if (!ret.result) {
-                            alert("用户名或密码错误,或权限不够")
+                            window.alert("用户名或密码错误,或权限不够")
                         } else {
                             window.location.replace('{% url 'managerUser' %}');
                         }
@@ -37,7 +37,7 @@
                     {'username': username, 'password': password},
                     function (ret) {
                         if (!ret.result) {
-                            alert("用户名或密码错误")
+                            window.alert("用户名或密码错误")
                         } else {
                             window.location.replace('{% url 'index' %}');
                         }
@@ -54,7 +54,7 @@
         function validate_required(field, alerttxt) {
             with (field) {
                 if (field.val() == null || field.val() == "") {
-                    alert(alerttxt)
+                    window.alert(alerttxt)
                     return false;
                 } else {
                     return true;

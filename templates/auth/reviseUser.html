@@ -60,9 +60,9 @@
                     data: {"id":{{ id }}, "name": name, "pw": pw, "isSuper": isSuper},
                     success: function (ret) {
                         if (!ret.result) {
-                            alert("失败")
+                            window.alert("失败")
                         } else {
-                            alert("操作成功");
+                            window.alert("操作成功");
                             window.location.replace("{% url 'managerUser' %}");
                         }
                     }
@@ -84,7 +84,7 @@
                         data: {"name": $("#nameText").val()},
                         success: function (ret) {
                             if (!ret.result) {
-                                alert("用户名已存在");
+                                window.alert("用户名已存在");
                                 $("#nameText").focus();
                             } else {
                                 reviseUser();

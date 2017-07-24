@@ -162,10 +162,10 @@
                 },
                 success:function (ret) {
                     if (ret.result) {
-                        alert("操作成功");
+                        window.alert("操作成功");
                         window.location.replace("{% url 'serverGroupSearch' %}");
                     } else {
-                        alert("服务器组名称已存在");
+                        window.alert("服务器组名称已存在");
                     }
                 },
                 complete:function () {
@@ -231,7 +231,7 @@
 
                 }
             ).fail(function () {
-                alert("连接失败");
+                window.alert("连接失败");
                 window.location.replace("{% url 'serverGroupRevise' %}");
             });
 
@@ -256,7 +256,7 @@
     <script>
         function validate_required(field, alerttxt) {
             if (field.val() == null || field.val() == "") {
-                alert(alerttxt);
+                window.alert(alerttxt);
                 return false
             }
             else {
