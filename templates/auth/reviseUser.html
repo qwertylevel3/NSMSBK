@@ -10,7 +10,7 @@
         function validate_required(field, alerttxt) {
             with (field) {
                 if (field.val() == null || field.val() == "") {
-                    alert(alerttxt)
+                    window.alert(alerttxt);
                     return false;
                 } else {
                     return true;
@@ -29,12 +29,12 @@
             }
 
             if (($("#pw").val() != $("#validatePW").val())) {
-                alert("两次密码不一致");
+                window.alert("两次密码不一致");
                 return false;
             }
 
             if ($("#pw").val().length < 8) {
-                alert("密码长度要大于8位");
+                window.alert("密码长度要大于8位");
                 $("#pw").focus();
                 return false;
             }

@@ -10,9 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-
 import os
-
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '55w1li(&!0$n=3go2n@vf51-v6oskc=@+9iwj0s)d!2eupn=ww'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,24 +78,24 @@ WSGI_APPLICATION = 'RuleManager.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ifly_cp_msp_name_server',
-        'USER': 'cobar',
-        'PASSWORD': 'test_cobar',
-        'HOST': '172.16.154.62',
-        'PORT': '8077'
-}
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'ifly_cp_msp_name_server',
+            'USER': 'cobar',
+            'PASSWORD': 'test_cobar',
+            'HOST': '172.16.154.62',
+            'PORT': '8077'
+        }
 
-#        'default': {
-#            'ENGINE': 'django.db.backends.mysql',
-#            'NAME': 'rules',
-#            'USER': 'root',
-#            'PASSWORD': 'Ll147258369',
-#            'HOST': '',
-#            'PORT': '3306',
-#            'ATOMIC_REQUESTS': True
-#        }
+#    'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#        'NAME': 'rules',
+#        'USER': 'root',
+#        'PASSWORD': 'Ll147258369',
+#        'HOST': '',
+#        'PORT': '3306',
+#        'ATOMIC_REQUESTS': True
+#    }
 }
 
 # Password validation
@@ -136,15 +134,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-STATIC_ROOT=os.path.join(BASE_DIR,'collected_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
-
-
-
 
 LOGIN_URL = '/login/'
 
@@ -162,7 +156,7 @@ LOGGING = {
         'sql': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR+'/sql.log',
+            'filename': BASE_DIR + '/sql.log',
             'formatter': 'sql',
         },
     },
