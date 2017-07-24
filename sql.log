@@ -17,3 +17,5 @@ INFO 2017-07-18 16:49:24,190 admin : delete server [id:25|ip:77.77.77.77|port:33
 INFO 2017-07-18 16:49:38,697 admin : revise server [id:23|ip:77.77.77.77|port:22|idc:ch|sign:tt]
 INFO 2017-07-18 16:51:55,042 admin : revise server [id:23|ip:77.77.77.77|port:22|idc:ch|sign: ]
 INFO 2017-07-18 16:52:46,575 admin : revise server [id:23|ip:77.77.77.77|port:22|idc:ch|sign: tt]
+INFO 2017-07-24 09:19:20,884 admin : create server [id:56|ip:44.44.44.44|port:99|idc:|sign:]
+INFO 2017-07-24 09:36:27,532 qwertylevel3 : create server [id:57|ip:99.11.22.33|port:1234|idc:|sign:]
