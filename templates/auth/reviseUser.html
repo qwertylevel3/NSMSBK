@@ -17,7 +17,6 @@
                 }
             }
         }
-
         function validate_form() {
             if (validate_required($("#nameText"), "用户名不能为空") == false) {
                 $("#nameText").focus();
@@ -43,6 +42,7 @@
             return true;
         }
 
+        //发送ajax请求修改用户
         function reviseUser() {
             var name = $("#nameText").val();
             var pw = $("#pw").val();
@@ -77,12 +77,16 @@
         }
 
 
+        //提交表单
         function submitForm() {
+            //首先验证
             if (!validate_form()) {
                 return;
             }
-
+            //观察name字段是否修改
             if ("{{ name }}" != $("#nameText").val()) {
+                //如果修改了name
+                //查看新的name是否已经存在
                 $.ajax(
                     {
                         type: 'GET',
@@ -103,6 +107,7 @@
             }
         }
 
+        //页面加载完成设置默认参数
         $(document).ready(function () {
             $("#nameText").val("{{ name }}")
 

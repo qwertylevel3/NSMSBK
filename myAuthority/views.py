@@ -22,6 +22,13 @@ def auth(request):
 
 
 # 检查是否登录成功
+#
+# post:
+# username
+# password
+#
+# ret:
+# result(是否登录成功)
 def check(request):
     username = request.POST.get("username", "")
     password = request.POST.get("password", "")
@@ -35,6 +42,15 @@ def check(request):
         return_json = {'result': False}
         return JsonResponse(return_json)
 
+
+# 检查高级管理员是否登录成功
+#
+# post:
+# username
+# password
+#
+# ret:
+# result(是否登录成功)
 def checkSuper(request):
     username = request.POST.get("username", "")
     password = request.POST.get("password", "")
@@ -53,6 +69,12 @@ def checkSuper(request):
         return_json = {'result': False}
         return JsonResponse(return_json)
 
+# 查询所有的用户
+#
+# get/post
+#
+# ret:
+# userList(所有用户列表)
 @super_required
 def ajQueryAllUser(request):
     allUser = User.objects.all()
@@ -72,7 +94,7 @@ def ajQueryAllUser(request):
     )
 
 
-
+# 显示管理用户界面
 @super_required
 def managerUser(request):
     allUser = User.objects.all()
@@ -82,11 +104,21 @@ def managerUser(request):
                       "allUser": allUser
                   })
 
-
+# 显示增加用户界面
 @super_required
 def addUser(request):
     return render(request, "auth/addUser.html")
 
+
+# 新增用户
+#
+# post:
+# name
+# pw
+# isSuper(on为超级管理员，off为普通用户)
+#
+# ret:
+# result(插入是否成功)
 @super_required
 def ajHandleAddUser(request):
     name = request.POST.get("name", "")
@@ -111,7 +143,10 @@ def ajHandleAddUser(request):
         }
     )
 
-
+# 显示更改用户页面
+#
+# get:
+# id(要更改的用户id)
 @super_required
 def reviseUser(request):
     id = request.GET.get("id", "")
@@ -132,6 +167,16 @@ def reviseUser(request):
                       "isSuper":isSuper
                   })
 
+# 更改用户信息
+#
+# post:
+# id
+# name
+# pw
+# isSuper
+#
+# ret:
+# result(是否更改成功)
 @super_required
 def ajHandleReviseUser(request):
     id = request.POST.get("id", "")
@@ -154,6 +199,13 @@ def ajHandleReviseUser(request):
         }
     )
 
+# 查询某个用户名是否存在
+#
+# get:
+# name
+#
+# ret:
+# result
 @super_required
 def ajQueryUser(request):
     name = request.GET.get("name", "")

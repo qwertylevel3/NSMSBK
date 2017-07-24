@@ -211,7 +211,7 @@ class GroupData:
 # allNet(数据库中所有网络信息，用来优化下拉框)
 # allGroup(数据库中所有服务器组信息，用来优化下拉框)
 @login_required
-def ruleConfigRevise(request):
+def ruleRevise(request):
     id = request.GET.get("id", "-1")
 
     condition = RuleCondition()

@@ -44,6 +44,7 @@
             return true;
         }
 
+        //发送ajax请求新增用户
         function addUser() {
             var name = $("#nameText").val();
             var pw = $("#pw").val();
@@ -76,11 +77,13 @@
             )
         }
 
+        //提交表单
         function submitForm() {
+            //表单验证
             if (!validate_form()) {
                 return;
             }
-
+            //用户名查重,成功才发送新增请求
             $.ajax(
                 {
                     type: 'GET',

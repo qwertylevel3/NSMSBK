@@ -47,7 +47,7 @@ urlpatterns = [
 
 
     url(r'ruleSearch/', ruleConfigViews.ruleSearch, name="ruleSearch"),
-    url(r'ruleRevise/', ruleConfigViews.ruleConfigRevise, name="ruleRevise"),
+    url(r'ruleRevise/', ruleConfigViews.ruleRevise, name="ruleRevise"),
     url(r'ajRuleDelete/', ruleConfigViews.ajRuleDelete, name="ajRuleDelete"),
     url(r'ajHandleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="ajHandleRuleRevise"),
     url(r'ajRuleReuse/', ruleConfigViews.ajRuleReuse, name="ajRuleReuse"),
