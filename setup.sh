@@ -21,6 +21,10 @@ find NameServerMngrSite -type d | xargs chmod 755
 cd NameServerMngrSite
 chmod 777 sql.log
 
+# 修改配置文件中的路径
+curDir="$(cd `dirname $0`; pwd)"
+sed -i "s:~:$curDir:g" NameServerMngrSite.conf
+
 # 拷贝apache站点配置文件
 cp NameServerMngrSite.conf /etc/apache2/sites-available/NameServerMngrSite.conf
 
