@@ -15,7 +15,7 @@ import sys
 
 sys.path.insert(0, PROJECT_DIR)
 
-os.environ["DJANGO_SETTINGS_MODULE"] = "RuleManager.settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "NameServerMngrSite.settings"
 
 from django.core.wsgi import get_wsgi_application
 

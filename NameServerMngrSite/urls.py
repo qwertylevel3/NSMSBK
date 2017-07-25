@@ -24,7 +24,7 @@ from myAuthority import views as authViews
 from django.contrib.auth.views import login, logout_then_login
 from django.views.generic.base import RedirectView
 
-from RuleManager import settings
+from NameServerMngrSite import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls, name="admin"),
