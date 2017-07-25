@@ -36,7 +36,6 @@ a2dissite default
 # 启用站点
 a2ensite NameServerMngrSite.conf
 
-service apache2 reload
-
 # 重启apache
+service apache2 reload
 service apache2 restart
