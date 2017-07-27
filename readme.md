@@ -1,14 +1,16 @@
 
 # NameServerMngrSite
 * 环境：ubuntu12.04 apache2.2.22
-***
+
+
 ### 自动部署
 ```bash
 chmod u+x setup.sh
 su root
 ./setup.sh
 ```
-***
+
+
 ### 手动部署
 
 #### 安装apache和mod_wsgi
@@ -73,7 +75,6 @@ service apache2 reload
 service apache2 restart
 ```
 
-***
 ### 参考
 
 [官方文档(部署)](https://docs.djangoproject.com/en/1.11/howto/deployment/)
