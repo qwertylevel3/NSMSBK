@@ -13,6 +13,23 @@ su root
 
 ### 手动部署
 
+#### 目录结构
+```
+/NameServerMngrSite
+    |--...
+    |--/NameServerMngrSite
+    |    |--__init__.py
+    |    |--settings.py
+    |    |--wsgi.py
+    |    |--urls.py
+    |--...
+    |--manage.py
+    |--NameServerMngrSite.conf
+    |--readme.md
+    |--requirement.txt
+    |--setup.sh
+    |--sql.log
+```
 #### 安装apache和mod_wsgi
 ```
 apt-get install apache2
