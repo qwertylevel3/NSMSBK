@@ -24,7 +24,7 @@
                                 window.alert("操作成功");
                                 window.location.replace("{% url 'ruleSearch' %}");
                             } else {
-                                window.alert("操作失败");
+                                window.alert(ret.msg);
                             }
                         },
                         complete: function () {
@@ -72,12 +72,16 @@
         }
         function validate_form(thisform) {
             with (thisform) {
-                if (validate_required(groupid, "group id must be filled out!") == false) {
+                if (validate_required(groupid, "group必填") == false) {
                     groupid.focus();
                     return false
                 }
-                if (validate_required(ttl, "ttl must be filled out!") == false) {
+                if (validate_required(ttl, "ttl必填") == false) {
                     ttl.focus();
+                    return false
+                }
+                if (validate_required(host, "host必填") == false) {
+                    host.focus();
                     return false
                 }
             }

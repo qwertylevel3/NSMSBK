@@ -285,6 +285,10 @@ def ajHandleRuleRevise(request):
     # 拼接为rule字符串用来保存
     conditionStr = condition.convert2Str()
 
+    if conditionStr=="":
+        json_return = {'result': False,'msg':"规则不能为空"}
+        return JsonResponse(json_return)
+
     rank = request.POST.get("rank", "")
     ttl = request.POST.get("ttl", "")
     compelStr = request.POST.get("compel", "")
