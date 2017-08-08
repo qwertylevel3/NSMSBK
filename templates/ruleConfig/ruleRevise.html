@@ -24,7 +24,7 @@
                                 window.alert("操作成功");
                                 window.location.replace("{% url 'ruleSearch' %}");
                             } else {
-                                window.alert(ret.msg);
+                                window.alert("操作失败");
                             }
                         },
                         complete: function () {

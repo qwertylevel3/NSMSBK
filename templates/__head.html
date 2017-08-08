@@ -1,27 +1,27 @@
 <script>
 
-    $(function () {
-        //页头下拉消失效果
-        var headerHeight = $('.header').outerHeight();
-        $(window).scroll(function () {
-            var scrollTopPos = $(document).scrollTop();
-            if (scrollTopPos > headerHeight) {
-                $('.header').addClass('headerHide');
-                $('.header').removeClass('headerShow');
-                $('.back-top-button').show()
-            } else {
-                $('.header').removeClass('headerHide');
-                $('.header').addClass('headerShow');
-                $('.back-top-button').hide()
-            }
-
-        });
-    });
+//    $(function () {
+//        //页头下拉消失效果
+//        var headerHeight = $('.header').outerHeight();
+//        $(window).scroll(function () {
+//            var scrollTopPos = $(document).scrollTop();
+//            if (scrollTopPos > headerHeight) {
+//                $('.header').addClass('headerHide');
+//                $('.header').removeClass('headerShow');
+//                $('.back-top-button').show()
+//            } else {
+//                $('.header').removeClass('headerHide');
+//                $('.header').addClass('headerShow');
+//                $('.back-top-button').hide()
+//            }
+//
+//        });
+//    });
 </script>
 
 <nav class="navbar navbar-collapse navbar-fixed-top header">
     <ul class="nav nav-pills">
-        <a class="navbar-brand header-brand" href="{% url 'index' %}">NameServerMngr</a>
+        <a class="navbar-brand header-brand" href="{% url 'index' %}">NameServer管理系统</a>
         <li><a class="navbar-btn header-btn" href="{% url 'ruleSearch' %}">管理规则</a></li>
         <li><a class="navbar-btn header-btn" href="{% url 'serverSearch' %}">管理服务器</a></li>
         <li><a class="navbar-btn header-btn" href="{% url 'serverGroupSearch' %}">管理服务器组</a></li>

@@ -100,11 +100,11 @@ h2 {
   .base-button;
 
   color: #666;
-  background-color: #EEE;
-  border-color: #EEE;
+  background-color: #dddddd;
+  border-color: #dddddd;
 
   font-weight: 300;
-  font-size: 16px;
+  font-size: 16pt;
 
   line-height: 40px;
   height: 40px;
@@ -117,7 +117,7 @@ h2 {
 }
 
 .button:hover, .button:focus {
-  background-color: #f6f6f6;
+  background-color: #e6e6e6;
   text-decoration: none;
   outline: none;
 }
@@ -125,9 +125,9 @@ h2 {
 .button:active, .button.active, .button.is-active {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
   text-decoration: none;
-  background-color: #eeeeee;
+  background-color: #dddddd;
   border-color: #cfcfcf;
-  color: #d4d4d4;
+  color: #afafaf;
   transition-duration: 0s;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
 }
@@ -216,6 +216,7 @@ h2 {
   border-collapse: collapse;
   font-family: Futura, Arial, sans-serif;
   margin: 0 auto;
+  text-align: center;
 }
 
 .result-table caption {
@@ -224,6 +225,7 @@ h2 {
 }
 
 .result-table th, td {
+  text-align: center;
   padding: .25em;
 }
 
@@ -240,6 +242,7 @@ h2 {
 }
 
 .green-tr {
+  text-align: center;
   background: #B8FFD3;
 }
 
@@ -249,8 +252,9 @@ h2 {
   height: 20px;
   background: #fcfff4;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfff4', endColorstr='#b3bead', GradientType=0);
-  margin: 0px auto;
   position: relative;
+// vertical-align:middle;
+// margin:auto;
 }
 
 .checkbox label {

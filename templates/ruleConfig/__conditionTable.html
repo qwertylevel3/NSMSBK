@@ -3,6 +3,9 @@
     <script>
 
         $(document).ready(function () {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
             $("#countryInvertCheckbox").attr("disabled", true)
 
             //国家下拉框更改的时候填充省份下拉框
@@ -16,7 +19,7 @@
                 {% for province in allProvince %}
 
                     var curCountryCode = $("#countrySelect").val();
-                    var tempCode ={{ province.code }}/100;
+                    var tempCode = {{ province.code }}/100;
                     tempCode = parseInt(tempCode);
 
 
@@ -44,7 +47,7 @@
                 {% for city in allCity %}
 
                     var curProvinceCode = $("#provinceSelect").val();
-                    var tempCode ={{ city.code }}/100;
+                    var tempCode = {{ city.code }}/100;
                     tempCode = parseInt(tempCode);
 
                     if (curProvinceCode == tempCode) {
@@ -153,7 +156,7 @@
                 </select>
             </td>
             <td>
-                <input type="text" name="host"  id="hostText"/>
+                <input type="text" name="host" id="hostText"/>
             </td>
             <td>
                 <input type="text" name="appid" id="appidText"/>
@@ -171,8 +174,11 @@
         <tr>
             <td>取反</td>
             <td>
-                <input type="checkbox" name="countryInvert" onclick="countryInvertCheck()" id="countryInvertCheckbox"
-                       class="checkbox"/>
+                <div data-toggle="tooltip" data-placement="left" title="反数据">
+                    <input type="checkbox" name="countryInvert" onclick="countryInvertCheck()"
+                           id="countryInvertCheckbox"
+                           class="checkbox"/>
+                </div>
             </td>
             <td id="provinceTd1">
                 <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox" class="checkbox"
@@ -182,13 +188,19 @@
                 <input type="checkbox" name="cityInvert" id="cityInvertCheckbox" class="checkbox" disabled="true"/>
             </td>
             <td>
-                <input type="checkbox" name="hostInvert"  id="hostInvertCheckbox" class="checkbox"/>
+                <div data-toggle="tooltip" data-placement="left" title="反数据">
+                    <input type="checkbox" name="hostInvert" id="hostInvertCheckbox" class="checkbox"/>
+                </div>
             </td>
             <td>
-                <input type="checkbox" name="appidInvert" id="appidInvertCheckbox" class="checkbox"/>
+                <div data-toggle="tooltip" data-placement="left" title="反数据">
+                    <input type="checkbox" name="appidInvert" id="appidInvertCheckbox" class="checkbox"/>
+                </div>
             </td>
             <td>
-                <input type="checkbox" name="netInvert" id="netInvertCheckbox" class="checkbox"/>
+                <div data-toggle="tooltip" data-placement="left" title="反数据">
+                    <input type="checkbox" name="netInvert" id="netInvertCheckbox" class="checkbox"/>
+                </div>
             </td>
         </tr>
         </tbody>
