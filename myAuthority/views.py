@@ -79,7 +79,7 @@ def checkSuper(request):
 def ajQueryAllUser(request):
     allUser = User.objects.all()
 
-    result = [];
+    result = []
     for user in allUser:
         result.append(
             {
