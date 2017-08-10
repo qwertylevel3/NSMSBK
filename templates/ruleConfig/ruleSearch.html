@@ -166,7 +166,7 @@
         }
         //页面加载完成自动搜索一下
         $(document).ready(function () {
-            submitSearchForm();
+//            submitSearchForm();
         });
     </script>
 
@@ -186,7 +186,7 @@
     <div class="row">
         <div class="col-md-12">
             <form id="ruleSearchForm">
-                {% include "ruleConfig/__conditionTable.html" %}
+                {% include "ruleConfig/__searchCondition.html" %}
                 <div class="radioDiv">
                     <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
                     <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>

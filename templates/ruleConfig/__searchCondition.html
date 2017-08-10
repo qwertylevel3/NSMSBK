@@ -1,0 +1,213 @@
+<div class="conditionTableDiv">
+    <script>
+
+        $(document).ready(function () {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+            $("#countryInvertCheckbox").attr("disabled", true)
+
+            //国家下拉框更改的时候填充省份下拉框
+            $("#countrySelect").change(function () {
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceSelect").append("<option value='' selected>省份</option>");
+                $("#citySelect").append("<option value='' selected>城市</option>");
+
+                {% for province in allProvince %}
+
+                    var curCountryCode = $("#countrySelect").val();
+                    var tempCode = {{ province.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+
+                    if (curCountryCode == tempCode) {
+                        $("#provinceSelect").append(
+                            $('<option>', {value:{{province.code}}}).text("{{ province.name }}")
+                        );
+
+
+                    };
+                {% endfor %}
+                if ($("#countrySelect").val() != "") {
+                    $("#countryInvertCheckbox").attr("disabled", false);
+                } else {
+                    $("#countryInvertCheckbox").attr("disabled", true);
+                }
+
+            });
+
+
+            //省份下拉框修改的时候填充城市下拉框
+            $("#provinceSelect").change(function () {
+                $("#citySelect").empty();
+                $("#citySelect").append("<option value='' selected>城市</option>")
+                {% for city in allCity %}
+
+                    var curProvinceCode = $("#provinceSelect").val();
+                    var tempCode = {{ city.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+                    if (curProvinceCode == tempCode) {
+                        $("#citySelect").append($('<option>', {value:{{city.code}}}).text("{{ city.name }}"));
+                    };
+
+                {% endfor %}
+            })
+
+
+            //设置默认参数
+            {% for rule in allRule %}
+                if ({{ rule.id }}=={{ id }}) {
+                    $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
+                    $("#countrySelect").change()
+
+                    $("#provinceSelect").find("option[value='{{ condition.province }}']").attr("selected", true);
+                    $("#provinceSelect").change()
+
+                    $("#citySelect").find("option[value='{{ condition.city }}']").attr("selected", true);
+
+                    $("#hostText").val("{{ condition.host }}");
+                    $("#appidText").val({{ condition.appid }});
+                    $("#netSelect").val({{ condition.net }});
+
+
+                    if ({{ condition.countryInvert }}=={{ 1 }}) {
+                        $("#countryInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.provinceInvert }}=={{ 1 }}) {
+                        $("#provinceInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.cityInvert }}=={{ 1 }}) {
+                        $("#cityInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.hostInvert }}=={{ 1 }}) {
+                        $("#hostInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.appidInvert }}=={{ 1 }}) {
+                        $("#appidInvertCheckbox").attr("checked", true)
+                    }
+                    if ({{ condition.netInvert }}=={{ 1 }}) {
+                        $("#netInvertCheckbox").attr("checked", true)
+                    }
+
+                }
+            {% endfor %}
+        });
+
+        function countryInvertCheck() {
+            if ($("#countryInvertCheckbox").is(":checked")) {
+                //如果国家反选选中
+                //隐藏省份和城市下拉框
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceTh").hide();
+                $("#cityTh").hide();
+                $("#provinceTd0").hide();
+                $("#cityTd0").hide();
+                $("#provinceTd1").hide();
+                $("#cityTd1").hide();
+            } else {
+                $("#provinceTh").show();
+                $("#cityTh").show();
+                $("#provinceTd0").show();
+                $("#cityTd0").show();
+                $("#provinceTd1").show();
+                $("#cityTd1").show();
+
+                $("#countrySelect").change();
+            }
+        }
+
+    </script>
+
+    <table class="result-table" border="1">
+        <thead>
+        <th></th>
+        <th>国家</th>
+        <th id="provinceTh">省份</th>
+        <th id="cityTh">城市</th>
+        <th>host</th>
+        <th>appid</th>
+        <th>net</th>
+        <th>服务器组</th>
+        </thead>
+        <tbody>
+        <tr>
+            <td>条件</td>
+            <td>
+                <select name="country" id="countrySelect">
+                    <option value="" selected>国家</option>
+                    {% for country in allCountry %}
+                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td id="provinceTd0">
+                <select name="province" id="provinceSelect">
+                    <option value="" selected>省份</option>
+                </select>
+            </td>
+            <td id="cityTd0">
+                <select name="city" id="citySelect">
+                    <option value="" selected>城市</option>
+                </select>
+            </td>
+            <td>
+                <input type="text" name="host" id="hostText"/>
+            </td>
+            <td>
+                <input type="text" name="appid" id="appidText"/>
+            </td>
+            <td>
+                <select name="net" id="netSelect">
+                    <option value="" selected>网络</option>
+                    {% for net in allNet %}
+                        <option value="{{ net.code }}">{{ net.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            <td>
+                <select name="serverGroup" id="serverGroupSelect">
+                    <option value="" selected>服务器组</option>
+                    {% for group in allGroup %}
+                        <option value="{{ group.id }}">{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr data-toggle="tooltip" data-placement="bottom" data-container="tr" title="非常规取反">
+
+            <td>取反</td>
+            <td>
+                <input type="checkbox" name="countryInvert" onclick="countryInvertCheck()"
+                       id="countryInvertCheckbox"
+                       class="checkbox"/>
+            </td>
+            <td id="provinceTd1">
+                <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox" class="checkbox"
+                       disabled="true"/>
+            </td>
+            <td id="cityTd1">
+                <input type="checkbox" name="cityInvert" id="cityInvertCheckbox" class="checkbox" disabled="true"/>
+            </td>
+            <td>
+                <input type="checkbox" name="hostInvert" id="hostInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="appidInvert" id="appidInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+                <input type="checkbox" name="netInvert" id="netInvertCheckbox" class="checkbox"/>
+            </td>
+            <td>
+
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+

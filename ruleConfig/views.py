@@ -17,6 +17,7 @@ import logging
 from ruleConfig.ruleCondition import RuleCondition
 
 
+
 # 数据库rule信息转化为字符串，用来log
 def ruleData2Str(ruleData):
     ruleStr = ""
@@ -344,6 +345,7 @@ def ruleSearch(request):
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
+    allGroup=GroupList.objects.all()
 
     return render(request,
                   "ruleConfig/ruleSearch.html",
@@ -351,11 +353,13 @@ def ruleSearch(request):
                    "allProvince": allProvince,
                    "allCity": allCity,
                    "allNet": allNet,
+                   "allGroup":allGroup
                    })
 
 
 # result分页并序列化
 def result2dict(searchResult, page):
+    t4=time.clock()
     searchLen = len(searchResult)
 
     paginator = Paginator(searchResult, 25)
@@ -370,6 +374,8 @@ def result2dict(searchResult, page):
     for rule in result:
         ruleList.append(rule)
 
+    t5=time.clock()
+
     return {
         "searchLen": searchLen,
         "has_previous": result.has_previous(),
@@ -378,6 +384,7 @@ def result2dict(searchResult, page):
         "all_page_num": result.paginator.num_pages,
         "ruleList": ruleList
     }
+
 
 # 检查rule是否满足conditoin条件
 # 用来搜索过程中过滤用
@@ -441,6 +448,8 @@ def check(rule, condition):
 @login_required
 def ajRuleSearch(request):
     page = request.POST.get("page")
+    serverGroup=request.POST.get("serverGroup","")
+
     searchResult = []
 
     ruleCondition = RuleCondition()
@@ -450,6 +459,9 @@ def ajRuleSearch(request):
 
     allRules = ServerRuleDat.objects.all()
 
+    print serverGroup
+
+
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
         if rule.is_use == 0 and showState == "1":
@@ -458,7 +470,13 @@ def ajRuleSearch(request):
             continue
         #        if check(rule, conditions):
         #            searchResult.append(convert2SearchResult(rule))
+        if serverGroup !="":
+            if rule.group_id!=int(serverGroup):
+                print rule.group_id
+                continue
         if check(rule, ruleCondition):
             searchResult.append(convert2SearchResult(rule))
+
+
 
     return JsonResponse(result2dict(searchResult, page))

@@ -20,11 +20,12 @@
                     $("#submitButton").attr("disabled", true);
                 },
                 success: function (ret) {
-                    if (!ret.result) {
-                        window.alert("该ip port已存在")
-                    } else {
+                    if (ret.result) {
                         window.alert("操作成功")
                         window.location.replace("{% url 'serverSearch' %}");
+
+                    } else {
+                        window.alert("该ip port已存在")
                     }
                 },
                 complete: function () {
@@ -32,6 +33,7 @@
                 }
             });
         }
+
         //表单验证
         function validataServerForm() {
             //首先查看ip和port是否不为空
@@ -71,6 +73,7 @@
                 }
             }
         }
+
         function validate_form() {
             if (validate_required($("#ipText")) == false) {
                 window.alert("ip必填");

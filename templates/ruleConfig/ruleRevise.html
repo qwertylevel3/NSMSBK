@@ -7,6 +7,54 @@
     {% include "__staticFiles.html" %}
 
     <script>
+        function validateRuleForm() {
+            if (validate_form(document.getElementById("reviseRuleForm"))) {
+                var rank = $("#rankSelect").val();
+                var compel = $("#compelCheckbox").val();
+                var ttl = $("#ttlText").val();
+                var serverGroup = $("#groupidSelect").val();
+
+
+                var countryInvert = "";
+                if ($("#countryInvertCheckbox").prop("disabled") == false && $("#countryInvertCheckbox").is(":checked")) {
+                    countryInvert = "~"
+                }
+                var hostInvert = "";
+                if ($("#hostInvertCheckbox").prop("disabled") == false && $("#hostInvertCheckbox").is(":checked")) {
+                    hostInvert = "~"
+                }
+                var appidInvert = "";
+                if ($("#appidInvertCheckbox").prop("disabled") == false && $("#appidInvertCheckbox").is(":checked")) {
+                    appidInvert = "~"
+                }
+                var netInvert = "";
+                if ($("#netInvertCheckbox").prop("disabled") == false && $("#netInvertCheckbox").is(":checked")) {
+                    netInvert = "~"
+                }
+                var country = $("#countrySelect").val();
+                var province = $("#provinceSelect").val();
+                var city = $("#citySelect").val();
+                var host = $("#hostText").val();
+                var appid = $("#appidText").val();
+                var net = $("#netSelect").val();
+
+
+                $("#validataAddDiv").html(
+                    "rank:" + rank + "<br/>" +
+                    "compel:" + compel + "<br/>" +
+                    "ttl:" + ttl + "<br/>" +
+                    "serverGroup:" + serverGroup + "<br/>" +
+                    "country:" + countryInvert + country + "<br/>" +
+                    "privince:" + province + "<br/>" +
+                    "city:" + city + "<br/>" +
+                    "host:" + hostInvert + host + "<br/>" +
+                    "appid:" + appidInvert + appid + "<br/>" +
+                    "net:" + netInvert + net);
+
+                //显示二次确认的模态对话框
+                $("#myModal").modal({});
+            }
+        }
 
         function submitForm() {
             if (validate_form(document.getElementById("reviseRuleForm"))) {
@@ -21,8 +69,9 @@
                         },
                         success: function (ret) {
                             if (ret.result) {
+                                $("#myModal").modal('hide');
                                 window.alert("操作成功");
-                                window.location.replace("{% url 'ruleSearch' %}");
+
                             } else {
                                 window.alert("操作失败");
                             }
@@ -34,6 +83,7 @@
                 );
             }
         }
+
         //页面加载完成填充默认参数
         $(document).ready(function () {
             for (var r = 1; r <= 7; r++) {
@@ -70,6 +120,7 @@
                 }
             }
         }
+
         function validate_form(thisform) {
             with (thisform) {
                 if (validate_required(groupid, "group必填") == false) {
@@ -142,10 +193,31 @@
 
             </form>
             <button class="button" onclick="window.location.replace('{% url 'ruleSearch' %}')">取消</button>
-            <button class="button" onclick="submitForm()">提交</button>
+            <button class="button" onclick="validateRuleForm()">提交</button>
         </div>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">新增规则信息</h4>
+            </div>
+            <div class="modal-body" id="validataAddDiv">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-success" onclick="submitForm()">确认提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 
 

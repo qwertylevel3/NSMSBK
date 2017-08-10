@@ -8,10 +8,9 @@ apt-get install libapache2-mod-wsgi
 apt-get install python-pip
 
 
-# 安装依赖
-pip freeze > requirement.txt
-pip install -r requirement.txt
-
+pip install Django==1.11.3
+pip install PyMySQL==0.7.11
+pip install pytz==2017.2
 
 # 修改目录权限
 cd ..
