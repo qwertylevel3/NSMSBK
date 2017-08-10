@@ -39,6 +39,7 @@ def logServerGroupNew(request, groupid):
                 serverGroup2Str(serverGroup))
 
 
+
 # 根据服务器组id返回服务器组名称
 def getServerGroupName(serverGroupID):
     allServerGroup = GroupList.objects.filter(id=serverGroupID)

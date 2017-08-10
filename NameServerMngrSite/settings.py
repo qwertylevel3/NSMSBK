@@ -78,23 +78,23 @@ WSGI_APPLICATION = 'NameServerMngrSite.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.mysql',
-#        'NAME': 'ifly_cp_msp_name_server',
-#        'USER': 'cobar',
-#        'PASSWORD': 'test_cobar',
-#        'HOST': '172.16.154.62',
-#        'PORT': '8077'
-#    }
+    #    'default': {
+    #        'ENGINE': 'django.db.backends.mysql',
+    #        'NAME': 'ifly_cp_msp_name_server',
+    #        'USER': 'cobar',
+    #        'PASSWORD': 'test_cobar',
+    #        'HOST': '172.16.154.62',
+    #        'PORT': '8077'
+    #    }
 
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'ifly_cp_msp_name_server',
-            'USER': 'nameserver_web',
-            'PASSWORD': 'nameserver_web_iflytek!',
-            'HOST': '192.168.71.222',
-            'PORT': '7066'
-        }
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ifly_cp_msp_name_server',
+        'USER': 'nameserver_web',
+        'PASSWORD': 'nameserver_web_iflytek!',
+        'HOST': '192.168.71.222',
+        'PORT': '7066'
+    }
 
     #    'default': {
     #        'ENGINE': 'django.db.backends.mysql',
@@ -160,6 +160,9 @@ LOGGING = {
         'sql': {
             'format': '%(levelname)s %(asctime)s %(message)s'
         },
+        'myDebug': {
+            'format': '%(message)s'
+        },
     },
     'handlers': {
         'sql': {
@@ -168,6 +171,12 @@ LOGGING = {
             'filename': BASE_DIR + '/sql.log',
             'formatter': 'sql',
         },
+        'myDebug': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR + '/debug.log',
+            'formatter': 'myDebug',
+        },
     },
     'loggers': {
         'sql': {
@@ -175,6 +184,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
 
+        },
+        'myDebug': {
+            'handlers': ['myDebug'],
+            'level': 'INFO',
+            'propagate': True,
         },
     },
 }

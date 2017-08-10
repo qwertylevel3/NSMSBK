@@ -17,7 +17,6 @@ import logging
 from ruleConfig.ruleCondition import RuleCondition
 
 
-
 # 数据库rule信息转化为字符串，用来log
 def ruleData2Str(ruleData):
     ruleStr = ""
@@ -66,45 +65,91 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
+class QueryBox(object):
+    __instance = None
+
+    def __init__(self):
+        pass
+
+    # 根据国家代码返回国家名称
+    def getCountryName(self,countryID):
+        if len(countryID) > 0:
+            country = self.allCountry.get(code=int(countryID))
+            return country.name
+        return ""
+
+
+    # 根据省份代码返回省份名称
+    def getProvinceName(self,provinceID):
+        if len(provinceID) > 0:
+            province = self.allProvince.get(code=int(provinceID))
+            return province.name
+        return ""
+
+
+    # 根据城市代码返回城市名称
+    def getCityName(self,cityID):
+        if len(cityID) > 0:
+            city = self.allCity.get(code=int(cityID))
+            return city.name
+        return ""
+
+
+    # 根据服务器组id返回服务器组名称
+    def getServerGroupName(self,serverGroupID):
+        allServerGroup = self.allServerGroup.filter(id=serverGroupID)
+        if len(allServerGroup) > 0:
+            return allServerGroup[0].name
+        return serverGroupID
+
+
+    # 根据网络代码返回网络名称
+    def getNetName(self,netCode):
+        if len(netCode) > 0:
+            net = self.allNet.filter(code=netCode)
+            if len(net) > 0:
+                return net[0].name
+        return netCode
+
+
+
+    def __new__(cls, *args, **kwd):
+        if QueryBox.__instance is None:
+            QueryBox.__instance = object.__new__(cls, *args, **kwd)
+            QueryBox.__instance.allCountry=CountryList.objects.all()
+            QueryBox.__instance.allProvince=ProvList.objects.all()
+            QueryBox.__instance.allCity=CityList.objects.all()
+            QueryBox.__instance.allServerGroup=GroupList.objects.all()
+            QueryBox.__instance.allNet=NetList.objects.all()
+        return QueryBox.__instance
+
+
 # 根据国家代码返回国家名称
 def getCountryName(countryID):
-    if len(countryID) > 0:
-        country = CountryList.objects.get(code=int(countryID))
-        return country.name
-    return ""
+    queryBox =QueryBox()
+    return queryBox.getCountryName(countryID)
 
 
 # 根据省份代码返回省份名称
 def getProvinceName(provinceID):
-    if len(provinceID) > 0:
-        province = ProvList.objects.get(code=int(provinceID))
-        return province.name
-    return ""
+    queryBox =QueryBox()
+    return queryBox.getProvinceName(provinceID)
 
 
 # 根据城市代码返回城市名称
 def getCityName(cityID):
-    if len(cityID) > 0:
-        city = CityList.objects.get(code=int(cityID))
-        return city.name
-    return ""
-
+    queryBox =QueryBox()
+    return queryBox.getCityName(cityID)
 
 # 根据服务器组id返回服务器组名称
 def getServerGroupName(serverGroupID):
-    allServerGroup = GroupList.objects.filter(id=serverGroupID)
-    if len(allServerGroup) > 0:
-        return allServerGroup[0].name
-    return serverGroupID
-
+    queryBox =QueryBox()
+    return queryBox.getServerGroupName(serverGroupID)
 
 # 根据网络代码返回网络名称
 def getNetName(netCode):
-    if len(netCode) > 0:
-        net = NetList.objects.filter(code=netCode)
-        if len(net) > 0:
-            return net[0].name
-    return netCode
+    queryBox =QueryBox()
+    return queryBox.getNetName(netCode)
 
 
 # 将数据库数据转换为在search页面显示的数据项
@@ -286,8 +331,8 @@ def ajHandleRuleRevise(request):
     # 拼接为rule字符串用来保存
     conditionStr = condition.convert2Str()
 
-    if conditionStr=="":
-        json_return = {'result': False,'msg':"规则不能为空"}
+    if conditionStr == "":
+        json_return = {'result': False, 'msg': "规则不能为空"}
         return JsonResponse(json_return)
 
     rank = request.POST.get("rank", "")
@@ -345,7 +390,7 @@ def ruleSearch(request):
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
-    allGroup=GroupList.objects.all()
+    allGroup = GroupList.objects.all()
 
     return render(request,
                   "ruleConfig/ruleSearch.html",
@@ -353,13 +398,13 @@ def ruleSearch(request):
                    "allProvince": allProvince,
                    "allCity": allCity,
                    "allNet": allNet,
-                   "allGroup":allGroup
+                   "allGroup": allGroup
                    })
 
 
 # result分页并序列化
 def result2dict(searchResult, page):
-    t4=time.clock()
+    t4 = time.clock()
     searchLen = len(searchResult)
 
     paginator = Paginator(searchResult, 25)
@@ -374,7 +419,10 @@ def result2dict(searchResult, page):
     for rule in result:
         ruleList.append(rule)
 
-    t5=time.clock()
+    t5 = time.clock()
+
+    logger = logging.getLogger("myDebug")
+    logger.info("t5-t4 : [%s]", t5 - t4)
 
     return {
         "searchLen": searchLen,
@@ -447,8 +495,11 @@ def check(rule, condition):
 # ruleList(rule组成的列表)
 @login_required
 def ajRuleSearch(request):
+    queryBox=QueryBox()
+
+    t1 = time.clock()
     page = request.POST.get("page")
-    serverGroup=request.POST.get("serverGroup","")
+    serverGroup = request.POST.get("serverGroup", "")
 
     searchResult = []
 
@@ -459,8 +510,10 @@ def ajRuleSearch(request):
 
     allRules = ServerRuleDat.objects.all()
 
-    print serverGroup
+    t2 = time.clock()
 
+    logger = logging.getLogger("myDebug")
+    logger.info("t2-t1 : [%s]", t2 - t1)
 
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
@@ -468,15 +521,15 @@ def ajRuleSearch(request):
             continue
         if rule.is_use == 1 and showState == "2":
             continue
-        #        if check(rule, conditions):
+        # if check(rule, conditions):
         #            searchResult.append(convert2SearchResult(rule))
-        if serverGroup !="":
-            if rule.group_id!=int(serverGroup):
-                print rule.group_id
+        if serverGroup != "":
+            if rule.group_id != int(serverGroup):
                 continue
         if check(rule, ruleCondition):
             searchResult.append(convert2SearchResult(rule))
+    t3 = time.clock()
 
-
+    logger.info("t3-t2 : [%s]", t3 - t2)
 
     return JsonResponse(result2dict(searchResult, page))
