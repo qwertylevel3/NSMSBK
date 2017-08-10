@@ -67,88 +67,117 @@ def logRuleDelete(request, id):
 
 class QueryBox(object):
     __instance = None
+    countryMap={}
+    provinceMap={}
+    cityMap={}
+    serverGroupMap={}
+    netMap={}
 
     def __init__(self):
         pass
 
     # 根据国家代码返回国家名称
-    def getCountryName(self,countryID):
+    def getCountryName(self, countryID):
         if len(countryID) > 0:
-            country = self.allCountry.get(code=int(countryID))
-            return country.name
+            return self.countryMap[int(countryID)]
         return ""
-
 
     # 根据省份代码返回省份名称
-    def getProvinceName(self,provinceID):
+    def getProvinceName(self, provinceID):
         if len(provinceID) > 0:
-            province = self.allProvince.get(code=int(provinceID))
-            return province.name
+            return self.provinceMap[int(provinceID)]
         return ""
-
 
     # 根据城市代码返回城市名称
-    def getCityName(self,cityID):
+    def getCityName(self, cityID):
         if len(cityID) > 0:
-            city = self.allCity.get(code=int(cityID))
-            return city.name
+            return self.cityMap[int(cityID)]
         return ""
 
-
     # 根据服务器组id返回服务器组名称
-    def getServerGroupName(self,serverGroupID):
-        allServerGroup = self.allServerGroup.filter(id=serverGroupID)
-        if len(allServerGroup) > 0:
-            return allServerGroup[0].name
+    def getServerGroupName(self, serverGroupID):
+        if self.serverGroupMap.has_key(serverGroupID):
+            return self.serverGroupMap[serverGroupID]
         return serverGroupID
 
-
     # 根据网络代码返回网络名称
-    def getNetName(self,netCode):
+    def getNetName(self, netCode):
         if len(netCode) > 0:
-            net = self.allNet.filter(code=netCode)
-            if len(net) > 0:
-                return net[0].name
+            if self.netMap.has_key(netCode):
+                return self.netMap[netCode]
         return netCode
 
+    def initCountry(self):
+        allCountry = CountryList.objects.all()
+        self.countryMap = {}
 
+        for country in allCountry:
+            self.countryMap[country.code] = country.name
+
+    def initProvince(self):
+        allProvince = ProvList.objects.all()
+        self.provinceMap = {}
+        for province in allProvince:
+            self.provinceMap[province.code] = province.name
+
+    def initCity(self):
+        allCity = CityList.objects.all()
+        self.cityMap = {}
+        for city in allCity:
+            self.cityMap[city.code] = city.name
+
+    def initServerGroup(self):
+        allServerGroup = GroupList.objects.all()
+        self.serverGroupMap = {}
+        for serverGroup in allServerGroup:
+            self.serverGroupMap[serverGroup.id] = serverGroup.name
+
+    def initNetMap(self):
+        allNet = NetList.objects.all()
+        self.netMap = {}
+        for net in allNet:
+            self.netMap[net.code] = net.name
+
+    def initMap(self):
+        self.initProvince()
+        self.initCountry()
+        self.initCity()
+        self.initServerGroup()
+        self.initNetMap()
 
     def __new__(cls, *args, **kwd):
         if QueryBox.__instance is None:
             QueryBox.__instance = object.__new__(cls, *args, **kwd)
-            QueryBox.__instance.allCountry=CountryList.objects.all()
-            QueryBox.__instance.allProvince=ProvList.objects.all()
-            QueryBox.__instance.allCity=CityList.objects.all()
-            QueryBox.__instance.allServerGroup=GroupList.objects.all()
-            QueryBox.__instance.allNet=NetList.objects.all()
         return QueryBox.__instance
 
 
 # 根据国家代码返回国家名称
 def getCountryName(countryID):
-    queryBox =QueryBox()
+    queryBox = QueryBox()
     return queryBox.getCountryName(countryID)
 
 
 # 根据省份代码返回省份名称
 def getProvinceName(provinceID):
-    queryBox =QueryBox()
+    queryBox = QueryBox()
     return queryBox.getProvinceName(provinceID)
 
 
 # 根据城市代码返回城市名称
 def getCityName(cityID):
-    queryBox =QueryBox()
+    queryBox = QueryBox()
     return queryBox.getCityName(cityID)
+
 
 # 根据服务器组id返回服务器组名称
 def getServerGroupName(serverGroupID):
-    queryBox =QueryBox()
+    queryBox = QueryBox()
     return queryBox.getServerGroupName(serverGroupID)
+
 
 # 根据网络代码返回网络名称
 def getNetName(netCode):
-    queryBox =QueryBox()
+    queryBox = QueryBox()
     return queryBox.getNetName(netCode)
 
 
@@ -386,6 +415,9 @@ def ajHandleRuleRevise(request):
 # allNet(数据库中所有网络信息，用来优化下拉框)
 @login_required
 def ruleSearch(request):
+    queryBox=QueryBox()
+    queryBox.initMap()
+
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
@@ -404,7 +436,6 @@ def ruleSearch(request):
 
 # result分页并序列化
 def result2dict(searchResult, page):
-    t4 = time.clock()
     searchLen = len(searchResult)
 
     paginator = Paginator(searchResult, 25)
@@ -419,10 +450,7 @@ def result2dict(searchResult, page):
     for rule in result:
         ruleList.append(rule)
 
-    t5 = time.clock()
 
-    logger = logging.getLogger("myDebug")
-    logger.info("t5-t4 : [%s]", t5 - t4)
 
     return {
         "searchLen": searchLen,
@@ -495,9 +523,8 @@ def check(rule, condition):
 # ruleList(rule组成的列表)
 @login_required
 def ajRuleSearch(request):
-    queryBox=QueryBox()
+    queryBox = QueryBox()
 
-    t1 = time.clock()
     page = request.POST.get("page")
     serverGroup = request.POST.get("serverGroup", "")
 
@@ -510,10 +537,7 @@ def ajRuleSearch(request):
 
     allRules = ServerRuleDat.objects.all()
 
-    t2 = time.clock()
 
-    logger = logging.getLogger("myDebug")
-    logger.info("t2-t1 : [%s]", t2 - t1)
 
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
@@ -528,8 +552,6 @@ def ajRuleSearch(request):
                 continue
         if check(rule, ruleCondition):
             searchResult.append(convert2SearchResult(rule))
-    t3 = time.clock()
 
-    logger.info("t3-t2 : [%s]", t3 - t2)
 
     return JsonResponse(result2dict(searchResult, page))
