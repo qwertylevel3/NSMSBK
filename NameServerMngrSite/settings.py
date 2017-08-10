@@ -160,9 +160,6 @@ LOGGING = {
         'sql': {
             'format': '%(levelname)s %(asctime)s %(message)s'
         },
-        'myDebug': {
-            'format': '%(message)s'
-        },
     },
     'handlers': {
         'sql': {
@@ -171,12 +168,6 @@ LOGGING = {
             'filename': BASE_DIR + '/sql.log',
             'formatter': 'sql',
         },
-        'myDebug': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR + '/debug.log',
-            'formatter': 'myDebug',
-        },
     },
     'loggers': {
         'sql': {
@@ -184,11 +175,6 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
 
-        },
-        'myDebug': {
-            'handlers': ['myDebug'],
-            'level': 'INFO',
-            'propagate': True,
         },
     },
 }

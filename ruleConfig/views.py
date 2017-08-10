@@ -65,13 +65,15 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
+# 数据库查询缓存
+# 保存一些经常查询的东西，用于页面加速
 class QueryBox(object):
     __instance = None
-    countryMap={}
-    provinceMap={}
-    cityMap={}
-    serverGroupMap={}
-    netMap={}
+    countryMap = {}
+    provinceMap = {}
+    cityMap = {}
+    serverGroupMap = {}
+    netMap = {}
 
     def __init__(self):
         pass
@@ -103,8 +105,8 @@ class QueryBox(object):
     # 根据网络代码返回网络名称
     def getNetName(self, netCode):
         if len(netCode) > 0:
-            if self.netMap.has_key(netCode):
-                return self.netMap[netCode]
+            if self.netMap.has_key(int(netCode)):
+                return self.netMap[int(netCode)]
         return netCode
 
     def initCountry(self):
@@ -415,7 +417,8 @@ def ajHandleRuleRevise(request):
 # allNet(数据库中所有网络信息，用来优化下拉框)
 @login_required
 def ruleSearch(request):
-    queryBox=QueryBox()
+    # 每次刷新页面的时候重置一下缓存
+    queryBox = QueryBox()
     queryBox.initMap()
 
     allCountry = CountryList.objects.all()
@@ -449,8 +452,6 @@ def result2dict(searchResult, page):
     ruleList = []
     for rule in result:
         ruleList.append(rule)
-
-
 
     return {
         "searchLen": searchLen,
@@ -537,8 +538,6 @@ def ajRuleSearch(request):
 
     allRules = ServerRuleDat.objects.all()
 
-
-
     # 对于所有符合condition的rule添加到result列表中
     for rule in allRules:
         if rule.is_use == 0 and showState == "1":
@@ -552,6 +551,5 @@ def ajRuleSearch(request):
                 continue
         if check(rule, ruleCondition):
             searchResult.append(convert2SearchResult(rule))
-
 
     return JsonResponse(result2dict(searchResult, page))
