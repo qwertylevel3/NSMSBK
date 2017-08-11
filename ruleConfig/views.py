@@ -153,61 +153,32 @@ class QueryBox(object):
         return QueryBox.__instance
 
 
-# 根据国家代码返回国家名称
-def getCountryName(countryID):
-    queryBox = QueryBox()
-    return queryBox.getCountryName(countryID)
-
-
-# 根据省份代码返回省份名称
-def getProvinceName(provinceID):
-    queryBox = QueryBox()
-    return queryBox.getProvinceName(provinceID)
-
-
-# 根据城市代码返回城市名称
-def getCityName(cityID):
-    queryBox = QueryBox()
-    return queryBox.getCityName(cityID)
-
-
-# 根据服务器组id返回服务器组名称
-def getServerGroupName(serverGroupID):
-    queryBox = QueryBox()
-    return queryBox.getServerGroupName(serverGroupID)
-
-
-# 根据网络代码返回网络名称
-def getNetName(netCode):
-    queryBox = QueryBox()
-    return queryBox.getNetName(netCode)
-
-
 # 将数据库数据转换为在search页面显示的数据项
 def convert2SearchResult(rawResultData):
+    queryBox = QueryBox()
     resultData = {}
     ruleCondition = RuleCondition(rawResultData.rule)
 
     resultData["id"] = rawResultData.id
-    resultData["group_id"] = getServerGroupName(rawResultData.group_id)
+    resultData["group_id"] = queryBox.getServerGroupName(rawResultData.group_id)
     resultData["rank"] = rawResultData.rank
     resultData["ttl"] = rawResultData.ttl
     resultData["compel"] = rawResultData.compel
 
     if ruleCondition.countryInvert == 1:
-        resultData["country"] = "~" + getCountryName(ruleCondition.country)
+        resultData["country"] = "~" + queryBox.getCountryName(ruleCondition.country)
     else:
-        resultData["country"] = getCountryName(ruleCondition.country)
+        resultData["country"] = queryBox.getCountryName(ruleCondition.country)
 
     if ruleCondition.provinceInvert == 1:
-        resultData["province"] = "~" + getProvinceName(ruleCondition.province)
+        resultData["province"] = "~" + queryBox.getProvinceName(ruleCondition.province)
     else:
-        resultData["province"] = getProvinceName(ruleCondition.province)
+        resultData["province"] = queryBox.getProvinceName(ruleCondition.province)
 
     if ruleCondition.cityInvert == 1:
-        resultData["city"] = "~" + getCityName(ruleCondition.city)
+        resultData["city"] = "~" + queryBox.getCityName(ruleCondition.city)
     else:
-        resultData["city"] = getCityName(ruleCondition.city)
+        resultData["city"] = queryBox.getCityName(ruleCondition.city)
 
     if ruleCondition.hostInvert == 1:
         resultData["host"] = "~" + ruleCondition.host
@@ -220,9 +191,9 @@ def convert2SearchResult(rawResultData):
         resultData["appid"] = ruleCondition.appid
 
     if ruleCondition.netInvert == 1:
-        resultData["net"] = "~" + getNetName(ruleCondition.net)
+        resultData["net"] = "~" + queryBox.getNetName(ruleCondition.net)
     else:
-        resultData["net"] = getNetName(ruleCondition.net)
+        resultData["net"] = queryBox.getNetName(ruleCondition.net)
 
     resultData["is_use"] = rawResultData.is_use
 
@@ -289,6 +260,7 @@ class GroupData:
 # allGroup(数据库中所有服务器组信息，用来优化下拉框)
 @login_required
 def ruleRevise(request):
+    queryBox=QueryBox()
     id = request.GET.get("id", "-1")
 
     condition = RuleCondition()
@@ -313,7 +285,7 @@ def ruleRevise(request):
         if group.group_id not in allGroupid:
             groupData = GroupData()
             groupData.groupid = group.group_id
-            groupData.groupidName = getServerGroupName(group.group_id)
+            groupData.groupidName = queryBox.getServerGroupName(group.group_id)
             allGroupid.append(group.group_id)
             allGroupData.append(groupData)
 
