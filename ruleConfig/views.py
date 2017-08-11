@@ -65,6 +65,8 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
+
+
 # 数据库查询缓存
 # 保存一些经常查询的东西，用于页面加速
 class QueryBox(object):
@@ -260,7 +262,10 @@ class GroupData:
 # allGroup(数据库中所有服务器组信息，用来优化下拉框)
 @login_required
 def ruleRevise(request):
+    #页面加载刷新缓存
     queryBox=QueryBox()
+    queryBox.initMap()
+
     id = request.GET.get("id", "-1")
 
     condition = RuleCondition()
