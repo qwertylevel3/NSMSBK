@@ -14,7 +14,6 @@
             submitSearchForm();
         }
 
-
         //提交搜索表单
         function submitSearchForm() {
             //先把之前查询的结果表格清空
@@ -31,13 +30,13 @@
                 type: 'POST',
                 url: "{% url 'ajRuleSearch' %}",
                 data: $("#ruleSearchForm").serialize(),
-                beforeSend:function () {
-                    $("#searchButton").attr("disabled",true);
+                beforeSend: function () {
+                    $("#searchButton").attr("disabled", true);
                 },
                 success: function (ret) {
                     var searchResultTable = document.getElementById("searchResultTable");
 
-                    var tbody=document.createElement("tbody");
+                    var tbody = document.createElement("tbody");
                     searchResultTable.appendChild(tbody);
 
                     var count = 1;
@@ -113,8 +112,8 @@
                     searchLenH2.innerHTML = "搜素结果(共" + (ret.searchLen) + "条)";
 
                 },
-                complete:function () {
-                    $("#searchButton").attr("disabled",false);
+                complete: function () {
+                    $("#searchButton").attr("disabled", false);
                 }
             });
         }
@@ -124,6 +123,7 @@
             $("#pageText").val(parseInt(curPage) + 1);
             submitSearchForm();
         }
+
         function previousPage() {
             var curPage = $("#pageText").val();
             $("#pageText").val(parseInt(curPage) - 1);
@@ -153,6 +153,7 @@
                 }
             )
         }
+
         function reuseRule(id) {
             $.post(
                 "{% url 'ajRuleReuse' %}",
@@ -164,10 +165,92 @@
                 }
             )
         }
-        //页面加载完成自动搜索一下
+
         $(document).ready(function () {
+            //bootstrap 插件
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
+            $("#countryInvertCheckbox").attr("disabled", true)
+
+            //国家下拉框更改的时候填充省份下拉框
+            $("#countrySelect").change(function () {
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceSelect").append("<option value='' selected>省份</option>");
+                $("#citySelect").append("<option value='' selected>城市</option>");
+
+                {% for province in allProvince %}
+
+                    var curCountryCode = $("#countrySelect").val();
+                    var tempCode = {{ province.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+
+                    if (curCountryCode == tempCode) {
+                        $("#provinceSelect").append(
+                            $('<option>', {value:{{province.code}}}).text("{{ province.name }}")
+                        );
+
+
+                    };
+                {% endfor %}
+
+                if ($("#countrySelect").val() != "") {
+                    $("#countryInvertCheckbox").attr("disabled", false);
+                } else {
+                    $("#countryInvertCheckbox").attr("disabled", true);
+                }
+
+            });
+
+            //省份下拉框修改的时候填充城市下拉框
+            $("#provinceSelect").change(function () {
+                $("#citySelect").empty();
+                $("#citySelect").append("<option value='' selected>城市</option>")
+                {% for city in allCity %}
+
+                    var curProvinceCode = $("#provinceSelect").val();
+                    var tempCode = {{ city.code }}/100;
+                    tempCode = parseInt(tempCode);
+
+                    if (curProvinceCode == tempCode) {
+                        $("#citySelect").append($('<option>', {value:{{city.code}}}).text("{{ city.name }}"));
+                    };
+
+                {% endfor %}
+            });
+
+            //页面加载完成自动搜索一下
             submitSearchForm();
         });
+
+        //国家反选checkbox触发事件
+        function countryInvertCheck() {
+            if ($("#countryInvertCheckbox").is(":checked")) {
+                //如果国家反选选中
+                //隐藏省份和城市下拉框
+                $("#provinceSelect").empty();
+                $("#citySelect").empty();
+
+                $("#provinceTh").hide();
+                $("#cityTh").hide();
+                $("#provinceTd0").hide();
+                $("#cityTd0").hide();
+                $("#provinceTd1").hide();
+                $("#cityTd1").hide();
+            } else {
+                $("#provinceTh").show();
+                $("#cityTh").show();
+                $("#provinceTd0").show();
+                $("#cityTd0").show();
+                $("#provinceTd1").show();
+                $("#cityTd1").show();
+
+                $("#countrySelect").change();
+            }
+        }
     </script>
 
 </head>
@@ -186,7 +269,97 @@
     <div class="row">
         <div class="col-md-12">
             <form id="ruleSearchForm">
-                {% include "ruleConfig/__searchCondition.html" %}
+
+                <div class="conditionTableDiv">
+
+                    <table class="result-table" border="1">
+                        <thead>
+                        <th></th>
+                        <th>国家</th>
+                        <th id="provinceTh">省份</th>
+                        <th id="cityTh">城市</th>
+                        <th>host</th>
+                        <th>appid</th>
+                        <th>net</th>
+                        <th>服务器组</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>条件</td>
+                            <td>
+                                <select name="country" id="countrySelect">
+                                    <option value="" selected>国家</option>
+                                    {% for country in allCountry %}
+                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td id="provinceTd0">
+                                <select name="province" id="provinceSelect">
+                                    <option value="" selected>省份</option>
+                                </select>
+                            </td>
+                            <td id="cityTd0">
+                                <select name="city" id="citySelect">
+                                    <option value="" selected>城市</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" name="host" id="hostText"/>
+                            </td>
+                            <td>
+                                <input type="text" name="appid" id="appidText"/>
+                            </td>
+                            <td>
+                                <select name="net" id="netSelect">
+                                    <option value="" selected>网络</option>
+                                    {% for net in allNet %}
+                                        <option value="{{ net.code }}">{{ net.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <select name="serverGroup" id="serverGroupSelect">
+                                    <option value="" selected>服务器组</option>
+                                    {% for group in allGroup %}
+                                        <option value="{{ group.id }}">{{ group.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr data-toggle="tooltip" data-placement="bottom" data-container="tr" title="非常规取反">
+
+                            <td>取反</td>
+                            <td>
+                                <input type="checkbox" name="countryInvert" onclick="countryInvertCheck()"
+                                       id="countryInvertCheckbox"
+                                       class="checkbox"/>
+                            </td>
+                            <td id="provinceTd1">
+                                <input type="checkbox" name="provinceInvert" id="provinceInvertCheckbox"
+                                       class="checkbox"
+                                       disabled="true"/>
+                            </td>
+                            <td id="cityTd1">
+                                <input type="checkbox" name="cityInvert" id="cityInvertCheckbox" class="checkbox"
+                                       disabled="true"/>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="hostInvert" id="hostInvertCheckbox" class="checkbox"/>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="appidInvert" id="appidInvertCheckbox" class="checkbox"/>
+                            </td>
+                            <td>
+                                <input type="checkbox" name="netInvert" id="netInvertCheckbox" class="checkbox"/>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="radioDiv">
                     <label><input type="radio" name="showState" id="showAll" value="0" checked>搜索全部</label>
                     <label><input type="radio" name="showState" id="showIsUsed" value="1"/>仅搜索已启用</label>
@@ -201,7 +374,7 @@
         <div class="col-md-6">
         </div>
         <div class="col-md-3">
-            <form action="{% url 'ruleRevise' %}" method="get">
+            <form action="{% url 'ruleAdd' %}" method="get">
                 <input type="text" name="id" value="-1" hidden>
                 <input type="submit" class="button" value="新增"/>
             </form>

@@ -245,11 +245,56 @@ class GroupData:
     groupid = ""
     groupidName = ""
 
+# 显示新增rule页面
+#
+# get:
+#
+# ret:
+# condition(ruleCondition的默认参数)
+# id(同上)
+# allRule(数据库中所有rule数据)
+# allCountry(数据库中所有国家信息，用来优化下拉框)
+# allProvince(数据库中所有省份信息，用来优化下拉框)
+# allCity(数据库中所有城市信息，用来优化下拉框)
+# allNet(数据库中所有网络信息，用来优化下拉框)
+# allGroup(数据库中所有服务器组信息，用来优化下拉框)
+def ruleAdd(request):
+    #页面加载刷新缓存
+    queryBox=QueryBox()
+    queryBox.initMap()
+
+    id = -1
+
+    allCountry = CountryList.objects.all()
+    allProvince = ProvList.objects.all()
+    allCity = CityList.objects.all()
+    allNet = NetList.objects.all()
+    allGroup = ServerGroupDat.objects.all()
+
+    allGroupid = []
+    allGroupData = []
+    for group in allGroup:
+        if group.group_id not in allGroupid:
+            groupData = GroupData()
+            groupData.groupid = group.group_id
+            groupData.groupidName = queryBox.getServerGroupName(group.group_id)
+            allGroupid.append(group.group_id)
+            allGroupData.append(groupData)
+
+    return render(request, "ruleConfig/ruleAdd.html",
+                  {
+                      "id": id,
+                      "allCountry": allCountry,
+                      "allProvince": allProvince,
+                      "allCity": allCity,
+                      "allNet": allNet,
+                      "allGroup": allGroupData
+                  })
 
 # 显示修改rule页面
 #
 # get:
-# id(-1为新增，否则为修改操作)
+# id(要修改的rule的id)
 #
 # ret:
 # condition(ruleCondition的默认参数)
@@ -283,6 +328,7 @@ def ruleRevise(request):
     allNet = NetList.objects.all()
     allRule = ServerRuleDat.objects.all()
     allGroup = ServerGroupDat.objects.all()
+
 
     allGroupid = []
     allGroupData = []

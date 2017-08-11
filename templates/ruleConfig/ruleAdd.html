@@ -122,7 +122,7 @@
                             if (ret.result) {
                                 $("#myModal").modal('hide');
                                 window.alert("操作成功");
-                                window.location.replace("{% url 'ruleSearch' %}");
+
                             } else {
                                 window.alert("操作失败");
                             }
@@ -230,55 +230,8 @@
                     };
 
                 {% endfor %}
-            })
+            });
 
-            //设置默认参数
-            {% for rule in allRule %}
-                if ({{ rule.id }}=={{ id }}) {
-                    $("#rankSelect").val({{ rule.rank }});
-
-                    if ({{ rule.compel }}=={{ 1 }}) {
-                        $("#compelCheckbox").attr("checked", true);
-                    }
-
-                    $("#ttlText").val({{ rule.ttl }});
-                    $("#groupidSelect").val({{ rule.group_id }});
-
-
-                    $("#countrySelect").find("option[value='{{ condition.country }}']").attr("selected", true);
-                    $("#countrySelect").change()
-
-                    $("#provinceSelect").find("option[value='{{ condition.province }}']").attr("selected", true);
-                    $("#provinceSelect").change()
-
-                    $("#citySelect").find("option[value='{{ condition.city }}']").attr("selected", true);
-
-                    $("#hostText").val("{{ condition.host }}");
-                    $("#appidText").val({{ condition.appid }});
-                    $("#netSelect").val({{ condition.net }});
-
-
-                    if ({{ condition.countryInvert }}=={{ 1 }}) {
-                        $("#countryInvertCheckbox").attr("checked", true)
-                    }
-                    if ({{ condition.provinceInvert }}=={{ 1 }}) {
-                        $("#provinceInvertCheckbox").attr("checked", true)
-                    }
-                    if ({{ condition.cityInvert }}=={{ 1 }}) {
-                        $("#cityInvertCheckbox").attr("checked", true)
-                    }
-                    if ({{ condition.hostInvert }}=={{ 1 }}) {
-                        $("#hostInvertCheckbox").attr("checked", true)
-                    }
-                    if ({{ condition.appidInvert }}=={{ 1 }}) {
-                        $("#appidInvertCheckbox").attr("checked", true)
-                    }
-                    if ({{ condition.netInvert }}=={{ 1 }}) {
-                        $("#netInvertCheckbox").attr("checked", true)
-                    }
-
-                }
-            {% endfor %}
         });
 
         function countryInvertCheck() {
