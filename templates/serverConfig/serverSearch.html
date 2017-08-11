@@ -209,6 +209,7 @@
                 checkbox.checked = true;
             })
         }
+
     </script>
 
 </head>
@@ -228,7 +229,32 @@
     <div class="row">
         <div class="col-md-12">
             <form id="serverSearchForm" action="{% url 'serverSearch' %}" method="post">
-                {% include "serverConfig/__serverConfigTable.html" %}
+
+
+                <table class="result-table" border="1">
+                    <thead>
+                    <th>ip</th>
+                    <th>port</th>
+                    <th>idc</th>
+                    <th>sign</th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>
+                            <input type="text" name="ip" id="ipText"/>
+                        </td>
+                        <td>
+                            <input type="text" name="port" id="portText"/>
+                        </td>
+                        <td>
+                            <input type="text" name="idc" id="idcText"/>
+                        </td>
+                        <td>
+                            <input type="text" name="sign" id="signText"/>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </form>
         </div>
     </div>

@@ -45,6 +45,7 @@
                 }
             }
         }
+
         function validate_form() {
             if (validate_required($("#ipText"), "ip must be filled out!") == false) {
                 $("#ipText").focus();
@@ -56,6 +57,15 @@
             }
             return true;
         }
+
+
+        //填充默认参数
+        $(document).ready(function () {
+            $("#ipText").val("{{ server.ip }}");
+            $("#portText").val("{{ server.port }}");
+            $("#idcText").val("{{ server.idc }}");
+            $("#signText").val("{{ server.sign }}");
+        });
     </script>
 </head>
 <body>
@@ -69,7 +79,34 @@
     <div class="row">
         <div class="col-md-12">
             <input type="text" name="id" value="{{ id }}" readonly hidden>
-            {% include "serverConfig/__serverConfigTable.html" %}
+
+
+            <table class="result-table" border="1">
+                <thead>
+                <th>ip</th>
+                <th>port</th>
+                <th>idc</th>
+                <th>sign</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="text" name="ip" id="ipText"/>
+                    </td>
+                    <td>
+                        <input type="text" name="port" id="portText"/>
+                    </td>
+                    <td>
+                        <input type="text" name="idc" id="idcText"/>
+                    </td>
+                    <td>
+                        <input type="text" name="sign" id="signText"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
             <button class="button" onclick="window.location.replace('{% url 'serverSearch' %}')">取消</button>
             <button id="submitButton" onclick="submitServerForm()" class="button">提交</button>
         </div>

@@ -118,20 +118,18 @@ def validateServer(ip, port):
     return True
 
 
-
-
 @login_required
 def ajValidateServer(request):
-    ip=request.POST.get("ip",-1)
-    port=request.POST.get("port",-1)
+    ip = request.POST.get("ip", -1)
+    port = request.POST.get("port", -1)
 
-    if validateServer(ip,port):
-        json_return={
-            "result":True
+    if validateServer(ip, port):
+        json_return = {
+            "result": True
         }
         return JsonResponse(json_return)
-    json_return={
-        "result":False
+    json_return = {
+        "result": False
     }
     return JsonResponse(json_return)
 
@@ -158,7 +156,6 @@ def ajHandleServerRevise(request):
 
     updateTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     registrationTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-
 
     # 更改
     # 首先检查是否更改了ip和port
@@ -220,7 +217,7 @@ def ajHandleServerAdd(request):
 # 显示更改服务器信息主界面
 #
 # get:
-# id(需要处理的服务器id，-1为新增，主要用来页面设置默认参数)
+# id(需要处理的服务器id，主要用来页面设置默认参数)
 #
 # ret:
 # id(同上)
@@ -229,9 +226,15 @@ def ajHandleServerAdd(request):
 def serverRevise(request):
     id = request.GET.get("id", "-1")
 
+    # TODO 错误处理
+    if id == "-1":
+        return
+
+    server = ServerList.objects.get(id=id)
+
     return render(request, 'serverConfig/serverRevise.html',
                   {"id": id,
-                   "allServer": ServerList.objects.all()
+                   "server": server
                    })
 
 
