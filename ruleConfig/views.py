@@ -65,8 +65,6 @@ def logRuleDelete(request, id):
                 ruleData2Str(rule))
 
 
-
-
 # 数据库查询缓存
 # 保存一些经常查询的东西，用于页面加速
 class QueryBox(object):
@@ -245,6 +243,7 @@ class GroupData:
     groupid = ""
     groupidName = ""
 
+
 # 显示新增rule页面
 #
 # get:
@@ -259,8 +258,8 @@ class GroupData:
 # allNet(数据库中所有网络信息，用来优化下拉框)
 # allGroup(数据库中所有服务器组信息，用来优化下拉框)
 def ruleAdd(request):
-    #页面加载刷新缓存
-    queryBox=QueryBox()
+    # 页面加载刷新缓存
+    queryBox = QueryBox()
     queryBox.initMap()
 
     id = -1
@@ -291,6 +290,7 @@ def ruleAdd(request):
                       "allGroup": allGroupData
                   })
 
+
 # 显示修改rule页面
 #
 # get:
@@ -307,28 +307,26 @@ def ruleAdd(request):
 # allGroup(数据库中所有服务器组信息，用来优化下拉框)
 @login_required
 def ruleRevise(request):
-    #页面加载刷新缓存
-    queryBox=QueryBox()
+    # 页面加载刷新缓存
+    queryBox = QueryBox()
     queryBox.initMap()
 
     id = request.GET.get("id", "-1")
 
     condition = RuleCondition()
 
-    # -1代表新增
     if id == "-1":
-        id = -1
-    else:
-        rule = ServerRuleDat.objects.get(id=id)
-        condition.initByStr(rule.rule)
+        # TODO 错误处理
+        return
+
+    rule = ServerRuleDat.objects.get(id=id)
+    condition.initByStr(rule.rule)
 
     allCountry = CountryList.objects.all()
     allProvince = ProvList.objects.all()
     allCity = CityList.objects.all()
     allNet = NetList.objects.all()
-    allRule = ServerRuleDat.objects.all()
     allGroup = ServerGroupDat.objects.all()
-
 
     allGroupid = []
     allGroupData = []
@@ -344,7 +342,7 @@ def ruleRevise(request):
                   {
                       "condition": condition,
                       "id": id,
-                      "allRule": allRule,
+                      "rule":rule,
                       "allCountry": allCountry,
                       "allProvince": allProvince,
                       "allCity": allCity,
