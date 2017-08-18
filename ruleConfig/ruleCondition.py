@@ -46,15 +46,15 @@ class RuleCondition:
         elif self.province != "":
             self.country = self.province[0:3]
 
-        self.host=self.host.strip()
-        self.appid=self.appid.strip()
+        self.host = self.host.strip()
+        self.appid = self.appid.strip()
 
     # 用一个rule字符设置内部数据,并自动填充空的country和province数据
     def initByStr(self, ruleStr):
         conditionStrList = ruleStr.split("&")
 
         for conditionStr in conditionStrList:
-            if conditionStr.find("=")!=-1:
+            if conditionStr.find("=") != -1:
                 conditionStr = conditionStr.split("=")
                 if conditionStr[0] == "country":
                     self.country = conditionStr[1]
@@ -74,7 +74,7 @@ class RuleCondition:
                 if conditionStr[0] == "net":
                     self.net = conditionStr[1]
                     self.netInvert = 0
-            elif conditionStr.find("~")!=-1:
+            elif conditionStr.find("~") != -1:
                 conditionStr = conditionStr.split("~")
                 if conditionStr[0] == "country":
                     self.country = conditionStr[1]
@@ -101,8 +101,8 @@ class RuleCondition:
         elif self.province != "":
             self.country = self.province[0:3]
 
-        self.host=self.host.strip()
-        self.appid=self.appid.strip()
+        self.host = self.host.strip()
+        self.appid = self.appid.strip()
 
     # 转换为rule字符串
     def convert2Str(self):
@@ -112,14 +112,18 @@ class RuleCondition:
             ruleStr = ("&country=" + self.country)
         elif self.country != "" and self.countryInvert == 1:
             ruleStr = ("&country~" + self.country)
-        if self.province != "" and self.provinceInvert == 0:
-            ruleStr = ("&province=" + self.province)
-        elif self.province != "" and self.provinceInvert == 1:
-            ruleStr = ("&province~" + self.province)
-        if self.city != "" and self.cityInvert == 0:
-            ruleStr = ("&city=" + self.city)
-        elif self.city != "" and self.cityInvert == 1:
-            ruleStr = ("&city~" + self.city)
+
+        # 如果国家取反(==1)，无视城市和省份条件
+        if self.countryInvert == 0:
+            if self.province != "" and self.provinceInvert == 0:
+                ruleStr = ("&province=" + self.province)
+            elif self.province != "" and self.provinceInvert == 1:
+                ruleStr = ("&province~" + self.province)
+
+            if self.city != "" and self.cityInvert == 0:
+                ruleStr = ("&city=" + self.city)
+            elif self.city != "" and self.cityInvert == 1:
+                ruleStr = ("&city~" + self.city)
 
         if ruleStr == "&":
             ruleStr = ""

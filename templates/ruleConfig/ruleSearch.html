@@ -206,7 +206,7 @@
 
 
             var provData = []
-            provData.push({"code": "", "name": "省份"});
+            provData.push({"value": "", "name": "省份"});
 
             {% for province in allProvince %}
 
@@ -216,7 +216,7 @@
 
 
                 if (curCountryCode == tempCode) {
-                    var tempProv = {"code": "{{ province.code }}", "name": "{{ province.name }}"};
+                    var tempProv = {"value": "{{ province.code }}", "name": "{{ province.name }}"};
                     provData.push(tempProv);
                 };
             {% endfor %}
@@ -235,7 +235,7 @@
             $("#citySelect").combobox('clear');
 
             var cityData = [];
-            cityData.push({"code": "", "name": "城市"});
+            cityData.push({"value": "", "name": "城市"});
             {% for city in allCity %}
 
                 var curProvinceCode = record;
@@ -243,7 +243,7 @@
                 tempCode = parseInt(tempCode);
 
                 if (curProvinceCode == tempCode) {
-                    var tempCity = {"code": "{{ city.code }}", "name": "{{ city.name }}"};
+                    var tempCity = {"value": "{{ city.code }}", "name": "{{ city.name }}"};
                     cityData.push(tempCity);
                 };
 
@@ -348,13 +348,13 @@
                             </td>
                             <td id="provinceTd0">
                                 <select class="easyui-combobox" name="province" id="provinceSelect"
-                                        data-options="valueField:'code',textField:'name',width:100,panelWidth: 100">
+                                        data-options="valueField:'value',textField:'name',width:100,panelWidth: 100">
                                     <option value="" selected>省份</option>
                                 </select>
                             </td>
                             <td id="cityTd0">
                                 <select class="easyui-combobox" name="city" id="citySelect"
-                                        data-options="valueField:'code',textField:'name',width:100,panelWidth: 150">
+                                        data-options="valueField:'value',textField:'name',width:100,panelWidth: 150">
                                     <option value="" selected>城市</option>
                                 </select>
                             </td>
