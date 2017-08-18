@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'ajHandleRuleRevise/', ruleConfigViews.ajHandleRuleRevise, name="ajHandleRuleRevise"),
     url(r'ajRuleReuse/', ruleConfigViews.ajRuleReuse, name="ajRuleReuse"),
     url(r'ajRuleSearch/', ruleConfigViews.ajRuleSearch, name="ajRuleSearch"),
+    url(r'ajGetProvince/',ruleConfigViews.ajGetProvince,name="ajGetProvince"),
 
     url(r'serverSearch/', serverConfigViews.serverSearch, name="serverSearch"),
     url(r'serverRevise/', serverConfigViews.serverRevise, name="serverRevise"),

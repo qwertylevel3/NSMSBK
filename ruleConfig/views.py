@@ -342,7 +342,7 @@ def ruleRevise(request):
                   {
                       "condition": condition,
                       "id": id,
-                      "rule":rule,
+                      "rule": rule,
                       "allCountry": allCountry,
                       "allProvince": allProvince,
                       "allCity": allCity,
@@ -502,13 +502,13 @@ def check(rule, condition):
     if condition.host != "":
         if tc.host != condition.host or tc.hostInvert != condition.hostInvert:
             return False
-    # condition中有city
-    if condition.city != "":
+    # condition中有city,如果国家取反，则无视city条件
+    if condition.city != "" and condition.countryInvert == 0:
         if tc.city != condition.city or tc.cityInvert != condition.cityInvert:
             return False
 
     # condition中有province
-    if condition.province != "":
+    if condition.province != "" and condition.countryInvert == 0:
         if tc.province != condition.province or tc.provinceInvert != condition.provinceInvert:
             return False
 
@@ -545,8 +545,6 @@ def check(rule, condition):
 # ruleList(rule组成的列表)
 @login_required
 def ajRuleSearch(request):
-    queryBox = QueryBox()
-
     page = request.POST.get("page")
     serverGroup = request.POST.get("serverGroup", "")
 
@@ -565,8 +563,6 @@ def ajRuleSearch(request):
             continue
         if rule.is_use == 1 and showState == "2":
             continue
-        # if check(rule, conditions):
-        #            searchResult.append(convert2SearchResult(rule))
         if serverGroup != "":
             if rule.group_id != int(serverGroup):
                 continue
@@ -574,3 +570,25 @@ def ajRuleSearch(request):
             searchResult.append(convert2SearchResult(rule))
 
     return JsonResponse(result2dict(searchResult, page))
+
+
+def ajGetProvince(request):
+    countryCode = request.GET.get("country")
+
+    selectedProv = []
+
+    allProv = ProvList.objects.all()
+
+    for prov in allProv:
+        tempCode = prov.code / 100
+        if tempCode == countryCode:
+            selectedProv.append(prov)
+
+    result = []
+
+    for prov in selectedProv:
+        result.append({
+            "code": prov.code,
+            "name": prov.name
+        })
+    return JsonResponse(result)

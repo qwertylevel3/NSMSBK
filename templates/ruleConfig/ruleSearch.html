@@ -6,7 +6,41 @@
 
     {% include "__staticFiles.html" %}
 
+
+    {% load  static %}
+    <link rel="stylesheet" type="text/css" href="{% static "themes/default/easyui.css" %}"/>
+    {% load  static %}
+    <link rel="stylesheet" type="text/css" href="{% static "themes/icon.css" %}"/>
+    {% load  static %}
+    <script src="{% static "js/jquery.easyui.min.js" %}"></script>
+
+
     <script>
+
+        var GLOBAL = {};
+
+        function initQueryMap() {
+            GLOBAL.countryMap = new Map();
+            GLOBAL.countryMap[""] = "";
+            GLOBAL.provinceMap = new Map();
+            GLOBAL.provinceMap[""] = "";
+            GLOBAL.cityMap = new Map();
+            GLOBAL.cityMap[""] = "";
+
+            {% for country in allCountry %}
+                GLOBAL.countryMap.set("{{ country.code }}", "{{ country.name }}");
+            {% endfor %}
+
+            {% for province in allProvince %}
+                GLOBAL.provinceMap.set("{{ province.code }}", "{{ province.name }}");
+            {% endfor %}
+
+            {% for city in allCity %}
+                GLOBAL.cityMap.set("{{ city.code }}", "{{ city.name }}");
+            {% endfor %}
+
+        }
+
         //搜索按钮调用
         //重置需要接受的page，然后提交表单
         function search() {
@@ -166,60 +200,78 @@
             )
         }
 
+        function countrySelect(record) {
+            $("#provinceSelect").combobox('clear');
+            $("#citySelect").combobox('clear');
+
+
+            var provData = []
+            provData.push({"code": "", "name": "省份"});
+
+            {% for province in allProvince %}
+
+                var curCountryCode = record;
+                var tempCode = {{ province.code }}/100;
+                tempCode = parseInt(tempCode);
+
+
+                if (curCountryCode == tempCode) {
+                    var tempProv = {"code": "{{ province.code }}", "name": "{{ province.name }}"};
+                    provData.push(tempProv);
+                };
+            {% endfor %}
+
+            if (record != "") {
+                $("#countryInvertCheckbox").attr("disabled", false);
+            } else {
+                $("#countryInvertCheckbox").attr("disabled", true);
+            }
+
+            $("#provinceSelect").combobox('loadData', provData);
+            $("#provinceSelect").combobox('select', '');
+        }
+
+        function provinceSelect(record) {
+            $("#citySelect").combobox('clear');
+
+            var cityData = [];
+            cityData.push({"code": "", "name": "城市"});
+            {% for city in allCity %}
+
+                var curProvinceCode = record;
+                var tempCode = {{ city.code }}/100;
+                tempCode = parseInt(tempCode);
+
+                if (curProvinceCode == tempCode) {
+                    var tempCity = {"code": "{{ city.code }}", "name": "{{ city.name }}"};
+                    cityData.push(tempCity);
+                };
+
+            {% endfor %}
+            $("#citySelect").combobox('loadData', cityData);
+            $("#citySelect").combobox('select', '')
+        }
+
         $(document).ready(function () {
+            initQueryMap();
             //bootstrap 插件
             $(function () {
                 $('[data-toggle="tooltip"]').tooltip()
             });
             $("#countryInvertCheckbox").attr("disabled", true)
 
-            //国家下拉框更改的时候填充省份下拉框
-            $("#countrySelect").change(function () {
-                $("#provinceSelect").empty();
-                $("#citySelect").empty();
 
-                $("#provinceSelect").append("<option value='' selected>省份</option>");
-                $("#citySelect").append("<option value='' selected>城市</option>");
+            $("#countrySelect").combobox({
 
-                {% for province in allProvince %}
-
-                    var curCountryCode = $("#countrySelect").val();
-                    var tempCode = {{ province.code }}/100;
-                    tempCode = parseInt(tempCode);
-
-
-                    if (curCountryCode == tempCode) {
-                        $("#provinceSelect").append(
-                            $('<option>', {value:{{province.code}}}).text("{{ province.name }}")
-                        );
-
-
-                    };
-                {% endfor %}
-
-                if ($("#countrySelect").val() != "") {
-                    $("#countryInvertCheckbox").attr("disabled", false);
-                } else {
-                    $("#countryInvertCheckbox").attr("disabled", true);
+                onChange: function (record, oldrecord) {
+                    countrySelect(record);
                 }
-
             });
 
-            //省份下拉框修改的时候填充城市下拉框
-            $("#provinceSelect").change(function () {
-                $("#citySelect").empty();
-                $("#citySelect").append("<option value='' selected>城市</option>")
-                {% for city in allCity %}
-
-                    var curProvinceCode = $("#provinceSelect").val();
-                    var tempCode = {{ city.code }}/100;
-                    tempCode = parseInt(tempCode);
-
-                    if (curProvinceCode == tempCode) {
-                        $("#citySelect").append($('<option>', {value:{{city.code}}}).text("{{ city.name }}"));
-                    };
-
-                {% endfor %}
+            $("#provinceSelect").combobox({
+                onChange: function (record, oldrecord) {
+                    provinceSelect(record);
+                }
             });
 
             //页面加载完成自动搜索一下
@@ -231,8 +283,8 @@
             if ($("#countryInvertCheckbox").is(":checked")) {
                 //如果国家反选选中
                 //隐藏省份和城市下拉框
-                $("#provinceSelect").empty();
-                $("#citySelect").empty();
+//                $("#provinceSelect").combobox('clear');
+//                $("#citySelect").combobox('clear');
 
                 $("#provinceTh").hide();
                 $("#cityTh").hide();
@@ -248,7 +300,7 @@
                 $("#provinceTd1").show();
                 $("#cityTd1").show();
 
-                $("#countrySelect").change();
+                //               $("#countrySelect").change();
             }
         }
     </script>
@@ -287,7 +339,7 @@
                         <tr>
                             <td>条件</td>
                             <td>
-                                <select name="country" id="countrySelect">
+                                <select class="easyui-combobox" name="country" id="countrySelect">
                                     <option value="" selected>国家</option>
                                     {% for country in allCountry %}
                                         <option value="{{ country.code }}">{{ country.name }}</option>
@@ -295,12 +347,14 @@
                                 </select>
                             </td>
                             <td id="provinceTd0">
-                                <select name="province" id="provinceSelect">
+                                <select class="easyui-combobox" name="province" id="provinceSelect"
+                                        data-options="valueField:'code',textField:'name',width:100,panelWidth: 100">
                                     <option value="" selected>省份</option>
                                 </select>
                             </td>
                             <td id="cityTd0">
-                                <select name="city" id="citySelect">
+                                <select class="easyui-combobox" name="city" id="citySelect"
+                                        data-options="valueField:'code',textField:'name',width:100,panelWidth: 150">
                                     <option value="" selected>城市</option>
                                 </select>
                             </td>
